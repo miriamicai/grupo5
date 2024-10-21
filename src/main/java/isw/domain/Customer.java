@@ -3,9 +3,6 @@ package isw.domain;
 import java.io.Serializable; //para poder usarse como key del hashMap 'session'
 
 public class Customer implements Serializable{
-    /**
-     *
-     */
     //private static final long serialVersionUID = 1L;
     private String id;
     private String name;

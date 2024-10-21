@@ -13,7 +13,7 @@ public class ConnectionDAO {
         String user = PropertiesISW.getInstance().getProperty("ddbb.user");
         String password = PropertiesISW.getInstance().getProperty("ddbb.password");
         try {
-            conexion = DriverManager.getConnection(url, user, password);
+            conexion = DriverManager.getConnection(url, user, password); //con la base de datos
         }catch (SQLException e) {
             System.out.println(e.getMessage());
         }
