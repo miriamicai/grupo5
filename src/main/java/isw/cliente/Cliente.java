@@ -100,12 +100,11 @@ public class Cliente {
              */
 
 
-
             /**
              *
              * El siguiente try-catch: este código es parte de un cliente que se comunica con un
-             * servidor mediante sockets. En términos simples, el cliente abre una conexión con
-             * el servidor, envía un objeto, espera una respuesta del servidor y luego la procesa.
+             * servidor mediante sockets. El cliente abre una conexión con el servidor, envía un
+             * objeto, espera una respuesta del servidor y luego la procesa.
              *
              */
 

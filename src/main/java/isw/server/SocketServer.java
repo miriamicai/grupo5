@@ -16,7 +16,7 @@ import isw.domain.Customer;
 import isw.message.Message;
 
 public class SocketServer extends Thread implements Runnable{
-    //implementar runable para...............
+
     public static int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
     protected Socket socket; //se crea el socket para crear una comunicación bidireccional con el servidor
