@@ -15,15 +15,16 @@ import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
 
-public class SocketServer extends Thread {
+public class SocketServer extends Thread implements Runnable{
+    //implementar runable para...............
     public static int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
-    protected Socket socket; //un socket es.................................
+    protected Socket socket; //se crea el socket para crear una comunicación bidireccional con el servidor
 
     private SocketServer(Socket socket) {
         this.socket = socket;
         //Configure connections
-        System.out.println("New client connected from " + socket.getInetAddress().getHostAddress()); //imprimir dirección IP del ciente
+        System.out.println("New client connected from " + socket.getInetAddress().getHostAddress()); //mostrar IP ciente
         start(); //se inicia el hilo al recibir un Socket
     }
 
@@ -37,7 +38,8 @@ public class SocketServer extends Thread {
             //first read the object that has been sent
             //ObjectInputStream permite leer objetos en binario enviados por el cliente
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
-            Message mensajeIn = (Message)objectInputStream.readObject(); //almaceno como Message el mensaje enviado por el cliente
+            //almaceno como Message el mensaje enviado por el cliente
+            Message mensajeIn = (Message)objectInputStream.readObject();
 
             //Object to return information - lo mismo que antes pero con el mensaje que se envía al cliente
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
@@ -57,18 +59,19 @@ public class SocketServer extends Thread {
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     break;
-                case "/getCustomer": //me recupera un cliente
+
+                case "/getCustomer": //me recupera un cliente -> muestra los datos
                     int id = (int) session.get("id");
                     customerControler = new CustomerControler();
-                    Customer cu = customerControler.getCustomer(id);
-                    if (cu!=null){
-                        System.out.println("id:"+cu.getId()); //consigo la info pedida
+                    Customer cu = customerControler.getCustomer(id); //Customer con los datos sacados de la bd
+                    if (cu!=null){ //solo si se encuentra el id en la base de datos
+                        System.out.println("id:"+cu.getId()); //imprimo la info pedida
                     }else {
                         System.out.println("No encontrado en la base de datos");
                     }
 
                     mensajeOut.setContext("/getCustomerResponse");
-                    session.put("Customer",cu); //meto el objeto en cuestión
+                    session.put("Customer",cu); //meto el objeto en el hashmap de <String, Object>
                     mensajeOut.setSession(session); //lo agrego al mensaje
                     objectOutputStream.writeObject(mensajeOut);
                     break;
@@ -78,31 +81,6 @@ public class SocketServer extends Thread {
                     break;
             }
 
-            //Lógica del controlador
-            //System.out.println("\n1.- He leído: "+mensaje.getContext());
-            //System.out.println("\n2.- He leído: "+(String)mensaje.getSession().get("Nombre"));
-
-
-
-            //Prueba para esperar
-		    /*try {
-		    	System.out.println("Me duermo");
-				Thread.sleep(15000);
-				System.out.println("Me levanto");
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-            // create an object output stream from the output stream so we can send an object through it
-			/*ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-
-			//Create the object to send
-			String cadena=((String)mensaje.getSession().get("Nombre"));
-			cadena+=" añado información";
-			mensaje.getSession().put("Nombre", cadena);
-			//System.out.println("\n3.- He leído: "+(String)mensaje.getSession().get("Nombre"));
-			objectOutputStream.writeObject(mensaje);*
-			*/
 
         } catch (IOException ex) {
             System.out.println("Unable to get streams from client");
@@ -122,15 +100,14 @@ public class SocketServer extends Thread {
 
     public static void main(String[] args) {
         System.out.println("SocketServer Example - Listening port "+port);
-        ServerSocket server = null; //OBJETO DE TIPO SOVERSOCKET QUÉ HACE
+        ServerSocket server = null;
         try {
             server = new ServerSocket(port);
             while (true) {
-                /**
-                 * create a new {@link SocketServer} object for each connection
-                 * this will allow multiple client connections
-                 */
-                new SocketServer(server.accept());
+                Socket socketCliente = server.accept();
+                SocketServer socketServer = new SocketServer(socketCliente);
+                Thread hilo = new Thread(socketServer);
+                hilo.start();
             }
         } catch (IOException e) {
             System.out.println("Unable to start server." + e.getMessage());

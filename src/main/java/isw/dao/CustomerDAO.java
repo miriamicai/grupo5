@@ -10,23 +10,25 @@ import isw.domain.Customer;
 
 public class CustomerDAO {
 
-    public static void getClientes(ArrayList<Customer> lista) {
+    public static void getClientes(ArrayList<Customer> lista) { //devuelve lista de Clientes
         Connection conexion =ConnectionDAO.getInstance().getConnection(); //instance de la DAO -> como objeto Connection
         try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM usuarios");
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
+                //creo una lista con todos los clientes que aparecen en la base de datos
                 lista.add(new Customer(rs.getString(1),rs.getString(2)));
             }
 
         } catch (SQLException e) {
-
             System.out.println(e.getMessage());
         }
     }
-    public static Customer getCliente(int id) {
+
+
+    public static Customer getCliente(int id) { //se usa en CustomerControler
         Connection conexion = ConnectionDAO.getInstance().getConnection();
-        Customer cu=null;
+        Customer cu = null; //es nulo
         try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM usuarios WHERE id="+id);
              ResultSet rs = pst.executeQuery()) {
 
@@ -38,12 +40,11 @@ public class CustomerDAO {
 
             System.out.println(e.getMessage());
         }
-        return cu;
-        //return new Customer("1","Atilano");
+        return cu; //devuelve la información del customer si coincide el id, si no será nulo
     }
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
 
         ArrayList<Customer> lista = new ArrayList<>();
         CustomerDAO.getClientes(lista);

@@ -1,35 +1,23 @@
 package isw.configuration;
 
-//import java.io.FileInputStream; //unused import
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
-//import src.main.resources.*;
-
 public class PropertiesISW extends Properties{ //Properties implements Hashtable
 
-    /**
-     * To successfully store and retrieve objects from a hashtable, the objects
-     * used as keys must implement the hashCode method and the equals method.
-     */
-
-
-
-    /**
-     *
-     */
+    //el objeto usado como key en la hashtable debe implementar el metodo equals
 
 
     //private static final long serialVersionUID = 1L;
     private static PropertiesISW prop;
-    private static final String path = "properties.xml"; //se puede conectar directamente
+    private static final String path = "properties.xml";
 
 
     private PropertiesISW() {
         try {
-            System.out.println("Path: " + path);
+            System.out.println("Path: " + path); //archivo properties.xml
             this.loadFromXML(getClass().getClassLoader().getResourceAsStream(path));
         } catch (InvalidPropertiesFormatException e) {
             // TODO Auto-generated catch block
@@ -43,7 +31,7 @@ public class PropertiesISW extends Properties{ //Properties implements Hashtable
         };
     }
 
-    public static PropertiesISW getInstance() {
+    public static PropertiesISW getInstance() { //Socket, cliente y customerDAO
         if (prop==null) {
             prop=new PropertiesISW();
         }
