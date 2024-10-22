@@ -15,7 +15,7 @@ import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
 
-public class SocketServer extends Thread implements Runnable{
+public class SocketServer extends Thread{
 
     public static int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
