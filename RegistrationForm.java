@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.sql.*;
 
 public class RegistrationForm implements ActionListener {
 
@@ -27,10 +28,12 @@ public class RegistrationForm implements ActionListener {
     JButton registerButton = new JButton("Register");
     JButton resetButton = new JButton("Reset");
 
+    // Constructor to set up the UI
     RegistrationForm() {
         createWindow();
         setLocationAndSize();
         addComponentsToFrame();
+        actionEvent();  // Add action listeners
     }
 
     public void createWindow() {
@@ -51,29 +54,34 @@ public class RegistrationForm implements ActionListener {
         soulLabel.setFont(newFont);
 
         // Load the logo image
-        ImageIcon logoIcon = new ImageIcon("/Users/salomerivas/Desktop/COMILLAS/ING DE SOFTWARE/Java Login/soulmatelogosinfondo.png");  // Replace with actual path to your logo
-        logoLabel.setIcon(logoIcon);  // Set the icon for the logo
+       /*ImageIcon logoIcon = new ImageIcon("/Users/salomerivas/Desktop/COMILLAS/ING DE SOFTWARE/Java Login/soulmatemini.png");
+        logoLabel.setIcon(logoIcon);
+        logoLabel.setBounds(30, 10, 80, 80);  */ 
 
         // Set bounds for each component
-        logoLabel.setBounds(110, 0, 50, 50);  // Adjust size and location as needed
-        signLabel.setBounds(110, 100, 180, 70);
-        soulLabel.setBounds(105, 140, 180, 70);
-        nameLabel.setBounds(20, 220, 100, 70);
-        genderLabel.setBounds(20, 250, 100, 70);
-        passwordLabel.setBounds(20, 300, 100, 70);
-        confirmPasswordLabel.setBounds(20, 350, 140, 70);
-        cityLabel.setBounds(20, 400, 100, 70);
-        emailLabel.setBounds(20, 450, 100, 70);
+        signLabel.setBounds(120, 5, 180, 70);
+        soulLabel.setBounds(120, 40, 180, 70);
 
-        // Set bounds for text fields
-        nameTextField.setBounds(180, 220, 165, 23);
-        genderComboBox.setBounds(180, 270, 165, 23);
-        passwordField.setBounds(180, 320, 165, 23);
-        confirmPasswordField.setBounds(180, 370, 165, 23);
+        nameLabel.setBounds(35, 235, 100, 70);
+        nameTextField.setBounds(180, 260, 165, 23);
+
+        genderLabel.setBounds(35, 275, 100, 70);
+        genderComboBox.setBounds(180, 300, 165, 23);
+
+        passwordLabel.setBounds(35, 315, 100, 70);
+        passwordField.setBounds(180, 340, 165, 23);
+
+        confirmPasswordLabel.setBounds(35, 355, 140, 70);
+        confirmPasswordField.setBounds(180, 380, 165, 23);
+
+        cityLabel.setBounds(35, 395, 100, 70);
         cityTextField.setBounds(180, 420, 165, 23);
-        emailTextField.setBounds(180, 470, 165, 23);
-        registerButton.setBounds(70, 520, 100, 35);
-        resetButton.setBounds(220, 520, 100, 35);
+
+        emailLabel.setBounds(35, 435, 100, 70);
+        emailTextField.setBounds(180, 460, 165, 23);    
+       
+        registerButton.setBounds(70, 525, 100, 35);
+        resetButton.setBounds(220, 525, 100, 35);
 
         // Set label colors
         nameLabel.setForeground(Color.WHITE);
@@ -84,6 +92,7 @@ public class RegistrationForm implements ActionListener {
         confirmPasswordLabel.setForeground(Color.WHITE);
         cityLabel.setForeground(Color.WHITE);
         emailLabel.setForeground(Color.WHITE);
+        genderComboBox.setBackground(Color.WHITE);
     }
 
     public void addComponentsToFrame() {
@@ -106,12 +115,55 @@ public class RegistrationForm implements ActionListener {
         frame.add(resetButton);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Add functionality for the buttons here
+    public void actionEvent() {
+        //Adding Action Listener to buttons
+        registerButton.addActionListener(this);
+        resetButton.addActionListener(this);
     }
 
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == registerButton) {
+            // Registration logic: collect form data
+            String name = nameTextField.getText();
+            String gender = genderComboBox.getSelectedItem().toString();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+            String city = cityTextField.getText();
+            String email = emailTextField.getText();
+    
+            // Check if all fields are filled
+            if (name.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || city.isEmpty() || email.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Please fill in all fields.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(frame, "Passwords do not match.", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                // Simulate successful registration (you can add your database logic here)
+                JOptionPane.showMessageDialog(frame, "Registration Successful! Welcome, " + name + "!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    
+                // Clear fields after successful registration
+                nameTextField.setText("");
+                genderComboBox.setSelectedItem("Male");
+                passwordField.setText("");
+                confirmPasswordField.setText("");
+                cityTextField.setText("");
+                emailTextField.setText("");
+            }
+        } else if (e.getSource() == resetButton) {
+            // Clear the fields when reset is clicked
+            nameTextField.setText("");
+            genderComboBox.setSelectedItem("Male");
+            passwordField.setText("");
+            confirmPasswordField.setText("");
+            cityTextField.setText("");
+            emailTextField.setText("");
+        }
+    }
+    
+
+    // Main method correctly placed within the class
     public static void main(String[] args) {
         new RegistrationForm();
     }
 }
+
+

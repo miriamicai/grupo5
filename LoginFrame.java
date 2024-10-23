@@ -74,8 +74,8 @@ public class LoginFrame extends JFrame implements ActionListener {
         passwordField.setBounds(150,400,180,30);
         loginButton.setBounds(95,450,300,30);
         forgotButton.setBounds(120,500,250,30);
-        noaccountLabel.setBounds(60,540,200,30);
-        signupButton.setBounds(230,540,200,30);
+        noaccountLabel.setBounds(60,550,200,30);
+        signupButton.setBounds(230,550,200,30);
   
     }
     public void addComponentsToContainer()
@@ -123,7 +123,10 @@ public class LoginFrame extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Email is required to reset password.");
             }
         } else if (e.getSource() == signupButton) {
-            // Sign-up logic: Open a new window for registration
+            new RegistrationForm();  // This will open your RegistrationForm window
+        }
+    }
+          /*   // Sign-up logic: Open a new window for registration
             JFrame signUpFrame = new JFrame("Sign Up for Soulmate");
             signUpFrame.setBounds(100, 100, 300, 200);
             signUpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -131,7 +134,7 @@ public class LoginFrame extends JFrame implements ActionListener {
 
              }
         
-            }
+            }*/
         }
 
 
