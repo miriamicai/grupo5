@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import isw.cliente.Cliente;
 import isw.domain.Customer;
+import isw.domain.AutentifCustomer;
 
 public class JVentana extends JFrame {
 
@@ -254,12 +255,17 @@ class LoginWindow extends JFrame {
         btnLogin.addActionListener(e -> {
             String usuario = txtUsuario.getText();
             String password = new String(txtPassword.getPassword());
-            if (usuario.equals("admin") && password.equals("1234")) {
+            //lógica en domain.AutetifCustomer
+            AutentifCustomer verif = new AutentifCustomer();
+            boolean exito = verif.VerificarLogin(usuario, password);
+            if (exito){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-            } else {
+            }else{
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         });
+
+
 
         // Lógica para recibir información con el ID del cliente
         btnRecibirInfo.addActionListener(e -> {
@@ -282,7 +288,7 @@ class LoginWindow extends JFrame {
         if (cu == null) {
             nombre = "Error - No encontrado en la base de datos";
         } else {
-            nombre = cu.getName();
+            nombre = cu.getId();
         }
         return nombre;
     }
