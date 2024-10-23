@@ -43,6 +43,32 @@ public class CustomerDAO {
         return cu; //devuelve la información del customer si coincide el id, si no será nulo
     }
 
+    // Método para añadir usuarios a la tabla
+    public void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
+        Connection conexion = ConnectionDAO.getInstance().getConnection();
+        String query = "INSERT INTO users (usuario, nombre, email, contraseña) VALUES (?, ?, ?, ?)";
+
+        try (Connection connection = ConnectionDAO.getConnection();
+             PreparedStatement pst = conexion.prepareStatement(query)) {
+
+            pst.setString(1, usuario);
+            pst.setString(2, nombre);
+            pst.setString(3, email);
+            pst.setString(4, contraseña);
+
+            int rowsAffected = pst.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("User added successfully!");
+            } else {
+                System.out.println("Failed to add user.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while adding user: " + e.getMessage());
+            throw e;
+        }
+    }
+
 
     public static void main(String[] args) {
 

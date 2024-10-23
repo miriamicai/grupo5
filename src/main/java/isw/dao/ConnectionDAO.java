@@ -6,7 +6,7 @@ import isw.configuration.PropertiesISW;
 
 public class ConnectionDAO {
     private static ConnectionDAO connectionDAO;
-    private Connection conexion;
+    private static Connection conexion;
 
     private ConnectionDAO() {
         String url = PropertiesISW.getInstance().getProperty("ddbb.connection");
@@ -26,7 +26,7 @@ public class ConnectionDAO {
         return connectionDAO;
     }
 
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return conexion;
     }
 
