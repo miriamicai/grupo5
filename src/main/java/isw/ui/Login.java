@@ -1,3 +1,5 @@
+package isw.ui;
+
 import javax.swing.JFrame;
 
 public class Login {

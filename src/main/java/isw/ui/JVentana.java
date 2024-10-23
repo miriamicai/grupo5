@@ -4,10 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashMap;
-
-import isw.cliente.Cliente;
-import isw.domain.Customer;
 
 public class JVentana extends JFrame {
 
@@ -75,12 +71,14 @@ public class JVentana extends JFrame {
 
         // Acción del botón "Iniciar Sesión"
         btnIniciarSesion.addActionListener(e -> {
-            new LoginWindow(JVentana.this);
+            LoginFrame loginFrame = new LoginFrame();
+            loginFrame.setVisible(true);  // Mostrar la ventana de login
         });
+
 
         // Acción del botón "Registro"
         btnRegistro.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Funcionalidad de registro aún no implementada.");
+            new RegistrationForm();
         });
 
         // Acción del botón "Salir"
@@ -159,131 +157,3 @@ public class JVentana extends JFrame {
     }
 }
 
-class LoginWindow extends JFrame {
-    public LoginWindow(JFrame parent) {
-        // Configurar la ventana de login
-        setTitle("Iniciar Sesión");
-        setSize(500, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(parent);
-        setLayout(new GridBagLayout());
-        getContentPane().setBackground(new Color(30, 30, 30));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Sección de usuario y contraseña
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel lblUsuario = new JLabel("Usuario:");
-        lblUsuario.setForeground(Color.WHITE);
-        add(lblUsuario, gbc);
-
-        JTextField txtUsuario = new JTextField(15);
-        txtUsuario.setBackground(new Color(50, 50, 50));
-        txtUsuario.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtUsuario, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel lblContraseña = new JLabel("Contraseña:");
-        lblContraseña.setForeground(Color.WHITE);
-        add(lblContraseña, gbc);
-
-        JPasswordField txtPassword = new JPasswordField(15);
-        txtPassword.setBackground(new Color(50, 50, 50));
-        txtPassword.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtPassword, gbc);
-
-        JButton btnLogin = new JButton("Iniciar Sesión");
-        btnLogin.setBackground(new Color(50, 150, 50));
-        btnLogin.setForeground(Color.WHITE);
-        btnLogin.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        add(btnLogin, gbc);
-
-        // Separación visual entre las secciones
-        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-        gbc.gridy = 3;
-        add(separator, gbc);
-
-        // Sección de ID del cliente y recuperación de información
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        JLabel lblId = new JLabel("ID Cliente:");
-        lblId.setForeground(Color.WHITE);
-        add(lblId, gbc);
-
-        JTextField txtId = new JTextField(15);
-        txtId.setBackground(new Color(50, 50, 50));
-        txtId.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtId, gbc);
-
-        JButton btnRecibirInfo = new JButton("Recibir Información");
-        btnRecibirInfo.setBackground(new Color(50, 150, 50));
-        btnRecibirInfo.setForeground(Color.WHITE);
-        btnRecibirInfo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        btnRecibirInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        add(btnRecibirInfo, gbc);
-
-        // Cuadro de texto para mostrar la información recibida
-        JTextArea txtAreaResultado = new JTextArea(5, 20);
-        txtAreaResultado.setLineWrap(true);
-        txtAreaResultado.setWrapStyleWord(true);
-        txtAreaResultado.setEditable(false);
-        txtAreaResultado.setBackground(new Color(50, 50, 50));
-        txtAreaResultado.setForeground(Color.WHITE);
-
-        JScrollPane scrollPane = new JScrollPane(txtAreaResultado);
-        gbc.gridy = 6;
-        add(scrollPane, gbc);
-
-        // Lógica para iniciar sesión
-        btnLogin.addActionListener(e -> {
-            String usuario = txtUsuario.getText();
-            String password = new String(txtPassword.getPassword());
-            if (usuario.equals("admin") && password.equals("1234")) {
-                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
-            }
-        });
-
-        // Lógica para recibir información con el ID del cliente
-        btnRecibirInfo.addActionListener(e -> {
-            int id = Integer.parseInt(txtId.getText());
-            String nombreCliente = recuperarInformacion(id);
-            txtAreaResultado.setText("Cliente: " + nombreCliente);
-        });
-
-        setVisible(true);
-    }
-
-    public String recuperarInformacion(int id) {
-        Cliente cliente = new Cliente();
-        HashMap<String, Object> session = new HashMap<>();
-        String context = "/getCustomer";
-        session.put("id", id);
-        session = cliente.sentMessage(context, session);
-        Customer cu = (Customer) session.get("Customer");
-        String nombre;
-        if (cu == null) {
-            nombre = "Error - No encontrado en la base de datos";
-        } else {
-            nombre = cu.getName();
-        }
-        return nombre;
-    }
-}
