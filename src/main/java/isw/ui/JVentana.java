@@ -13,7 +13,7 @@ public class JVentana extends JFrame {
     private int id;
 
     public JVentana() {
-        // Configuración de la ventana principal
+        //Configuración de la ventana principal
         setTitle("Página Principal");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
