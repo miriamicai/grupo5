@@ -58,14 +58,14 @@ public class Cliente {
             case "/getCustomersResponse": //CustomerS (varios)
                 ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
-                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getName());
+                    System.out.println("He leído el id: "+customer.getId()+" con correo: "+customer.getCorreo());
                 }
                 break;
             case "/getCustomerResponse": //1 Customer solo
                 session=mensajeVuelta.getSession();
                 Customer customer =(Customer) (session.get("Customer"));
                 if (customer!=null) {
-                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getName());
+                    System.out.println("He leído el id: " + customer.getId() + " con correo: " + customer.getCorreo());
                 }else {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }

@@ -4,9 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import isw.cliente.Cliente;
+import isw.controler.CustomerControler;
+import isw.domain.AutentifCustomer;
 import isw.domain.Customer;
 
 public class JVentana extends JFrame {
@@ -252,11 +255,16 @@ class LoginWindow extends JFrame {
 
         // Lógica para iniciar sesión
         btnLogin.addActionListener(e -> {
+
             String usuario = txtUsuario.getText();
             String password = new String(txtPassword.getPassword());
-            if (usuario.equals("admin") && password.equals("1234")) {
+
+            //lógica en domain.AutetifCustomer
+            AutentifCustomer verif = new AutentifCustomer();
+            boolean exito = verif.VerificarLogin(usuario, password);
+            if (exito){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-            } else {
+            }else{
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         });
@@ -278,12 +286,12 @@ class LoginWindow extends JFrame {
         session.put("id", id);
         session = cliente.sentMessage(context, session);
         Customer cu = (Customer) session.get("Customer");
-        String nombre;
+        String correo;
         if (cu == null) {
-            nombre = "Error - No encontrado en la base de datos";
+            correo = "Error - No encontrado en la base de datos";
         } else {
-            nombre = cu.getName();
+            correo = cu.getCorreo();
         }
-        return nombre;
+        return correo;
     }
 }
