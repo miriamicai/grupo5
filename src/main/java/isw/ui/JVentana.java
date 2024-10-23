@@ -34,6 +34,7 @@ public class JVentana extends JFrame {
         panelIzq.add(etiquetaImagen, BorderLayout.NORTH);
         add(panelIzq, BorderLayout.WEST);
 
+
         // Panel central y derecho combinado
         JPanel panelCenDer = new JPanel();
         panelCenDer.setLayout(new GridLayout(4, 1, 10, 10));
