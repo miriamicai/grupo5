@@ -10,10 +10,9 @@ import isw.cliente.Cliente;
 import isw.domain.Customer;
 
 public class JVentana extends JFrame {
-    private int id;
 
     public JVentana() {
-        //Configuración de la ventana principal
+        // Configuración de la ventana principal
         setTitle("Página Principal");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,8 +24,8 @@ public class JVentana extends JFrame {
         panelIzq.setLayout(new BorderLayout());
         panelIzq.setBackground(Color.BLACK);
 
-        //logo
-        ImageIcon logoInicial = new ImageIcon("src/main/java/isw/ui/soulmatelogosinfondo.png");
+        // logo
+        ImageIcon logoInicial = new ImageIcon("C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\soulmatelogosinfondo.png");
         Image imagenEscala = logoInicial.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH);
         ImageIcon iconoEscala = new ImageIcon(imagenEscala);
         JLabel etiquetaImagen = new JLabel(iconoEscala);
@@ -41,10 +40,10 @@ public class JVentana extends JFrame {
         panelCenDer.setBackground(Color.BLACK);
 
         // Crear botones
-        JButton btnNovedades = createImageButton("Últimas novedades", "src/main/java/isw/ui/imagen1.jpg", 180, 100);
-        JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "src/main/java/isw/ui/imagen1.jpg", 180, 100);
-        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "src/main/java/isw/ui/imagen1.jpg", 180, 100);
-        JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "src/main/java/isw/ui/imagen1.jpg", 180, 100);
+        JButton btnNovedades = createImageButton("Últimas novedades", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
+        JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
+        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
+        JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
 
         panelCenDer.add(btnNovedades);
         panelCenDer.add(btnExplorarArtistas);
@@ -61,31 +60,6 @@ public class JVentana extends JFrame {
 
         topPanel.add(searchField);
         topPanel.add(btnBuscar);
-
-        // Panel para la entrada de ID y resultado
-        JPanel pnlSur = new JPanel();
-        pnlSur.setBackground(Color.BLACK); // Añadir fondo negro al panel
-        JLabel lblId = new JLabel("Introduzca el id:", SwingConstants.CENTER);
-        lblId.setForeground(Color.WHITE);
-        JTextField txtId = new JTextField(10);
-
-        txtId.setBackground(new Color(50, 50, 50)); // Establecer fondo oscuro
-        txtId.setForeground(Color.WHITE); // Cambiar color de texto a blanco
-        txtId.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Establecer borde
-
-        // Cambiar a un botón estilizado
-        JButton btnInformacion = createStyledButton("Recibir información");
-        JTextField txtResultado = new JTextField(20);
-
-        txtResultado.setEditable(false);
-        txtResultado.setBackground(new Color(50, 50, 50)); // Establecer fondo oscuro
-        txtResultado.setForeground(Color.WHITE); // Cambiar color de texto a blanco
-        txtResultado.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10)); // Establecer bord
-        pnlSur.add(lblId);
-        pnlSur.add(txtId);
-        pnlSur.add(btnInformacion);
-        pnlSur.add(txtResultado);
-        topPanel.add(pnlSur);
 
         // Botones de inicio de sesión
         JButton btnIniciarSesion = createStyledButton("Iniciar Sesión");
@@ -113,33 +87,11 @@ public class JVentana extends JFrame {
             System.exit(0);
         });
 
-        // Acción del botón "Recibir información"
-        btnInformacion.addActionListener(actionEvent -> {
-            id = Integer.parseInt(txtId.getText());
-            txtResultado.setText(recuperarInformacion());
-        });
-
         // Efectos hover
         addHoverEffect(btnNovedades);
         addHoverEffect(btnExplorarArtistas);
         addHoverEffect(btnCantantesFavoritos);
         addHoverEffect(btnMasEscuchado);
-    }
-
-    public String recuperarInformacion() {
-        Cliente cliente = new Cliente();
-        HashMap<String, Object> session = new HashMap<>();
-        String context = "/getCustomer";
-        session.put("id", id);
-        session = cliente.sentMessage(context, session);
-        Customer cu = (Customer) session.get("Customer");
-        String nombre;
-        if (cu == null) {
-            nombre = "Error - No encontrado en la base de datos";
-        } else {
-            nombre = cu.getName();
-        }
-        return nombre;
     }
 
     // Resto de los métodos para crear botones
@@ -186,7 +138,7 @@ public class JVentana extends JFrame {
 
     private void addHoverEffect(JButton button) {
         button.addMouseListener(new MouseAdapter() {
-            final Color originalColor = button.getForeground();
+            private Color originalColor = button.getForeground();
 
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -210,7 +162,7 @@ class LoginWindow extends JFrame {
     public LoginWindow(JFrame parent) {
         // Configurar la ventana de login
         setTitle("Iniciar Sesión");
-        setSize(500, 300);
+        setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(parent);
         setLayout(new GridBagLayout());
@@ -220,6 +172,7 @@ class LoginWindow extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Sección de usuario y contraseña
         gbc.gridx = 0;
         gbc.gridy = 0;
         JLabel lblUsuario = new JLabel("Usuario:");
@@ -255,30 +208,81 @@ class LoginWindow extends JFrame {
         gbc.gridwidth = 2;
         add(btnLogin, gbc);
 
-        JButton btnRecuperar = new JButton("¿Olvidaste tu contraseña?");
-        btnRecuperar.setForeground(Color.LIGHT_GRAY);
-        btnRecuperar.setBackground(new Color(30, 30, 30));
-        btnRecuperar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        btnRecuperar.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
+        // Separación visual entre las secciones
+        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
         gbc.gridy = 3;
-        add(btnRecuperar, gbc);
+        add(separator, gbc);
 
+        // Sección de ID del cliente y recuperación de información
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        JLabel lblId = new JLabel("ID Cliente:");
+        lblId.setForeground(Color.WHITE);
+        add(lblId, gbc);
+
+        JTextField txtId = new JTextField(15);
+        txtId.setBackground(new Color(50, 50, 50));
+        txtId.setForeground(Color.WHITE);
+        gbc.gridx = 1;
+        add(txtId, gbc);
+
+        JButton btnRecibirInfo = new JButton("Recibir Información");
+        btnRecibirInfo.setBackground(new Color(50, 150, 50));
+        btnRecibirInfo.setForeground(Color.WHITE);
+        btnRecibirInfo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        btnRecibirInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        add(btnRecibirInfo, gbc);
+
+        // Cuadro de texto para mostrar la información recibida
+        JTextArea txtAreaResultado = new JTextArea(5, 20);
+        txtAreaResultado.setLineWrap(true);
+        txtAreaResultado.setWrapStyleWord(true);
+        txtAreaResultado.setEditable(false);
+        txtAreaResultado.setBackground(new Color(50, 50, 50));
+        txtAreaResultado.setForeground(Color.WHITE);
+
+        JScrollPane scrollPane = new JScrollPane(txtAreaResultado);
+        gbc.gridy = 6;
+        add(scrollPane, gbc);
+
+        // Lógica para iniciar sesión
         btnLogin.addActionListener(e -> {
             String usuario = txtUsuario.getText();
             String password = new String(txtPassword.getPassword());
             if (usuario.equals("admin") && password.equals("1234")) {
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-                dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         });
 
-        btnRecuperar.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Recuperación de contraseña no implementada.");
+        // Lógica para recibir información con el ID del cliente
+        btnRecibirInfo.addActionListener(e -> {
+            int id = Integer.parseInt(txtId.getText());
+            String nombreCliente = recuperarInformacion(id);
+            txtAreaResultado.setText("Cliente: " + nombreCliente);
         });
 
         setVisible(true);
+    }
+
+    public String recuperarInformacion(int id) {
+        Cliente cliente = new Cliente();
+        HashMap<String, Object> session = new HashMap<>();
+        String context = "/getCustomer";
+        session.put("id", id);
+        session = cliente.sentMessage(context, session);
+        Customer cu = (Customer) session.get("Customer");
+        String nombre;
+        if (cu == null) {
+            nombre = "Error - No encontrado en la base de datos";
+        } else {
+            nombre = cu.getName();
+        }
+        return nombre;
     }
 }
