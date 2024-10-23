@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+
+<properties>
+    <comment>
+        Documento codificado en UTF-8. Se garantiza que el formato puede utilizarse por programas Java.
+        Cada entrada define una clave - valor.
+
+        Cadena de conexión para una base de datos (isw) corriendo en un servidor local (localhost) en el puerto 5432.
+        Nombre de usuario con el que se conecta a la base de datos (postgres)
+        Contraseña para el usuario de la base de datos (postgres)
+        Dirección IP del localhost (este dispositivo)
+        Puerto pen el que está corriendo el servidor de la aplicación (el cliente se conecta a este puerto para mandar las solicitudes)
+
+        Este archivo le permite a la aplicación cliente saber cómo conectarse a una base de datos y a qué servidor (host y puerto) enviar solicitudes o peticiones.
+    </comment>
+
+    <entry key="ddbb.connection">jdbc:postgresql://localhost:5432/postgres</entry>
+    <entry key="ddbb.user">postgres</entry>
+    <entry key="ddbb.password">postgres</entry>
+    <entry key="host">127.0.0.1</entry>
+    <entry key="port">8081</entry>
+
+</properties>
