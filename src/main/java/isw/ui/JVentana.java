@@ -25,7 +25,7 @@ public class JVentana extends JFrame {
         panelIzq.setBackground(Color.BLACK);
 
         // logo
-        ImageIcon logoInicial = new ImageIcon("C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\soulmatelogosinfondo.png");
+        ImageIcon logoInicial = new ImageIcon("src/main/resources/soulmatelogosinfondo.png");
         Image imagenEscala = logoInicial.getImage().getScaledInstance(400, 600, Image.SCALE_SMOOTH);
         ImageIcon iconoEscala = new ImageIcon(imagenEscala);
         JLabel etiquetaImagen = new JLabel(iconoEscala);
@@ -41,10 +41,10 @@ public class JVentana extends JFrame {
         panelCenDer.setBackground(Color.BLACK);
 
         // Crear botones
-        JButton btnNovedades = createImageButton("Últimas novedades", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
-        JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
-        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
-        JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "C:\\Users\\mwani\\OneDrive\\Escritorio\\Ingeniería del Software\\Proyecto\\imagen1.jpg", 180, 100);
+        JButton btnNovedades = createImageButton("Últimas novedades", "src/main/resources/imagen1.jpg", 180, 100);
+        JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "src/main/resources/imagen1.jpg", 180, 100);
+        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "src/main/resources/imagen1.jpg", 180, 100);
+        JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "src/main/resources/imagen1.jpg", 180, 100);
 
         panelCenDer.add(btnNovedades);
         panelCenDer.add(btnExplorarArtistas);
