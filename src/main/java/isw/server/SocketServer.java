@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -25,10 +26,12 @@ public class SocketServer extends Thread{
         this.socket = socket;
         //Configure connections
         System.out.println("New client connected from " + socket.getInetAddress().getHostAddress()); //mostrar IP ciente
+        System.out.println("Connection established with client: " + socket.getInetAddress());
         start(); //se inicia el hilo al recibir un Socket
     }
 
     public void run() {
+        System.out.println("Connection established with client: " + socket.getInetAddress());
         InputStream in = null;
         OutputStream out = null;
         try { //se maneja la lógica principal del servidor para procesar solicitudes para enviar y leer archivos
@@ -40,6 +43,7 @@ public class SocketServer extends Thread{
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             //almaceno como Message el mensaje enviado por el cliente
             Message mensajeIn = (Message)objectInputStream.readObject();
+            System.out.println("Received message with context: " + mensajeIn.getContext());
 
             //Object to return information - lo mismo que antes pero con el mensaje que se envía al cliente
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
@@ -58,6 +62,8 @@ public class SocketServer extends Thread{
                     session.put("Customers",lista);
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+
                     break;
 
                 case "/getCustomer": //me recupera un cliente -> muestra los datos
@@ -74,6 +80,29 @@ public class SocketServer extends Thread{
                     session.put("Customer",cu); //meto el objeto en el hashmap de <String, Object>
                     mensajeOut.setSession(session); //lo agrego al mensaje
                     objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+
+                    break;
+
+                case "/addUser": // New case for adding a user
+                    customerControler = new CustomerControler();
+                    String usuario = (String) session.get("usuario");
+                    String nombre = (String) session.get("nombre");
+                    String email = (String) session.get("email");
+                    String contraseña = (String) session.get("contraseña");
+
+                    try {
+                        customerControler.addUser(usuario, nombre, email, contraseña);
+                        mensajeOut.setContext("/addUserResponse");
+                        session.put("message", "User added successfully!");
+                    } catch (SQLException e) {
+                        session.put("error", e.getMessage());
+                    }
+
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+
                     break;
 
                 default:
@@ -99,6 +128,7 @@ public class SocketServer extends Thread{
     }
 
     public static void main(String[] args) {
+
         System.out.println("SocketServer Example - Listening port "+port);
         ServerSocket server = null;
         try {

@@ -69,7 +69,6 @@ public class CustomerDAO {
         }
     }
 
-
     public static void main(String[] args) {
 
         ArrayList<Customer> lista = new ArrayList<>();
