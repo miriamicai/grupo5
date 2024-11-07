@@ -7,10 +7,17 @@ import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import isw.cliente.Cliente;
+import isw.dao.SpotifyAuth;
 import isw.domain.Customer;
 import isw.domain.AutentifCustomer;
+import isw.server.OAuthCallbackServer;
 
 public class JVentana extends JFrame {
+    private JButton btnIniciarSesion;
+    private JButton btnRegistro;
+    private JButton btnSpotify;
+    private JButton btnDatosSpotify;
+    private JButton btnSalir;
 
     public JVentana() {
         // Configuración de la ventana principal
@@ -66,10 +73,13 @@ public class JVentana extends JFrame {
         // Botones de inicio de sesión
         JButton btnIniciarSesion = createStyledButton("Iniciar Sesión");
         JButton btnRegistro = createStyledButton("Registro");
+        JButton btnSpotify = createStyledButton("Vincular con tu cuenta de Spotify");
+        JButton btnDatosSpotify = createStyledButton("Ver datos de tu cuenta Spotify");
         JButton btnSalir = createStyledButton("Salir");
 
         topPanel.add(btnIniciarSesion);
         topPanel.add(btnRegistro);
+        topPanel.add(btnSpotify);
         topPanel.add(btnSalir);
 
         add(topPanel, BorderLayout.NORTH);
@@ -84,6 +94,11 @@ public class JVentana extends JFrame {
             new RegistrationForm();
         });
 
+        //Acción del botón "Vincular con cuenta de Spotify"
+        btnSpotify.addActionListener(e -> {
+            SpotifyAuth.requestNewAuthorizationCode();
+        });
+
         // Acción del botón "Salir"
         btnSalir.addActionListener(e -> {
             System.exit(0);
@@ -94,6 +109,23 @@ public class JVentana extends JFrame {
         addHoverEffect(btnExplorarArtistas);
         addHoverEffect(btnCantantesFavoritos);
         addHoverEffect(btnMasEscuchado);
+    }
+
+    public void showAccountInfoButton() {
+        JPanel topPanel = (JPanel) btnSpotify.getParent();
+        topPanel.remove(btnSpotify); // Remove the Spotify link button
+        topPanel.add(btnDatosSpotify); // Add the account info button
+        topPanel.revalidate();
+        topPanel.repaint();
+
+        // Set up the action for the new button to show account info
+        btnDatosSpotify.addActionListener(e -> {
+            if (SpotifyAuth.accessToken != null) {
+                SpotifyAuth.getUserAccountInfo(SpotifyAuth.accessToken);
+            } else {
+                System.out.println("Access token is not available.");
+            }
+        });
     }
 
     // Resto de los métodos para crear botones
@@ -153,6 +185,8 @@ public class JVentana extends JFrame {
             }
         });
     }
+
+
 
     public static void main(String[] args) {
         JVentana ventanaPpal = new JVentana();
