@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import isw.cliente.Cliente;
 import isw.domain.Customer;
+import isw.message.Message;
 
 public class CustomerDAO {
 
@@ -71,14 +74,29 @@ public class CustomerDAO {
 
     public static void main(String[] args) {
 
-        ArrayList<Customer> lista = new ArrayList<>();
+        /*ArrayList<Customer> lista = new ArrayList<>();
         CustomerDAO.getClientes(lista);
 
 
         for (Customer customer : lista) {
             System.out.println("He leído el id: "+customer.getId()+" con nombre: " + customer.getName());
-        }
+        }*/
 
+        CustomerDAO customerDAO = new CustomerDAO();
+
+        // Define user details
+        String usuario = "El_Jolan_4";
+        String nombre = "Marco Holland";
+        String email = "hollandmarco@gmail.com";
+        String contraseña = "hashed_password";
+
+        // Try to add the user to the database
+        try {
+            customerDAO.addUser(usuario, nombre, email, contraseña);
+            System.out.println("User added to database from CustomerDAO main method.");
+        } catch (SQLException e) {
+            System.out.println("Error adding user: " + e.getMessage());
+        }
     }
 
 }

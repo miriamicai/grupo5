@@ -152,25 +152,7 @@ public class Cliente {
     }
 
     public static void main(String[] args) {
-        Cliente cliente = new Cliente();
 
-        // Prepare the message to send to the server
-        Message messageOut = new Message();
-        messageOut.setContext("/addUser");
-
-        // Prepare the session data for the new user
-        HashMap<String, Object> session = new HashMap<>();
-        session.put("usuario", "El_Jolan_2");
-        session.put("nombre", "Marco Holland");
-        session.put("email", "hollandmarco@gmail.com");
-        session.put("contraseña", "hashed_password");
-        messageOut.setSession(session); // Set session data in the message
-
-        // Send the message to the server
-        cliente.sent(messageOut, new Message()); // `new Message()` for receiving the response
     }
 
 }
-
-
-
