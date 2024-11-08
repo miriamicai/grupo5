@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat;
 
 public class MusicBrainzService {
 
-    private static final String USER_AGENT = "YourAppName/1.0 ( your-email@example.com )";
+    private static final String USER_AGENT = "Soulmate/1.0 ( your-email@example.com )";
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
@@ -157,10 +157,19 @@ public class MusicBrainzService {
      */
     private Date parseDate(String dateString) {
         try {
-            return dateString.isEmpty() ? null : DATE_FORMAT.parse(dateString);
+            if (dateString.matches("\\d{4}")) { // Year only
+                return new SimpleDateFormat("yyyy").parse(dateString);
+            } else if (dateString.matches("\\d{4}-\\d{2}")) { // Year and month
+                return new SimpleDateFormat("yyyy-MM").parse(dateString);
+            } else if (dateString.matches("\\d{4}-\\d{2}-\\d{2}")) { // Full date
+                return DATE_FORMAT.parse(dateString);
+            } else {
+                return null; // Return null if the date format is unrecognized
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
 }

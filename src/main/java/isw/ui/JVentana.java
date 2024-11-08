@@ -5,11 +5,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
+import java.util.List;
 
 import isw.cliente.Cliente;
+import isw.dao.MusicBrainzService;
 import isw.dao.SpotifyAuth;
 import isw.domain.Customer;
 import isw.domain.AutentifCustomer;
+import isw.releases.Album;
 import isw.server.OAuthCallbackServer;
 
 public class JVentana extends JFrame {
@@ -20,6 +23,8 @@ public class JVentana extends JFrame {
     private JButton btnSalir;
 
     public JVentana() {
+        MusicBrainzService musicBrainzService = new MusicBrainzService();
+
         // Configuración de la ventana principal
         setTitle("Página Principal");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -83,6 +88,12 @@ public class JVentana extends JFrame {
         topPanel.add(btnSalir);
 
         add(topPanel, BorderLayout.NORTH);
+
+        //Acción del botón "Buscar"
+        btnBuscar.addActionListener(e -> {
+            List<Album> albums = musicBrainzService.searchAlbum(searchField.getText());
+            showSearchResults(albums);
+        });
 
         // Acción del botón "Iniciar Sesión"
         btnIniciarSesion.addActionListener(e -> {
@@ -186,7 +197,14 @@ public class JVentana extends JFrame {
         });
     }
 
-
+    public void showSearchResults(List<Album> albums) {
+        if (albums.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No results found.", "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            SearchResults resultsWindow = new SearchResults(albums);
+            resultsWindow.setVisible(true);
+        }
+    }
 
     public static void main(String[] args) {
         JVentana ventanaPpal = new JVentana();
