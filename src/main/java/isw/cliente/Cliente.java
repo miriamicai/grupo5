@@ -152,7 +152,22 @@ public class Cliente {
     }
 
     public static void main(String[] args) {
+        Cliente cliente = new Cliente();
 
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", "El_Jolan_3");
+        session.put("nombre", "Marco Holland");
+        session.put("email", "hollandmarco@gmail.com");
+        session.put("contraseña", "hashed_password");
+        messageOut.setSession(session);
+
+        cliente.sent(messageOut, new Message());
     }
 
 }
+
+
+

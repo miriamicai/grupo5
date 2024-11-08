@@ -84,13 +84,11 @@ public class CustomerDAO {
 
         CustomerDAO customerDAO = new CustomerDAO();
 
-        // Define user details
         String usuario = "El_Jolan_4";
         String nombre = "Marco Holland";
         String email = "hollandmarco@gmail.com";
         String contraseña = "hashed_password";
 
-        // Try to add the user to the database
         try {
             customerDAO.addUser(usuario, nombre, email, contraseña);
             System.out.println("User added to database from CustomerDAO main method.");
