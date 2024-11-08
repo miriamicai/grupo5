@@ -84,7 +84,7 @@ public class SocketServer extends Thread{
 
                     break;
 
-                case "/addUser": // New case for adding a user
+                case "/addUser":
                     customerControler = new CustomerControler();
                     String usuario = (String) session.get("usuario");
                     String nombre = (String) session.get("nombre");
@@ -102,14 +102,12 @@ public class SocketServer extends Thread{
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
-
                     break;
 
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;
             }
-
 
         } catch (IOException ex) {
             System.out.println("Unable to get streams from client");
@@ -135,6 +133,7 @@ public class SocketServer extends Thread{
             server = new ServerSocket(port);
             while (true) {
                 Socket socketCliente = server.accept();
+                System.out.println("Accepted a new client connection");
                 SocketServer socketServer = new SocketServer(socketCliente);
                 Thread hilo = new Thread(socketServer);
                 hilo.start();

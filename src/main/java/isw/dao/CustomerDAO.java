@@ -76,9 +76,8 @@ public class CustomerDAO {
 
 
         for (Customer customer : lista) {
-            System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getName());
+            System.out.println("He leído el id: "+customer.getId()+" con nombre: " + customer.getName());
         }
-
 
     }
 

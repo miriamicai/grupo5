@@ -70,6 +70,16 @@ public class Cliente {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
+            case "/addUserResponse":
+                String message = (String) mensajeVuelta.getSession().get("message");
+                if (message != null) {
+                    System.out.println("Server response: " + message);
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /addUserResponse");
+                }
+                break;
             default:
 
                 System.out.println("\nError a la vuelta");
@@ -79,8 +89,6 @@ public class Cliente {
         //System.out.println("3.- En Main.- El valor devuelto es: "+((String)mensajeVuelta.getSession().get("Nombre")));
         return session;
     }
-
-
 
     public void sent(Message messageOut, Message messageIn) {
         try {
@@ -142,6 +150,26 @@ public class Cliente {
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        Cliente cliente = new Cliente();
+
+        // Prepare the message to send to the server
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        // Prepare the session data for the new user
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", "El_Jolan_2");
+        session.put("nombre", "Marco Holland");
+        session.put("email", "hollandmarco@gmail.com");
+        session.put("contraseña", "hashed_password");
+        messageOut.setSession(session); // Set session data in the message
+
+        // Send the message to the server
+        cliente.sent(messageOut, new Message()); // `new Message()` for receiving the response
+    }
+
 }
 
 
