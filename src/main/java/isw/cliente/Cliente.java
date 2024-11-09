@@ -34,8 +34,6 @@ public class Cliente {
     public HashMap<String, Object> sentMessage(String Context, HashMap<String, Object> session) {
         //función que devuelve un HashMap<String, Object> que recibe un String y un HashMap
 
-
-
         //Configure connections -> ya hecho en el constructor vacío
         //String host = PropertiesISW.getInstance().getProperty("host");
         //int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
@@ -158,16 +156,14 @@ public class Cliente {
         messageOut.setContext("/addUser");
 
         HashMap<String, Object> session = new HashMap<>();
-        session.put("usuario", "El_Jolan_3");
+        session.put("usuario", "El_Jolan_5");
         session.put("nombre", "Marco Holland");
         session.put("email", "hollandmarco@gmail.com");
         session.put("contraseña", "hashed_password");
         messageOut.setSession(session);
 
         cliente.sent(messageOut, new Message());
+
+        System.out.println("User added to database from Cliente main method.");
     }
-
 }
-
-
-

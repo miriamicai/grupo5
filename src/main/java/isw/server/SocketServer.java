@@ -41,12 +41,18 @@ public class SocketServer extends Thread{
             //first read the object that has been sent
             //ObjectInputStream permite leer objetos en binario enviados por el cliente
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
             //almaceno como Message el mensaje enviado por el cliente
             Message mensajeIn = (Message)objectInputStream.readObject();
-            System.out.println("Received message with context: " + mensajeIn.getContext());
+            if (mensajeIn != null) {
+                System.out.println("Message received from client with context: " + mensajeIn.getContext());
+                System.out.println("Message session data: " + mensajeIn.getSession()); // Optional: print session data if needed
+            } else {
+                System.out.println("No message received from client (mensajeIn is null).");
+            }
 
             //Object to return information - lo mismo que antes pero con el mensaje que se envía al cliente
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+            //ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
             Message mensajeOut = new Message();
 
             HashMap<String,Object> session = mensajeIn.getSession(); //se devuelve la sesión
@@ -90,15 +96,10 @@ public class SocketServer extends Thread{
                     String nombre = (String) session.get("nombre");
                     String email = (String) session.get("email");
                     String contraseña = (String) session.get("contraseña");
+                    customerControler.addUser(usuario, nombre, email, contraseña);
 
-                    try {
-                        customerControler.addUser(usuario, nombre, email, contraseña);
-                        mensajeOut.setContext("/addUserResponse");
-                        session.put("message", "User added successfully!");
-                    } catch (SQLException e) {
-                        session.put("error", e.getMessage());
-                    }
-
+                    mensajeOut.setContext("/addUserResponse");
+                    session.put("message", "User added successfully.");
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
@@ -114,6 +115,8 @@ public class SocketServer extends Thread{
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally { //cerrar todos los flujos y socket al completar la conexión
             try {
                 in.close();
