@@ -346,8 +346,9 @@ class LoginWindow extends JFrame {
         if (cu == null) {
             nombre = "Error - No encontrado en la base de datos";
         } else {
-            nombre = cu.getId();
+            nombre = cu.getNombreUsuario();
         }
         return nombre;
     }
+
 }
