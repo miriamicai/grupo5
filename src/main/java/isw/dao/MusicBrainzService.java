@@ -98,11 +98,12 @@ public class MusicBrainzService {
             JSONArray items = response.getJSONArray("releases");
             for (int i = 0; i < items.length(); i++) {
                 JSONObject item = items.getJSONObject(i);
+                String id = item.getString("id");
                 albums.add(new Album(
-                        item.getString("id"),
+                        id,
                         item.getString("title"),
                         item.getJSONArray("artist-credit").getJSONObject(0).getJSONObject("artist").getString("name"),
-                        null,  // Placeholder for cover URL, as MusicBrainz does not provide cover images directly
+                        fetchCoverURL(id),  // Placeholder for cover URL, as MusicBrainz does not provide cover images directly
                         parseDate(item.optString("date")),
                         item.optInt("track-count", 0)
                 ));
@@ -171,5 +172,24 @@ public class MusicBrainzService {
             return null;
         }
     }
+
+    /**
+     * Fetches the cover art URL for an album using its MusicBrainz ID.
+     *
+     * @param albumId The MusicBrainz ID of the album.
+     * @return The URL of the album cover, or a default placeholder URL if not found.
+     */
+    private String fetchCoverURL(String albumId) {
+        String coverUrl = "https://coverartarchive.org/release/" + albumId + "/front";
+
+        JSONObject response = makeApiRequest(coverUrl);
+        if (response != null) {
+            return coverUrl; // Cover found
+        } else {
+            return null; // No cover found or an error occurred
+        }
+    }
+
+
 
 }
