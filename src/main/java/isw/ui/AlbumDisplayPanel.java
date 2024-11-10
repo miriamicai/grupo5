@@ -7,15 +7,19 @@ import java.awt.*;
 
 public class AlbumDisplayPanel extends JPanel{
     private JLabel name, artist, cover;
-    private JPanel jPanel;
+    private JPanel TotalAlbumPanel;
 
-    public AlbumDisplayPanel(Album album) {
+    public AlbumDisplayPanel(Album album){
         setLayout(new BorderLayout());
 
+        String title = album.getTitle() != null ? album.getTitle() : "Unknown Title";
+        String artist = album.getArtist() != null ? album.getArtist() : "Unknown Artist";
+        ImageIcon coverIcon = album.getCoverUrl() != null ? new ImageIcon(album.getCoverUrl()) : new ImageIcon("src/main/resources/Marquee_moon_album_cover.jpg"); // Placeholder image
+
         // Use album data to populate the panel
-        JLabel titleLabel = new JLabel(album.getTitle());
-        JLabel artistLabel = new JLabel(album.getArtist());
-        JLabel coverLabel = new JLabel(new ImageIcon(album.getCoverUrl())); // Assume coverUrl is a valid image URL
+        JLabel titleLabel = new JLabel(title);
+        JLabel artistLabel = new JLabel(artist);
+        JLabel coverLabel = new JLabel(coverIcon); // Assume coverUrl is a valid image URL
 
         add(titleLabel, BorderLayout.NORTH);
         add(artistLabel, BorderLayout.CENTER);

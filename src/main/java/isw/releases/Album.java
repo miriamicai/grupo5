@@ -63,6 +63,18 @@ public class Album {
         this.personalRating = personalRating;
     }
 
+    @Override
+    public String toString() {
+        return "Album{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", releaseDate=" + release +
+                ", trackCount=" + numTracks +
+                '}';
+    }
+
+
     public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks) {
         this.id = id;
         this.title = title;
