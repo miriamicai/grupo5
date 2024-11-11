@@ -3,7 +3,20 @@ package isw.releases;
 import java.util.*;
 
 public class Album {
-    private String id, title, artist, coverUrl;
+    private String id;
+    private String title;
+    private String artist;
+    private String coverUrl;
+
+    public String getReleaseGroupID() {
+        return releaseGroupID;
+    }
+
+    public void setReleaseGroupID(String releaseGroupID) {
+        this.releaseGroupID = releaseGroupID;
+    }
+
+    private String releaseGroupID;
     private Date release;
     private int numTracks, avgRating, personalRating;
 
@@ -75,12 +88,13 @@ public class Album {
     }
 
 
-    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks) {
+    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String releaseGroupID) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.coverUrl = coverUrl;
         this.release = release;
         this.numTracks = numTracks;
+        this.releaseGroupID = releaseGroupID;
     }
 }

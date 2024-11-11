@@ -4,6 +4,8 @@ import isw.releases.Album;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class AlbumDisplayPanel extends JPanel{
     private JLabel name, artist, cover;
@@ -14,7 +16,15 @@ public class AlbumDisplayPanel extends JPanel{
 
         String title = album.getTitle() != null ? album.getTitle() : "Unknown Title";
         String artist = album.getArtist() != null ? album.getArtist() : "Unknown Artist";
-        ImageIcon coverIcon = album.getCoverUrl() != null ? new ImageIcon(album.getCoverUrl()) : new ImageIcon("src/main/resources/Marquee_moon_album_cover.jpg"); // Placeholder image
+
+        ImageIcon coverIcon;
+        try {
+            // Attempt to create ImageIcon from a URL if coverUrl is a web URL
+            coverIcon = new ImageIcon(new URL(album.getCoverUrl()));
+        } catch (MalformedURLException e) {
+            // If coverUrl is not a valid URL, load a local placeholder image
+            coverIcon = new ImageIcon(album.getCoverUrl()); // Assumes coverUrl is a local path
+        }
 
         // Use album data to populate the panel
         JLabel titleLabel = new JLabel(title);

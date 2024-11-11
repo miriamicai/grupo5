@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -91,7 +92,12 @@ public class JVentana extends JFrame {
 
         //Acción del botón "Buscar"
         btnBuscar.addActionListener(e -> {
-            List<Album> albums = musicBrainzService.searchAlbum(searchField.getText());
+            List<Album> albums = null;
+            try {
+                albums = musicBrainzService.searchAlbum(searchField.getText());
+            } catch (UnsupportedEncodingException ex) {
+                throw new RuntimeException(ex);
+            }
             showSearchResults(albums);
         });
 
