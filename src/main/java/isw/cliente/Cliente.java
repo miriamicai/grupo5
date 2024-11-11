@@ -161,7 +161,7 @@ public class Cliente {
         messageOut.setContext("/addUser");
 
         HashMap<String, Object> session = new HashMap<>();
-        session.put("usuario", "El_Jolan_9");
+        session.put("usuario", "El_Jolan_10");
         session.put("nombre", "Marco Holland");
         session.put("email", "hollandmarco@gmail.com");
         session.put("contraseña", "hashed_password");
