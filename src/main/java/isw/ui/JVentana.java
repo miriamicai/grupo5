@@ -4,15 +4,28 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
+import java.util.List;
 
 import isw.cliente.Cliente;
+import isw.dao.MusicBrainzService;
+import isw.dao.SpotifyAuth;
 import isw.domain.Customer;
 import isw.domain.AutentifCustomer;
+import isw.releases.Album;
+import isw.server.OAuthCallbackServer;
 
 public class JVentana extends JFrame {
+    private JButton btnIniciarSesion;
+    private JButton btnRegistro;
+    private JButton btnSpotify;
+    private JButton btnDatosSpotify;
+    private JButton btnSalir;
 
     public JVentana() {
+        MusicBrainzService musicBrainzService = new MusicBrainzService();
+
         // Configuración de la ventana principal
         setTitle("Página Principal");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -66,13 +79,27 @@ public class JVentana extends JFrame {
         // Botones de inicio de sesión
         JButton btnIniciarSesion = createStyledButton("Iniciar Sesión");
         JButton btnRegistro = createStyledButton("Registro");
+        JButton btnSpotify = createStyledButton("Vincular con tu cuenta de Spotify");
+        JButton btnDatosSpotify = createStyledButton("Ver datos de tu cuenta Spotify");
         JButton btnSalir = createStyledButton("Salir");
 
         topPanel.add(btnIniciarSesion);
         topPanel.add(btnRegistro);
+        topPanel.add(btnSpotify);
         topPanel.add(btnSalir);
 
         add(topPanel, BorderLayout.NORTH);
+
+        //Acción del botón "Buscar"
+        btnBuscar.addActionListener(e -> {
+            List<Album> albums = null;
+            try {
+                albums = musicBrainzService.searchAlbum(searchField.getText());
+            } catch (UnsupportedEncodingException ex) {
+                throw new RuntimeException(ex);
+            }
+            showSearchResults(albums);
+        });
 
         // Acción del botón "Iniciar Sesión"
         btnIniciarSesion.addActionListener(e -> {
@@ -82,6 +109,11 @@ public class JVentana extends JFrame {
         // Acción del botón "Registro"
         btnRegistro.addActionListener(e -> {
             new RegistrationForm();
+        });
+
+        //Acción del botón "Vincular con cuenta de Spotify"
+        btnSpotify.addActionListener(e -> {
+            SpotifyAuth.requestNewAuthorizationCode();
         });
 
         // Acción del botón "Salir"
@@ -94,6 +126,23 @@ public class JVentana extends JFrame {
         addHoverEffect(btnExplorarArtistas);
         addHoverEffect(btnCantantesFavoritos);
         addHoverEffect(btnMasEscuchado);
+    }
+
+    public void showAccountInfoButton() {
+        JPanel topPanel = (JPanel) btnSpotify.getParent();
+        topPanel.remove(btnSpotify); // Remove the Spotify link button
+        topPanel.add(btnDatosSpotify); // Add the account info button
+        topPanel.revalidate();
+        topPanel.repaint();
+
+        // Set up the action for the new button to show account info
+        btnDatosSpotify.addActionListener(e -> {
+            if (SpotifyAuth.accessToken != null) {
+                SpotifyAuth.getUserAccountInfo(SpotifyAuth.accessToken);
+            } else {
+                System.out.println("Access token is not available.");
+            }
+        });
     }
 
     // Resto de los métodos para crear botones
@@ -152,6 +201,15 @@ public class JVentana extends JFrame {
                 button.setForeground(originalColor);
             }
         });
+    }
+
+    public void showSearchResults(List<Album> albums) {
+        if (albums.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No results found.", "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            SearchResults resultsWindow = new SearchResults(albums);
+            resultsWindow.setVisible(true);
+        }
     }
 
     public static void main(String[] args) {

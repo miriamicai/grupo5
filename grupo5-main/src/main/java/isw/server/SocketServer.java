@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -77,24 +76,6 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
-                case "/addUser":
-                    customerControler = new CustomerControler();
-                    String usuario = (String) session.get("usuario");
-                    String nombre = (String) session.get("nombre");
-                    String email = (String) session.get("email");
-                    String contraseña = (String) session.get("contraseña");
-                    customerControler.addUser(usuario, nombre, email, contraseña);
-
-                    mensajeOut.setContext("/addUserResponse");
-                    session.put("message", "User added successfully.");
-                    mensajeOut.setSession(session);
-                    objectOutputStream.writeObject(mensajeOut);
-                    System.out.println("Response sent to client: " + mensajeOut.getContext());
-                    break;
-
-                case "/logRelease":
-                    //Envio de solicitud
-
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;
@@ -106,8 +87,6 @@ public class SocketServer extends Thread{
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         } finally { //cerrar todos los flujos y socket al completar la conexión
             try {
                 in.close();
@@ -125,11 +104,10 @@ public class SocketServer extends Thread{
         try {
             server = new ServerSocket(port);
             while (true) {
-                //Socket socketCliente = server.accept();
-                //SocketServer socketServer = new SocketServer(socketCliente);
-                //Thread hilo = new Thread(socketServer);
-                //hilo.start();
-                new SocketServer(server.accept());
+                Socket socketCliente = server.accept();
+                SocketServer socketServer = new SocketServer(socketCliente);
+                Thread hilo = new Thread(socketServer);
+                hilo.start();
             }
         } catch (IOException e) {
             System.out.println("Unable to start server." + e.getMessage());

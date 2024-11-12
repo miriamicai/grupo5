@@ -58,31 +58,18 @@ public class Cliente {
             case "/getCustomersResponse": //CustomerS (varios)
                 ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
-                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getPassword());
+                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getName());
                 }
                 break;
             case "/getCustomerResponse": //1 Customer solo
                 session=mensajeVuelta.getSession();
                 Customer customer =(Customer) (session.get("Customer"));
                 if (customer!=null) {
-                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getPassword());
+                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getName());
                 }else {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
-            case "/addUserResponse":
-                String message = (String) mensajeVuelta.getSession().get("message");
-                if (message != null) {
-                    System.out.println("Server response: " + message);
-                } else if (mensajeVuelta.getSession().containsKey("error")) {
-                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
-                } else {
-                    System.out.println("Unexpected response from server for /addUserResponse");
-                }
-                break;
-
-            case "/logReleaseResponse":
-
             default:
 
                 System.out.println("\nError a la vuelta");
@@ -155,24 +142,7 @@ public class Cliente {
             e.printStackTrace();
         }
     }
-
-    public void registerUser(String username, String name, String email, String password){
-        //Cliente cliente = new Cliente();
-
-        Message messageOut = new Message();
-        messageOut.setContext("/addUser");
-
-        HashMap<String, Object> session = new HashMap<>();
-        session.put("usuario", username);
-        session.put("nombre", name);
-        session.put("email", email);
-        session.put("contraseña", password);
-        messageOut.setSession(session);
-
-        sent(messageOut, new Message());
-
-        System.out.println("User added to database from Cliente registerUser() method.");
-    }
+}
 
 
 

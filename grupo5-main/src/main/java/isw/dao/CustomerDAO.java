@@ -25,6 +25,7 @@ public class CustomerDAO {
         }
     }
 
+
     public static Customer getCliente(int id) { //se usa en CustomerControler
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         Customer cu = null; //es nulo
@@ -42,29 +43,32 @@ public class CustomerDAO {
         return cu; //devuelve la información del customer si coincide el id, si no será nulo
     }
 
-    // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
-    public void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
-        Connection conexion = ConnectionDAO.getInstance().getConnection();
-        String query = "INSERT INTO users (usuario, nombre, email, contraseña) VALUES (?, ?, ?, ?)";
+    // Method to add a new user to the users table
+    public void addUser(String username, String email, String passwordHash) throws SQLException {
+        String query = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)";
 
-        try (PreparedStatement pst = conexion.prepareStatement(query)) {
-            pst.setString(1, usuario);
-            pst.setString(2, nombre);
-            pst.setString(3, email);
-            pst.setString(4, contraseña);
+        try (Connection connection = ConnectionDAO.getConnection();
+             PreparedStatement pst = connection.prepareStatement(query)) {
 
+            // Set the values for the prepared statement
+            pst.setString(1, username);
+            pst.setString(2, email);
+            pst.setString(3, passwordHash);
+
+            // Execute the insert statement
             int rowsAffected = pst.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("User added successfully, amazing");
+                System.out.println("User added successfully!");
             } else {
-                System.out.println("Failed to add user oh no");
+                System.out.println("Failed to add user.");
             }
         } catch (SQLException e) {
             System.out.println("Error while adding user: " + e.getMessage());
-            throw e; // rethrow exception to allow SocketServer to handle it
+            throw e;
         }
     }
+
 
     public static void main(String[] args) {
 
@@ -73,7 +77,7 @@ public class CustomerDAO {
 
 
         for (Customer customer : lista) {
-            System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getId());
+            System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getName());
         }
 
 
