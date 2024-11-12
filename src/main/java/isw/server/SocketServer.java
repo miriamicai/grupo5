@@ -92,9 +92,6 @@ public class SocketServer extends Thread{
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
                     break;
 
-                case "/logRelease":
-                    //Envio de solicitud
-
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;
