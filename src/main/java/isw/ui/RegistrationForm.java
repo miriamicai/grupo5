@@ -13,12 +13,14 @@ public class RegistrationForm implements ActionListener {
 
     String[] gender = {"Male", "Female"};
     JLabel nameLabel = new JLabel("Name");
+    JLabel usernameLabel = new JLabel("Username: ");
     JLabel genderLabel = new JLabel("Gender");
     JLabel passwordLabel = new JLabel("Password");
     JLabel confirmPasswordLabel = new JLabel("Confirm Password");
     JLabel cityLabel = new JLabel("City");
     JLabel emailLabel = new JLabel("Email");
 
+    JTextField usernameTextField = new JTextField();
     JTextField nameTextField = new JTextField();
     JComboBox genderComboBox = new JComboBox(gender);
     JPasswordField passwordField = new JPasswordField();
@@ -60,6 +62,7 @@ public class RegistrationForm implements ActionListener {
         logoLabel.setBounds(110, 0, 50, 50);  // Adjust size and location as needed
         signLabel.setBounds(110, 100, 180, 70);
         soulLabel.setBounds(105, 140, 180, 70);
+        usernameLabel.setBounds(20, 200, 100,70);
         nameLabel.setBounds(20, 220, 100, 70);
         genderLabel.setBounds(20, 250, 100, 70);
         passwordLabel.setBounds(20, 300, 100, 70);
@@ -68,6 +71,7 @@ public class RegistrationForm implements ActionListener {
         emailLabel.setBounds(20, 450, 100, 70);
 
         // Set bounds for text fields
+        usernameTextField.setBounds(180, 200, 165, 23);
         nameTextField.setBounds(180, 220, 165, 23);
         genderComboBox.setBounds(180, 270, 165, 23);
         passwordField.setBounds(180, 320, 165, 23);
@@ -78,6 +82,7 @@ public class RegistrationForm implements ActionListener {
         resetButton.setBounds(220, 520, 100, 35);
 
         // Set label colors
+        usernameLabel.setForeground(Color.WHITE);
         nameLabel.setForeground(Color.WHITE);
         signLabel.setForeground(Color.WHITE);
         soulLabel.setForeground(Color.WHITE);
@@ -90,6 +95,7 @@ public class RegistrationForm implements ActionListener {
 
     public void addComponentsToFrame() {
         frame.add(logoLabel);  // Add the logo to the frame
+        frame.add(usernameLabel);
         frame.add(nameLabel);
         frame.add(signLabel);
         frame.add(soulLabel);
@@ -98,6 +104,7 @@ public class RegistrationForm implements ActionListener {
         frame.add(confirmPasswordLabel);
         frame.add(cityLabel);
         frame.add(emailLabel);
+        frame.add(usernameTextField);
         frame.add(nameTextField);
         frame.add(genderComboBox);
         frame.add(passwordField);
