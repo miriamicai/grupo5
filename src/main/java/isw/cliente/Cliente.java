@@ -9,9 +9,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-
-
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -21,9 +18,10 @@ public class Cliente {
     private int port;
 
     public Cliente(String host, int port) { //constructor de Cliente: caracterísiticas petición host y puerto
-        this.host=host;
-        this.port=port;
+        this.host = host;
+        this.port = port;
     }
+
     public Cliente() { //constructor vacío de Cliente: host y puerto sacado de PropertiesISW.java
         this.host = PropertiesISW.getInstance().getProperty("host");
         this.port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
@@ -31,42 +29,42 @@ public class Cliente {
             throw new IllegalArgumentException("Host o puerto no válidos.");
         }
     }
+
     public HashMap<String, Object> sentMessage(String Context, HashMap<String, Object> session) {
         //función que devuelve un HashMap<String, Object> que recibe un String y un HashMap
-
 
 
         //Configure connections -> ya hecho en el constructor vacío
         //String host = PropertiesISW.getInstance().getProperty("host");
         //int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
-        System.out.println("Host: "+host+" port"+port);
+        System.out.println("Host: " + host + " port" + port);
         //Create a cliente class                             -> por qué se necesita una clase Cliente??
         //Client cliente=new Client(host, port);
 
         //HashMap<String,Object> session=new HashMap<String, Object>();
         //session.put("/getCustomer",""); //clase CustomerControler -> se saca de la base de datos
 
-        Message mensajeEnvio=new Message();
-        Message mensajeVuelta=new Message();
+        Message mensajeEnvio = new Message();
+        Message mensajeVuelta = new Message();
         mensajeEnvio.setContext(Context);///getCustomer"
         mensajeEnvio.setSession(session);
-        this.sent(mensajeEnvio,mensajeVuelta);
+        this.sent(mensajeEnvio, mensajeVuelta);
 
 
         switch (mensajeVuelta.getContext()) { //Devolver los Customers dependiendo del mensaje que devuelva el servidor (mensajeVuelta)
             case "/getCustomersResponse": //CustomerS (varios)
-                ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
+                ArrayList<Customer> customerList = (ArrayList<Customer>) (mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
-                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getPassword());
+                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getPassword());
                 }
                 break;
             case "/getCustomerResponse": //1 Customer solo
-                session=mensajeVuelta.getSession();
-                Customer customer =(Customer) (session.get("Customer"));
-                if (customer!=null) {
+                session = mensajeVuelta.getSession();
+                Customer customer = (Customer) (session.get("Customer"));
+                if (customer != null) {
                     System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getPassword());
-                }else {
+                } else {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
@@ -80,7 +78,6 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
-
             case "/logReleaseResponse":
 
             default:
@@ -92,7 +89,6 @@ public class Cliente {
         //System.out.println("3.- En Main.- El valor devuelto es: "+((String)mensajeVuelta.getSession().get("Nombre")));
         return session;
     }
-
 
 
     public void sent(Message messageOut, Message messageIn) {
@@ -132,7 +128,7 @@ public class Cliente {
 
                 // create a DataInputStream so we can read data from it.
                 ObjectInputStream objectInputStream = new ObjectInputStream(in);
-                Message msg=(Message)objectInputStream.readObject();
+                Message msg = (Message) objectInputStream.readObject();
                 messageIn.setContext(msg.getContext());
                 messageIn.setSession(msg.getSession());
 		        /*System.out.println("\n1.- El valor devuelto es: "+messageIn.getContext());
@@ -156,7 +152,7 @@ public class Cliente {
         }
     }
 
-    public void registerUser(String username, String name, String email, String password){
+    public void registerUser(String username, String name, String email, String password) {
         //Cliente cliente = new Cliente();
 
         Message messageOut = new Message();
@@ -173,6 +169,6 @@ public class Cliente {
 
         System.out.println("User added to database from Cliente registerUser() method.");
     }
-
+}
 
 

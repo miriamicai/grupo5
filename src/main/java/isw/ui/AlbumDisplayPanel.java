@@ -31,10 +31,12 @@ public class AlbumDisplayPanel extends JPanel{
         JLabel titleLabel = new JLabel(title);
         JLabel artistLabel = new JLabel(artist);
         JLabel coverLabel = new JLabel(coverIcon); // Assume coverUrl is a valid image URL
+        JButton logButton = new JButton("Log");
 
         add(titleLabel, BorderLayout.NORTH);
         add(artistLabel, BorderLayout.CENTER);
         add(coverLabel, BorderLayout.SOUTH);
+        add(logButton, BorderLayout.EAST);
     }
 
     // No-argument constructor required by the .form file
