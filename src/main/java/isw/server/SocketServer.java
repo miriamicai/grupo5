@@ -104,10 +104,11 @@ public class SocketServer extends Thread{
         try {
             server = new ServerSocket(port);
             while (true) {
-                Socket socketCliente = server.accept();
-                SocketServer socketServer = new SocketServer(socketCliente);
-                Thread hilo = new Thread(socketServer);
-                hilo.start();
+                //Socket socketCliente = server.accept();
+                //SocketServer socketServer = new SocketServer(socketCliente);
+                //Thread hilo = new Thread(socketServer);
+                //hilo.start();
+                new SocketServer(server.accept());
             }
         } catch (IOException e) {
             System.out.println("Unable to start server." + e.getMessage());

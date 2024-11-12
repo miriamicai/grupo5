@@ -19,6 +19,7 @@ public class ConnectionDAO {
         }
     }
 
+
     public static ConnectionDAO getInstance() {
         if (connectionDAO == null) {
             connectionDAO=new ConnectionDAO();
@@ -30,7 +31,10 @@ public class ConnectionDAO {
         return conexion;
     }
 
-    public static void main(String[] args) {
+
+
+    //IMPORTANTE
+    /*public static void main(String[] args) {
 
         String url = PropertiesISW.getInstance().getProperty("ddbb.connection");
         String user = PropertiesISW.getInstance().getProperty("ddbb.user");
@@ -49,5 +53,5 @@ public class ConnectionDAO {
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
-    }
+    }*/
 }

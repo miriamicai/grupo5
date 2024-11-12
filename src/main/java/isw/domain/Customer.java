@@ -5,13 +5,21 @@ import java.util.Objects;
 
 public class Customer implements Serializable {
     //private static final long serialVersionUID = 1L;
-    private int id;
+    private int id; //cambiar a int?
     private String nombre_usuario; //id asociado en nuestra base de datos
     private String correo;
     private String password;
     private String nombre;
     private String apellido1;
     private String apellido2;
+
+    //public HashMap() seguidores;
+    //public HashMap() seguidos;
+
+    // Estructura HashMap para la aplicación
+    //HashMap<Integer, List<Integer>> seguidores = new HashMap<>();
+    //HashMap<Integer, List<Integer>> seguidos = new HashMap<>();
+
 
 
     /*public Customer(String nombre_usuario, String correo, String password, String nombre) {
@@ -31,8 +39,20 @@ public class Customer implements Serializable {
         this.setApellido1(apellido1);
     }**/
 
+    //constructor que voy a usar al recoger un customer de la base de datos
+    public Customer(int id, String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
+        this.setId(id);
+        this.setNombreUsuario(nombre_usuario);
+        this.setCorreo(correo);
+        this.setPassword(password);
+        this.setNombre(nombre);
+        this.setApellido1(apellido1);
+        this.setApellido2(apellido2);
+    }
+
+    //constructor que se usará cuando se registre un nuevo cliente, asignándole un nuevo id
     public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
-        this.setId(); //siempre se asigna de manera automática
+        //this.setIdNuevo(); //siempre se asigna de manera automática
         this.setNombreUsuario(nombre_usuario);
         this.setCorreo(correo);
         this.setPassword(password);
@@ -48,13 +68,12 @@ public class Customer implements Serializable {
 
 
 
-
     public int getId() {
         return id;
     }
 
-    public void setId() {
-        this.id = 1;
+    public void setId(int id) {
+        this.id = id;
         //CREAR LA LÓGICA POR LA QUE SE ASIGNA DIFERENTES ID A LOS CLIENTES
     }
 
@@ -112,6 +131,10 @@ public class Customer implements Serializable {
 
     public void getInfoPruebas() {
         System.out.println(this.id + " " + this.password + " " + this.correo);
+    }
+
+    public void setIdNuevo(){
+        this.id = 2;
     }
 
     @Override
