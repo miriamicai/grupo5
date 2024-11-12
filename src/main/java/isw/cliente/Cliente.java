@@ -154,7 +154,23 @@ public class Cliente {
         }
     }
 
+    public void registerUser(String username, String name, String email, String password){
+        //Cliente cliente = new Cliente();
 
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", username);
+        session.put("nombre", name);
+        session.put("email", email);
+        session.put("contraseña", password);
+        messageOut.setSession(session);
+
+        sent(messageOut, new Message());
+
+        System.out.println("User added to database from Cliente registerUser() method.");
+    }
 
     public static void main(String[] args) {
         Cliente cliente = new Cliente();

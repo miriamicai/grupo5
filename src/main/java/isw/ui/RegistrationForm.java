@@ -1,5 +1,7 @@
 package isw.ui;
 
+import isw.cliente.Cliente;
+
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
@@ -35,6 +37,8 @@ public class RegistrationForm implements ActionListener {
         createWindow();
         setLocationAndSize();
         addComponentsToFrame();
+        registerButton.addActionListener(this);
+        resetButton.addActionListener(this);
     }
 
     public void createWindow() {
@@ -118,6 +122,34 @@ public class RegistrationForm implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // Add functionality for the buttons here
+        if(e.getSource() == registerButton){
+            Cliente cliente = new Cliente();
+            String username = usernameTextField.getText();
+            String name = nameTextField.getText();
+            String gender = genderComboBox.getSelectedItem().toString();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+            String city = cityTextField.getText();
+            String email = emailTextField.getText();
+
+            if(username.isEmpty()||name.isEmpty() || password.isEmpty() ||
+                    confirmPassword.isEmpty() || city.isEmpty() || email.isEmpty()){
+                JOptionPane.showMessageDialog(frame, "Por favor rellena todos los campos.", "Formulatio incompleto", JOptionPane.ERROR_MESSAGE);
+            } else if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(frame, "Contraseñas no coinciden..", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                cliente.registerUser(username, name, email, password);
+                JOptionPane.showMessageDialog(frame, "¡Registrado con éxito!", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (e.getSource()==resetButton) {
+            usernameTextField.setText("");
+            nameTextField.setText("");
+            genderComboBox.setSelectedIndex(0);
+            passwordField.setText("");
+            confirmPasswordField.setText("");
+            cityTextField.setText("");
+            emailTextField.setText("");
+        }
     }
 
     public static void main(String[] args) {
