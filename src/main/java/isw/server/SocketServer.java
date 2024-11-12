@@ -76,6 +76,9 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
+                case "/logRelease":
+                    //Envio de solicitud
+
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;

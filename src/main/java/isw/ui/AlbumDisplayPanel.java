@@ -10,6 +10,7 @@ import java.net.URL;
 public class AlbumDisplayPanel extends JPanel{
     private JLabel name, artist, cover;
     private JPanel TotalAlbumPanel;
+    private JButton logButton;
 
     public AlbumDisplayPanel(Album album){
         setLayout(new BorderLayout());

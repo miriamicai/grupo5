@@ -25,7 +25,6 @@ public class CustomerDAO {
         }
     }
 
-
     public static Customer getCliente(int id) { //se usa en CustomerControler
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         Customer cu = null; //es nulo

@@ -70,8 +70,9 @@ public class Cliente {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
-            default:
+            case "/logReleaseResponse":
 
+            default:
                 System.out.println("\nError a la vuelta");
                 break;
 
