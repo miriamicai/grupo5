@@ -37,6 +37,7 @@ public class AutentifCustomer {
             //customer.getInfoPruebas();
 
             if (esUsuario.equals(customer)) {
+                UserSession.getInstance().setUserId(customer.getId());
                 return true; //si coincide lo introducido con los datos de algún cliente en la base de datos
             }
         }

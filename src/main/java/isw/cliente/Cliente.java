@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
+import isw.domain.UserSession;
 import isw.message.Message;
 
 public class Cliente {
@@ -78,7 +79,16 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
-            case "/logReleaseResponse":
+            case "/connectUserResponse":
+                String mensaje = (String) mensajeVuelta.getSession().get("message");
+                if (mensaje != null) {
+                    System.out.println("Server response: " + mensaje);
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /addUserResponse");
+                }
+                break;
 
             default:
 
@@ -150,6 +160,19 @@ public class Cliente {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void establishConnection(int followerId, int followingId){
+        Message messageOut = new Message();
+        messageOut.setContext("/connectUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("followerId", followerId);
+        session.put("followingId", followingId);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+
+        System.out.println("Connection established from Cliente estabishConnection() method.");
     }
 
     public void registerUser(String username, String name, String email, String password) {

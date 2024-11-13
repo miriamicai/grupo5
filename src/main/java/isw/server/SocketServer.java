@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import isw.configuration.PropertiesISW;
+import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -47,6 +48,7 @@ public class SocketServer extends Thread{
 
             HashMap<String,Object> session = mensajeIn.getSession(); //se devuelve la sesión
             CustomerControler customerControler; //CustomerControler que utilizaremos para interactuar con la bd
+            ConexionesControler conexionesControler;
 
             switch (mensajeIn.getContext()) { //dependiendo del tipo de petición, tendrá un contexto
                 case "/getCustomers"://contexto 1. me recupera todos los clientes
@@ -90,6 +92,21 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
                     break;
+
+                //NUEVO CASO PARA CONECTAR A USUARIOS
+                case "/connectUser":
+                    conexionesControler = new ConexionesControler();
+                    int followerId = (int) session.get("followerId");
+                    int followingId = (int) session.get("followingId");
+                    conexionesControler.addConexion(followerId, followingId);
+
+                    mensajeOut.setContext("/connectUserResponse");
+                    session.put("message", "Connection successfully established");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
 
                 default:
                     System.out.println("\nParámetro no encontrado");

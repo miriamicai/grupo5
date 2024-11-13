@@ -30,9 +30,14 @@ public class ConexionesControler {
         return (ConexionesDAO.getSeguidoresCliente(id));
     }
 
-    public void addConexion(String usuario, String nombre, String email, String password) throws SQLException {
+    /*public void addConexion(String usuario, String nombre, String email, String password) throws SQLException {
         CustomerDAO dao = new CustomerDAO();
         dao.addUser(usuario, nombre, email, password);
+    }*/
+
+    public void addConexion(int followerId, int followingId) throws SQLException {
+        ConexionesDAO conexionesDAO = new ConexionesDAO();
+        conexionesDAO.addConexion(followerId, followingId);
     }
 
 

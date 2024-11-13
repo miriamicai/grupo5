@@ -13,6 +13,7 @@ import isw.dao.MusicBrainzService;
 import isw.dao.SpotifyAuth;
 import isw.domain.Customer;
 import isw.domain.AutentifCustomer;
+import isw.enums.SearchTypes;
 import isw.releases.Album;
 import isw.server.OAuthCallbackServer;
 
@@ -207,7 +208,7 @@ public class JVentana extends JFrame {
         if (albums.isEmpty()) {
             JOptionPane.showMessageDialog(null, "No results found.", "Search Results", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            SearchResults resultsWindow = new SearchResults(albums);
+            SearchResults resultsWindow = new SearchResults(albums, SearchTypes.ALBUM);
             resultsWindow.setVisible(true);
         }
     }
