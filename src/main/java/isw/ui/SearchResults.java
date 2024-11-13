@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.List;
 
 public class SearchResults extends JFrame {
+
     private JPanel searchResultsPanel;
     private JPanel releasePanel;
     private JLabel searchResultsLabel;
