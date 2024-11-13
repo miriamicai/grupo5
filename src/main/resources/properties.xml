@@ -16,7 +16,7 @@
         Este archivo le permite a la aplicación cliente saber cómo conectarse a una base de datos y a qué servidor (host y puerto) enviar solicitudes o peticiones.
     </comment>
 
-    <entry key="ddbb.connection">jdbc:postgresql://localhost:5432/postgres</entry>
+    <entry key="ddbb.connection">jdbc:postgresql://localhost:5432/isw</entry>
     <entry key="ddbb.user">postgres</entry>
     <entry key="ddbb.password">postgres</entry>
     <entry key="host">127.0.0.1</entry>
