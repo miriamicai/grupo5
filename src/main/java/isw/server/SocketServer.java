@@ -10,7 +10,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import isw.configuration.PropertiesISW;
 import isw.controler.CustomerControler;
 import isw.domain.Customer;
