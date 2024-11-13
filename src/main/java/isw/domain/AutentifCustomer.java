@@ -15,16 +15,6 @@ public class AutentifCustomer {
         this.customerControler = new CustomerControler();
     }
 
-    /*public AutentifCustomer(String usuario, String password){
-        this.usuario = usuario;
-        this.password = password;
-    }
-
-    public AutentifCustomer() {
-        this.usuario = "";
-        this.password = "";
-    }*/
-
     public boolean VerificarLogin(String usuario, String password) {
 
         ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
