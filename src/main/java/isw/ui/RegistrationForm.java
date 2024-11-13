@@ -1,3 +1,4 @@
+
 package isw.ui;
 
 import javax.swing.*;
@@ -53,7 +54,7 @@ public class RegistrationForm implements ActionListener {
         soulLabel.setFont(newFont);
 
         // Load the logo image
-        ImageIcon logoIcon = new ImageIcon("src/main/resources/soulmatelogosinfondo.png");
+        ImageIcon logoIcon = new ImageIcon("/Users/salomerivas/Desktop/COMILLAS/ING DE SOFTWARE/Java Login/soulmatelogosinfondo.png");  // Replace with actual path to your logo
         logoLabel.setIcon(logoIcon);  // Set the icon for the logo
 
         // Set bounds for each component
