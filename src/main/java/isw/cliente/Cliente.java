@@ -70,6 +70,17 @@ public class Cliente {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
+            case "/addUserResponse":
+                String message = (String) mensajeVuelta.getSession().get("message");
+                if (message != null) {
+                    System.out.println("Server response: " + message);
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /addUserResponse");
+                }
+                break;
+
             default:
 
                 System.out.println("\nError a la vuelta");
@@ -142,6 +153,24 @@ public class Cliente {
             e.printStackTrace();
         }
     }
+
+    /*public static void main(String[] args) {
+        Cliente cliente = new Cliente();
+
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", "El_Jolan_7");
+        session.put("nombre", "Marco Holland");
+        session.put("email", "hollandmarco@gmail.com");
+        session.put("contraseña", "hashed_password");
+        messageOut.setSession(session);
+
+        cliente.sent(messageOut, new Message());
+
+        System.out.println("User added to database from Cliente main method.");
+    }**/
 }
 
 

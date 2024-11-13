@@ -1,14 +1,12 @@
+package isw.ui;
+
+import isw.domain.AutentifCustomer;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.net.URL;
 
-public class LoginFrame extends JFrame implements ActionListener {
+public class LoginFrame extends JFrame {
 
     Container container = getContentPane();
     JLabel logLabel = new JLabel("Log in to");
@@ -23,41 +21,61 @@ public class LoginFrame extends JFrame implements ActionListener {
 
     JLabel logoLabel = new JLabel();
 
-    LoginFrame() {
+    public LoginFrame() {
+        this.setTitle("Login Form");
+        this.setVisible(true);
+        this.setBounds(10, 10, 500, 650);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
+
+
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
-        addActionEvent();
+        //addActionEvent();
 
-        container.setBackground(new Color(32, 32, 32)); // Set your desired background color here
+        container.setBackground(new Color(32, 32, 32));
 
-        // Setting text and button colors
+        //texto y botones
         userLabel.setForeground(Color.WHITE);
         passwordLabel.setForeground(Color.WHITE);
         noaccountLabel.setForeground(Color.WHITE);
         logLabel.setForeground(Color.WHITE);
 
-        loginButton.setOpaque(true);  // Make the button opaque
-        loginButton.setContentAreaFilled(true);  // Allow the content area to be filled
-        loginButton.setBorderPainted(false);  // Optional: Remove the border for a cleaner look
-        loginButton.setBackground(Color.PINK);  // Set background color
-        loginButton.setForeground(Color.WHITE);  // Set text color
+        loginButton.setOpaque(true);
+        loginButton.setContentAreaFilled(true);
+        loginButton.setBorderPainted(false);
+        loginButton.setBackground(Color.PINK);
+        loginButton.setForeground(Color.WHITE);
 
-        forgotButton.setForeground(new Color(32, 32, 32));  // White text for the forgot button
+        forgotButton.setForeground(new Color(32, 32, 32));
         signupButton.setForeground(new Color(32, 32, 32));
 
-        // Load logo from GitHub URL
+        //cargar el logo desde la url de GitHub
         try {
-            // Load logo from GitHub URL
             URL imageUrl = new URL("https://raw.githubusercontent.com/miriamicai/grupo5/main/Fotos/soulmatelogosinfondo.png");
             ImageIcon logo = new ImageIcon(imageUrl);
             logoLabel.setIcon(logo);
-            logoLabel.setBounds(120, 65, 300, 240);  // Set the position and size of the logo
+            logoLabel.setBounds(120, 65, 300, 240);  //posición y tamaño del logo
             container.add(logoLabel);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error loading logo image.");
+            JOptionPane.showMessageDialog(this, "Error cargando la imagen del logo.");
             e.printStackTrace();
         }
+
+        // Lógica para iniciar sesión
+        loginButton.addActionListener(e -> {
+            String usuario = userTextField.getText();
+            String password = new String(passwordField.getPassword());
+            //lógica en domain.AutetifCustomer
+            AutentifCustomer verif = new AutentifCustomer();
+            boolean exito = verif.VerificarLogin(usuario, password);
+            if (exito){
+                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
+            }else{
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
+            }
+        });
     }
 
     public void setLayoutManager() {
@@ -93,25 +111,17 @@ public class LoginFrame extends JFrame implements ActionListener {
         container.add(signupButton);
     }
 
+    /*
     public void addActionEvent() {
         loginButton.addActionListener(this);
         forgotButton.addActionListener(this);
         signupButton.addActionListener(this);
-    }
+    }*/
 
-    // Database connection method
-    public Connection getConnection() {
-        Connection connection = null;
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/userlogindb", "root", "root");  // Replace with your database details
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error connecting to the database.");
-            e.printStackTrace();
-        }
-        return connection;
-    }
 
-    // Overriding actionPerformed() method
+
+
+    /* Overriding actionPerformed() method
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
@@ -121,27 +131,6 @@ public class LoginFrame extends JFrame implements ActionListener {
 
             if (username.isEmpty() || password.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Please enter all fields.");
-                return;
-            }
-
-            // Database validation
-            try (Connection connection = getConnection()) {
-                if (connection != null) {
-                    String query = "SELECT * FROM userlogintable WHERE USERNAME=? AND PASSWORD=?";
-                    PreparedStatement preparedStatement = connection.prepareStatement(query);
-                    preparedStatement.setString(1, username);
-                    preparedStatement.setString(2, password);
-                    ResultSet resultSet = preparedStatement.executeQuery();
-
-                    if (resultSet.next()) {
-                        JOptionPane.showMessageDialog(this, "Login Successful");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Invalid Username or Password");
-                    }
-                }
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error occurred during login.");
-                ex.printStackTrace();
             }
         } else if (e.getSource() == forgotButton) {
             // Forgot password logic
@@ -155,14 +144,14 @@ public class LoginFrame extends JFrame implements ActionListener {
             // Open registration form (assuming it's another class)
             new RegistrationForm();  // Replace with actual form class
         }
-    }
+    }*/
 
     public static void main(String[] args) {
         LoginFrame frame = new LoginFrame();
-        frame.setTitle("Login Form");
+        /*frame.setTitle("Login Form");
         frame.setVisible(true);
         frame.setBounds(10, 10, 500, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
+        frame.setResizable(false);*/
     }
 }
