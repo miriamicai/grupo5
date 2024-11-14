@@ -20,7 +20,7 @@ public class JVentanaLogged extends JVentana{
 
         btnMiPerfil.addActionListener(e -> {
             //System.out.println("Detecta el botón");
-            HashMap<String, Object> response = cliente.sentMessage("/getCustomer", session);
+            HashMap<String, Object> response = cliente.sentMessage("/getCustomerResponse", session); //FALLO EN ESTA LÍNEA
             System.out.println("Conexión en cliente");
 
             //se tiene la respuesta con el cliente

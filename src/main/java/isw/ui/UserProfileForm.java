@@ -175,9 +175,6 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
 
 
-
-
-
         // Public Playlists Panel
         JPanel playlistsPanel = new JPanel();
         playlistsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));

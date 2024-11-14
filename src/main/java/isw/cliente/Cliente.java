@@ -63,7 +63,7 @@ public class Cliente {
                 break;
             case "/getCustomerResponse": //1 Customer solo
                 session=mensajeVuelta.getSession();
-                Customer customer =(Customer) (session.get("Customer"));
+                Customer customer = (Customer) (session.get("Customer"));
                 if (customer!=null) {
                     System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getNombreUsuario());
                 }else {
