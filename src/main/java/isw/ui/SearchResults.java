@@ -91,7 +91,6 @@ public class SearchResults extends JFrame {
     }
 
     public static void main(String[] args) {
-        //CustomerDAO cdao = new CustomerDAO();
         ArrayList<Customer> allUsers = new ArrayList<>();
         CustomerDAO.getClientes(allUsers);
         SearchResults allCustomerWindow = new SearchResults(allUsers, SearchTypes.CUSTOMER);
