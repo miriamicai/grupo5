@@ -198,6 +198,6 @@ public class Cliente {
 
     public static void main(String[] args) {
         Cliente c = new Cliente();
-        c.establishConnection(5, 7);
+        c.establishConnection(25, 2);
     }
 }
