@@ -152,7 +152,7 @@ public class RegistrationForm implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         new RegistrationForm();
-    }
+    }*/
 }

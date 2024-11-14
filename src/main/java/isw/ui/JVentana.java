@@ -4,15 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
 
-import isw.cliente.Cliente;
 import isw.dao.LastFmService;
 import isw.dao.SpotifyAuth;
-import isw.domain.Customer;
-import isw.domain.AutentifCustomer;
 import isw.enums.SearchTypes;
 import isw.releases.Album;
 

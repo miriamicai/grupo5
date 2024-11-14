@@ -50,7 +50,7 @@ public class AutentifCustomer {
         return 0;
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
       System.out.println("But if I run it through here the id is: " + UserSession.getInstance().getUserId());
-    }
+    }*/
 }

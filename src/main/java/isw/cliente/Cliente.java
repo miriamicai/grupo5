@@ -231,8 +231,8 @@ public class Cliente {
         System.out.println("User added to database from Cliente registerUser() method.");
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         Cliente c = new Cliente();
         c.establishConnection(25, 2);
-    }
+    }*/
 }

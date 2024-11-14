@@ -2,7 +2,6 @@ package isw.message;
 
 import java.io.Serializable;
 import java.util.HashMap;
-//import java.util.Map;
 
 public class Message implements Serializable {
 
