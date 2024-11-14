@@ -3,7 +3,6 @@ package isw;
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,21 +17,19 @@ public class CustomerDAOTest {
     private CustomerDAO customerDAO;  // Simulación de CustomerDAO
 
     @InjectMocks
-    private CustomerDAOTest customerDAOTest; // Inyectar mocks en esta clase
+    private CustomerDAO customerDAOTest; // Inyectar mocks en CustomerDAO (no en CustomerDAOTest)
 
 
     @BeforeEach
     public void setUp() {
         // Inicializar los mocks
         MockitoAnnotations.openMocks(this);
-        // Inicializar manualmente el customerDAO
-        customerDAO = mock(CustomerDAO.class);
     }
 
     @Test
     public void testGetCustomerById() {
-        // Crear un objeto de cliente simulado
-        Customer expectedCustomer = new Customer("123", "Atilano");
+        // Crear un objeto de cliente simulado con un id de tipo int
+        Customer expectedCustomer = new Customer(123, "usuarioAtilano", "atilanocorreo@dominio.com", "password123", "Atilano", "Apellido1", "Apellido2");
 
         // Simular el comportamiento del método getCliente
         when(customerDAO.getCliente(123)).thenReturn(expectedCustomer);
@@ -40,12 +37,14 @@ public class CustomerDAOTest {
         // Llamar al método
         Customer actualCustomer = customerDAO.getCliente(123);
 
-        // Verificar que el resultado es correcto
+        // Verificar que el resultado no es nulo
         assertNotNull(actualCustomer);
-        assertEquals("123", actualCustomer.getId());
-        assertEquals("Atilano", actualCustomer.getName());
+        // Verificar que el id del cliente es 123 (de tipo int)
+        assertEquals(123, actualCustomer.getId());
+        // Verificar que el nombre del cliente es "Atilano"
+        assertEquals("Atilano", actualCustomer.getNombre());
 
-        // Verificar que el método getCliente fue llamado
+        // Verificar que el método getCliente fue llamado una vez con el id 123
         verify(customerDAO, times(1)).getCliente(123);
     }
 }
