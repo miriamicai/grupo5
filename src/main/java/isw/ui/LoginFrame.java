@@ -74,12 +74,12 @@ public class LoginFrame extends JFrame {
             String password = new String(passwordField.getPassword());
             //lógica en domain.AutetifCustomer
             AutentifCustomer verif = new AutentifCustomer();
-            boolean id_logged = verif.VerificarLogin(usuario, password);
-            if (id_logged){
+            int id_logged = verif.VerificarLogin(usuario, password);
+            if (id_logged!=0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 session.put("id_logged", id_logged);
                 //System.out.println("Bien en LoginFrame");
-                //new JVentanaLogged(session, cliente);
+                new JVentanaLogged(id_logged, session,cliente);
             }else{
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }

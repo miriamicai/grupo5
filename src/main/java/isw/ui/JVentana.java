@@ -17,11 +17,12 @@ import isw.enums.SearchTypes;
 import isw.releases.Album;
 
 public class JVentana extends JFrame {
-    private JButton btnIniciarSesion;
-    private JButton btnRegistro;
-    private JButton btnSpotify;
-    private JButton btnDatosSpotify;
-    private JButton btnSalir;
+    protected JButton btnIniciarSesion;
+    protected JButton btnRegistro;
+    protected JButton btnSpotify;
+    protected JButton btnDatosSpotify;
+    protected JButton btnSalir;
+    protected JPanel topPanel;
 
     public JVentana() {
         LastFmService musicBrainzService = new LastFmService();
@@ -67,7 +68,7 @@ public class JVentana extends JFrame {
         add(panelCenDer, BorderLayout.CENTER);
 
         // Panel superior
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.setBackground(Color.BLACK);
 
         JTextField searchField = new JTextField(20);
@@ -124,6 +125,10 @@ public class JVentana extends JFrame {
         addHoverEffect(btnMasEscuchado);
     }
 
+    protected JPanel getTopPanel() {
+        return topPanel;
+    }
+
     public void showAccountInfoButton() {
         JPanel topPanel = (JPanel) btnSpotify.getParent();
         topPanel.remove(btnSpotify); // Remove the Spotify link button
@@ -142,7 +147,7 @@ public class JVentana extends JFrame {
     }
 
     // Resto de los métodos para crear botones
-    private JButton createStyledButton(String text) {
+    protected JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
         button.setBackground(new Color(64, 64, 64));
@@ -214,7 +219,7 @@ public class JVentana extends JFrame {
     }
 }
 
-class LoginWindow extends JFrame {
+/*class LoginWindow extends JFrame {
     public LoginWindow(JFrame parent) {
         // Configurar la ventana de login
         setTitle("Iniciar Sesión");
@@ -320,7 +325,6 @@ class LoginWindow extends JFrame {
         });
 
 
-
         // Lógica para recibir información con el ID del cliente
         btnRecibirInfo.addActionListener(e -> {
             int id = Integer.parseInt(txtId.getText());
@@ -347,4 +351,4 @@ class LoginWindow extends JFrame {
         return nombre;
     }
 
-}
+}*/
