@@ -20,9 +20,10 @@ public class Cliente {
     private int port;
 
     public Cliente(String host, int port) { //constructor de Cliente: caracterísiticas petición host y puerto
-        this.host=host;
-        this.port=port;
+        this.host = host;
+        this.port = port;
     }
+
     public Cliente() { //constructor vacío de Cliente: host y puerto sacado de PropertiesISW.java
         this.host = PropertiesISW.getInstance().getProperty("host");
         this.port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
@@ -30,43 +31,43 @@ public class Cliente {
             throw new IllegalArgumentException("Host o puerto no válidos.");
         }
     }
+
     public HashMap<String, Object> sentMessage(String Context, HashMap<String, Object> session) {
         //función que devuelve un HashMap<String, Object> que recibe un String y un HashMap
-
 
 
         //Configure connections -> ya hecho en el constructor vacío
         //String host = PropertiesISW.getInstance().getProperty("host");
         //int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
-        System.out.println("Host: "+host+" port"+port);
+        System.out.println("Host: " + host + " port" + port);
         //Create a cliente class
         //Client cliente=new Client(host, port);
 
-        HashMap<String,Object> sessionActual = new HashMap<String, Object>();
-        sessionActual.put("/getCustomer",""); //clase CustomerControler -> se saca de la base de datos
+        //HashMap<String,Object> sessionActual = new HashMap<String, Object>();
+        //sessionActual.put("/getCustomer",""); //clase CustomerControler -> se saca de la base de datos
 
-        Message mensajeEnvio=new Message();
-        Message mensajeVuelta=new Message();
+        Message mensajeEnvio = new Message();
+        Message mensajeVuelta = new Message();
         mensajeEnvio.setContext(Context);///getCustomer"
-        mensajeEnvio.setSession(sessionActual);
-        this.sent(mensajeEnvio,mensajeVuelta);
+        mensajeEnvio.setSession(session);
+        this.sent(mensajeEnvio, mensajeVuelta);
 
 
         switch (mensajeVuelta.getContext()) { //Devolver los Customers dependiendo del mensaje que devuelva el servidor (mensajeVuelta)
 
             case "/getCustomersResponse": //CustomerS (varios)
-                ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
+                ArrayList<Customer> customerList = (ArrayList<Customer>) (mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
-                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getNombreUsuario());
+                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getNombreUsuario());
                 }
                 break;
             case "/getCustomerResponse": //1 Customer solo
-                session=mensajeVuelta.getSession();
+                session = mensajeVuelta.getSession();
                 Customer customer = (Customer) (session.get("Customer"));
-                if (customer!=null) {
+                if (customer != null) {
                     System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getNombreUsuario());
-                }else {
+                } else {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
@@ -106,6 +107,17 @@ public class Cliente {
                 }
                 break;
 
+            case "/connectUserResponse":
+                String mensaje = (String) mensajeVuelta.getSession().get("message");
+                if (mensaje != null) {
+                    System.out.println("Server response: " + mensaje);
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /addUserResponse");
+                }
+                break;
+
             default:
 
                 System.out.println("\nError a la vuelta");
@@ -115,7 +127,6 @@ public class Cliente {
         //System.out.println("3.- En Main.- El valor devuelto es: "+((String)mensajeVuelta.getSession().get("Nombre")));
         return session;
     }
-
 
 
     public void sent(Message messageOut, Message messageIn) {
@@ -189,6 +200,7 @@ public class Cliente {
             e.printStackTrace();
         }
     }
+}
 
     /*public static void main(String[] args) {
         Cliente cliente = new Cliente();
@@ -222,7 +234,47 @@ public class Cliente {
         cliente.sentMessage("/getSeguidos", session);
     }*/
 
-}
 
 
 
+
+
+
+
+
+
+
+
+
+
+//MARCO ÚLTIMO AÑADIDO
+/*public void establishConnection(int followerId, int followingId){
+        Message messageOut = new Message();
+        messageOut.setContext("/connectUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("followerId", followerId);
+        session.put("followingId", followingId);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+
+        System.out.println("Connection established from Cliente estabishConnection() method.");
+    }
+
+    public void registerUser(String username, String name, String email, String password) {
+        //Cliente cliente = new Cliente();
+
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", username);
+        session.put("nombre", name);
+        session.put("email", email);
+        session.put("contraseña", password);
+        messageOut.setSession(session);
+
+        sent(messageOut, new Message());
+
+        System.out.println("User added to database from Cliente registerUser() method.");
+    }*/

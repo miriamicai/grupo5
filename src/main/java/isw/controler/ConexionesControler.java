@@ -1,7 +1,6 @@
 package isw.controler;
 
 import isw.dao.ConexionesDAO;
-import isw.dao.CustomerDAO;
 import isw.domain.Customer;
 
 
@@ -48,9 +47,14 @@ public class ConexionesControler {
         return seguidos;
     }
 
-    public void addConexion(int id, int id_seguir) throws SQLException {
-        ConexionesDAO.addConexion(id, id_seguir);
+    public void addConexion(int followerId, int followingId) throws SQLException {
+        //ahora estático
+        ConexionesDAO.addConexion(followerId, followingId);
     }
+
+    /*public void addConexion(int id, int id_seguir) throws SQLException {
+        ConexionesDAO.addConexion(id, id_seguir);
+    }*/
 
 
 

@@ -73,7 +73,7 @@ public class LoginFrame extends JFrame {
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
             //lógica en domain.AutetifCustomer
-            AutentifCustomer verif = new AutentifCustomer();
+            AutentifCustomer verif = new AutentifCustomer(cliente);
             int id_logged = verif.VerificarLogin(usuario, password);
             if (id_logged!=0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");

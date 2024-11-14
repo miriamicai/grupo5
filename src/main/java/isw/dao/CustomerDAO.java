@@ -22,6 +22,9 @@ public class CustomerDAO {
                         rs.getString(7)));
             }
 
+            //PARA ACOMODAR TABLA MARCO
+            //lista.add(new Customer(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
+
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -47,15 +50,16 @@ public class CustomerDAO {
     }
 
 
-    public void addUser(String usuario, String nombre, String email, String password) throws SQLException { //CAMBIAR A ESTATICo
+    // Método para añadir usuarios a la tabla (revisado para evitar duplicados)
+    public void addUser(String usuario, String correo, String password, String nombre) throws SQLException {
         Connection conexion = ConnectionDAO.getInstance().getConnection();
-        String query = "INSERT INTO users (usuario, nombre, email, password) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO users (nombre_usuario, correo, password, nombre) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pst = conexion.prepareStatement(query)) {
             pst.setString(1, usuario);
-            pst.setString(2, nombre);
-            pst.setString(3, email);
-            pst.setString(4, password);
+            pst.setString(2, correo);
+            pst.setString(3, password);
+            pst.setString(4, nombre);
 
             int rowsAffected = pst.executeUpdate();
 

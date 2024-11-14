@@ -1,36 +1,40 @@
 package isw.domain;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import isw.controler.CustomerControler;
+import isw.cliente.Cliente;
+import isw.message.Message;
 
-//Añadir autentificación también con correo y contraseña
 public class AutentifCustomer {
 
-    //private String usuario;
-    //private String password;
-    private CustomerControler customerControler;
+    private Cliente cliente;
 
-    public AutentifCustomer(){
-        this.customerControler = new CustomerControler();
+    public AutentifCustomer(Cliente cliente){
+        this.cliente = cliente;
     }
 
     public int VerificarLogin(String usuario, String password) {
 
-        ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
-        this.customerControler.getCustomers(lista);
+        //crear un mensaje con los datos de autenticación
+        Message mensajeAServior = new Message();
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", usuario);
+        session.put("password", password);
+        mensajeAServior.setContext("/login");
+        mensajeAServior.setSession(session);
 
-        Customer esUsuario = new Customer(usuario, password);
+        //enviar y recibir mensajes del Servidor:
+        Message mensajeDelServior = new Message();
+        cliente.sent(mensajeAServior, mensajeDelServior);
 
-        for (Customer customer : lista) {
-
-            //customer.getInfoPruebas();
-
-            if (esUsuario.equals(customer)) {
-                return customer.getId(); //devuelve el id si coincide con lo introducido por el usuario
+        //analizar respuesta del Servidor
+        if (mensajeDelServior.getContext().equals("/loginResponse")) {
+            if (mensajeDelServior.getSession().containsKey("id_logged")) {
+                return (int) mensajeDelServior.getSession().get("id_logged");
             }
         }
         return 0;
+
     }
 
 }

@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,27 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
+                case "/login":
+                    String usuario = (String) session.get("usuario");
+                    String password = (String) session.get("password");
+                    customerControler = new CustomerControler();
+
+                    //lógica de autenticación -> devuelve id del usuario logged
+                    int id_logged = customerControler.autentifLogin(usuario, password); //implementado en CustomerControler
+
+                    //creo lel mensaje de respuesta (out)
+                    mensajeOut.setContext("/loginResponse");
+                    if (id_logged != 0) {
+                        session.put("id_logged", id_logged);
+                    } else {
+                        session.put("error", "Usuario o contraseña incorrectos");
+                    }
+                    mensajeOut.setSession(session);
+                    //enviar respuesta al cliente
+                    objectOutputStream.writeObject(mensajeOut);
+                    break;
+
+
                 case "/getSeguidores":
                     id = (int) session.get("id_logged");
                     List<Customer> seguidores = conexionesControler.getMisSeguidores(id);
@@ -97,6 +119,35 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
+                case "/addUser": //recuperar información de getCustomer?
+                    customerControler = new CustomerControler();
+                    String nombre_usuario = (String) session.get("nombre_usuario");
+                    String nombre = (String) session.get("nombre");
+                    String email = (String) session.get("correo");
+                    String psswrd = (String) session.get("password");
+                    customerControler.addUser(nombre_usuario, email, psswrd, nombre);
+
+                    mensajeOut.setContext("/addUserResponse");
+                    session.put("message", "User added successfully.");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
+                //NUEVO CASO PARA CONECTAR A USUARIOS
+                case "/connectUser":
+                    conexionesControler = new ConexionesControler();
+                    int followerId = (int) session.get("followerId");
+                    int followingId = (int) session.get("followingId");
+                    conexionesControler.addConexion(followerId, followingId);
+
+                    mensajeOut.setContext("/connectUserResponse");
+                    session.put("message", "Connection successfully established");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;
@@ -108,6 +159,8 @@ public class SocketServer extends Thread{
         } catch (ClassNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } finally { //cerrar todos los flujos y socket al completar la conexión
             try {
                 in.close();

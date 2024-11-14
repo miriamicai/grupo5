@@ -20,18 +20,34 @@ public class CustomerControler {
         return(CustomerDAO.getCliente(id));
     }
 
-    public void addUser(String usuario, String nombre, String email, String password) throws SQLException {
-        CustomerDAO dao = new CustomerDAO();
+    public int autentifLogin(String usuario, String password) {
+        ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
+        this.getCustomers(lista);
+
+        Customer esUsuario = new Customer(usuario, password);
+
+        for (Customer customer : lista) {
+
+            //customer.getInfoPruebas();
+
+            if (esUsuario.equals(customer)) {
+                return customer.getId(); //devuelve el id si coincide con lo introducido por el usuario
+            }
+        }
+        return 0;
+    }
+
+    public void addUser(String usuario, String nombre, String email, String password) throws SQLException, SQLException, SQLException {
         dao.addUser(usuario, nombre, email, password);
     }
 
 
 
-
+    /*
     public String getUserName(int id_logged){
         Customer customer = getCliente(id_logged);
         return customer.getNombreUsuario();
-    }
+    }*/
 
 
 
