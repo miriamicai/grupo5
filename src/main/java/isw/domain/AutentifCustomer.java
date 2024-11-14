@@ -9,7 +9,7 @@ public class AutentifCustomer {
 
     //private String usuario;
     //private String password;
-    private CustomerControler customerControler;
+    public CustomerControler customerControler;
 
     public AutentifCustomer(){
         this.customerControler = new CustomerControler();
