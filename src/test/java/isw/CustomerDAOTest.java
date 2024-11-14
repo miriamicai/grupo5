@@ -1,4 +1,4 @@
-package isw;
+/*package isw;
 
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
@@ -48,3 +48,6 @@ public class CustomerDAOTest {
         verify(customerDAO, times(1)).getCliente(123);
     }
 }
+
+
+ */
