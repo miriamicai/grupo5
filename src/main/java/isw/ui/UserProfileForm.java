@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-//ASOCIAR ESTA CLASE A BOTÓN DEL JVENTANALOGGED
 public class UserProfileForm extends JFrame implements ActionListener {
 
     // Assuming user data is passed as parameters or fetched from a database or API
@@ -38,7 +37,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
         setTitle("User Profile");
         setSize(800, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(18, 18, 18));
 
@@ -46,7 +45,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
         JPanel profilePanel = new JPanel(new BorderLayout());
         profilePanel.setBackground(new Color(18, 18, 18));
 
-        // Profile header with "Profile" text above the user name
+        // Profile header with "Profile" text above the username
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
         headerPanel.setBackground(new Color(18, 18, 18));
@@ -133,20 +132,50 @@ public class UserProfileForm extends JFrame implements ActionListener {
         }*/
 
 
-        //mostrar listas de followers y
-        /*
-        for (String follower : nombresSeguidores) {
-            //LLAMAR A FUNCIÓN PARA QUE ME DÉ LOS NOMBRES DE USUARIO
-            JLabel trackLabel = new JLabel(follower);
-            trackLabel.setForeground(Color.WHITE);
-            tracksPanel.add(trackLabel);
+        //mostrar listas de seguidores y seguidos
+        // Mostrar seguidores
+        JPanel seguidoresPanel = new JPanel();
+        seguidoresPanel.setLayout(new BoxLayout(seguidoresPanel, BoxLayout.Y_AXIS));
+        seguidoresPanel.setBackground(new Color(18, 18, 18));
+
+        JLabel seguidoresLabel = new JLabel("Followers");
+        seguidoresLabel.setForeground(Color.LIGHT_GRAY);
+        seguidoresPanel.add(seguidoresLabel);
+
+        for (String seguidor : nombresSeguidores) {
+            JLabel seguidorLabel = new JLabel(seguidor);
+            seguidorLabel.setForeground(Color.WHITE);
+            seguidoresPanel.add(seguidorLabel);
         }
 
-        for (String following : nombresSeguidos) {
-            JLabel trackLabel = new JLabel(following);
-            trackLabel.setForeground(Color.WHITE);
-            tracksPanel.add(trackLabel);
-        }*/
+        // Mostrar seguidos
+        JPanel seguidosPanel = new JPanel();
+        seguidosPanel.setLayout(new BoxLayout(seguidosPanel, BoxLayout.Y_AXIS));
+        seguidosPanel.setBackground(new Color(18, 18, 18));
+
+        JLabel seguidosLabel = new JLabel("Following");
+        seguidosLabel.setForeground(Color.LIGHT_GRAY);
+        seguidosPanel.add(seguidosLabel);
+
+        for (String seguido : nombresSeguidos) {
+            JLabel seguidoLabel = new JLabel(seguido);
+            seguidoLabel.setForeground(Color.WHITE);
+            seguidosPanel.add(seguidoLabel);
+        }
+
+        // Agregar estos paneles a tu interfaz principal
+        topTracksLabel.add(seguidoresPanel);
+        topTracksLabel.add(Box.createVerticalStrut(20));
+        topTracksLabel.add(seguidosPanel);
+
+
+
+
+
+
+
+
+
 
 
         // Public Playlists Panel
@@ -211,31 +240,38 @@ public class UserProfileForm extends JFrame implements ActionListener {
     }
 
 
-    private String cargarDatosDelCliente(HashMap<String, Object> session, Cliente cliente) {
-        this.cliente = cliente; //uso cliente para hacer las peticiones
-        HashMap<String, Object> response = cliente.sentMessage("/getUserProfile", session);
-        nombreUsuario = null;
 
-        if (response != null) {
-            Customer customer = (Customer) response.get("Customer");
-            if (customer != null) {
-                this.nombreUsuario = customer.getNombreUsuario();
-                this.numberOfPlaylists = (int) response.getOrDefault("numberOfPlaylists", 0);
-                this.followersCount = (int) response.getOrDefault("followersCount", 0);
-                this.followingCount = (int) response.getOrDefault("followingCount", 0);
-                this.topArtists = (ArrayList<String>) response.getOrDefault("topArtists", new ArrayList<>());
-                this.topTracks = (ArrayList<String>) response.getOrDefault("topTracks", new ArrayList<>());
-                this.playlists = (ArrayList<String>) response.getOrDefault("playlists", new ArrayList<>());
-                this.nombresSeguidores = (ArrayList<String>) response.getOrDefault("nombresSeguidores", new ArrayList<>());
-                this.nombresSeguidos = (ArrayList<String>) response.getOrDefault("nombresSeguidos", new ArrayList<>());
-            } else {
-                JOptionPane.showMessageDialog(this, "No se ha recuperado el perfil del usuario.", "Error", JOptionPane.ERROR_MESSAGE);
+    private String cargarDatosDelCliente(HashMap<String, Object> session, Cliente cliente) {
+        this.cliente = cliente; // Uso cliente para hacer las peticiones
+
+        // Obtener los seguidores y seguidos
+        HashMap<String, Object> seguidoresResponse = cliente.sentMessage("/getSeguidores", session);
+        HashMap<String, Object> seguidosResponse = cliente.sentMessage("/getSeguidos", session);
+
+        // Inicializar las listas
+        this.nombresSeguidores = new ArrayList<>();
+        this.nombresSeguidos = new ArrayList<>();
+
+        // Extraer los nombres de los seguidores
+        ArrayList<Customer> seguidoresList = (ArrayList<Customer>) seguidoresResponse.get("Seguidores");
+        if (seguidoresList != null) {
+            for (Customer seguidor : seguidoresList) {
+                this.nombresSeguidores.add(seguidor.getNombreUsuario());
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Error al comunicarse con el servidor.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        return nombreUsuario;
+
+        // Extraer los nombres de los seguidos
+        ArrayList<Customer> seguidosList = (ArrayList<Customer>) seguidosResponse.get("Seguidos");
+        if (seguidosList != null) {
+            for (Customer seguido : seguidosList) {
+                this.nombresSeguidos.add(seguido.getNombreUsuario());
+            }
+        }
+
+        // Deberías tener más lógica aquí para completar el resto de la carga de datos, como el nombre de usuario.
+        return this.nombreUsuario;
     }
+
 
 
 

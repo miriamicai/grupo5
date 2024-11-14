@@ -9,10 +9,7 @@ public class JVentanaLogged extends JVentana{
 
     public JVentanaLogged(HashMap<String, Object> session, Cliente cliente) {
         super();
-
-        //obtener seguidos y seguidores a través de la clase cliente
-        cliente.sentMessage("/getSeguidores", session);
-        cliente.sentMessage("/getSeguidos", session);
+        this.setVisible(true);
 
         //creo el botón "Mi perfil"
         JButton btnMiPerfil = createStyledButton("Mi perfil");
@@ -22,7 +19,9 @@ public class JVentanaLogged extends JVentana{
 
 
         btnMiPerfil.addActionListener(e -> {
+            //System.out.println("Detecta el botón");
             HashMap<String, Object> response = cliente.sentMessage("/getCustomer", session);
+            System.out.println("Conexión en cliente");
 
             //se tiene la respuesta con el cliente
             if (response != null && response.get("Customer") != null) {

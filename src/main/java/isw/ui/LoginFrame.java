@@ -30,7 +30,7 @@ public class LoginFrame extends JFrame {
         this.setTitle("Login Form");
         this.setVisible(true);
         this.setBounds(10, 10, 500, 650);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
 
@@ -78,6 +78,7 @@ public class LoginFrame extends JFrame {
             if (id_logged!=0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 session.put("id_logged", id_logged);
+                //System.out.println("Bien en LoginFrame");
                 new JVentanaLogged(session, cliente);
             }else{
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");

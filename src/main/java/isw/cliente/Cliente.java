@@ -40,20 +40,21 @@ public class Cliente {
         //int port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
 
         System.out.println("Host: "+host+" port"+port);
-        //Create a cliente class                             -> por qué se necesita una clase Cliente??
+        //Create a cliente class
         //Client cliente=new Client(host, port);
 
-        //HashMap<String,Object> session=new HashMap<String, Object>();
-        //session.put("/getCustomer",""); //clase CustomerControler -> se saca de la base de datos
+        HashMap<String,Object> sessionActual = new HashMap<String, Object>();
+        sessionActual.put("/getCustomer",""); //clase CustomerControler -> se saca de la base de datos
 
         Message mensajeEnvio=new Message();
         Message mensajeVuelta=new Message();
         mensajeEnvio.setContext(Context);///getCustomer"
-        mensajeEnvio.setSession(session);
+        mensajeEnvio.setSession(sessionActual);
         this.sent(mensajeEnvio,mensajeVuelta);
 
 
         switch (mensajeVuelta.getContext()) { //Devolver los Customers dependiendo del mensaje que devuelva el servidor (mensajeVuelta)
+
             case "/getCustomersResponse": //CustomerS (varios)
                 ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
@@ -148,10 +149,12 @@ public class Cliente {
                 in = echoSocket.getInputStream(); //flujo de entrada desde el socket (leer datos del servidor)
                 out = echoSocket.getOutputStream(); //flujo de salida del socket (enviar datos del servidor)
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+                ObjectInputStream objectInputStream = new ObjectInputStream(in);
 
                 //Create the objetct to send
                 objectOutputStream.writeObject(messageOut);
 
+                /*
                 // create a DataInputStream so we can read data from it.
                 ObjectInputStream objectInputStream = new ObjectInputStream(in);
                 Message msg=(Message)objectInputStream.readObject();
@@ -160,6 +163,15 @@ public class Cliente {
 		        /*System.out.println("\n1.- El valor devuelto es: "+messageIn.getContext());
 		        String cadena=(String) messageIn.getSession().get("Nombre");
 		        System.out.println("\n2.- La cadena devuelta es: "+cadena);*/
+
+                // Enviar el objeto al servidor
+                objectOutputStream.writeObject(messageOut);
+                objectOutputStream.flush(); // Asegúrate de que los datos se envíen
+
+                // Leer la respuesta del servidor
+                Message msg = (Message) objectInputStream.readObject();
+                messageIn.setContext(msg.getContext());
+                messageIn.setSession(msg.getSession());
 
             } catch (UnknownHostException e) {
                 System.err.println("Unknown host: " + host);
@@ -194,7 +206,7 @@ public class Cliente {
         cliente.sent(messageOut, new Message());
 
         System.out.println("User added to database from Cliente main method.");
-    }**/
+    }*/
 
 
     /* Prueba mensajes conexiones clientes
