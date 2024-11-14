@@ -35,15 +35,15 @@ public class CustomerDAOTest {
     public void setUp() {
         // Inicializar los mocks
         MockitoAnnotations.openMocks(this);
+
+        // Simular la conexión de ConnectionDAO
+        when(connectionDAO.getConnection()).thenReturn(conexion);  // Simula que getConnection devuelve la conexión mockeada
     }
 
     @Test
     public void testGetCustomerById() throws Exception {
         // Crear un objeto de cliente simulado con un id de tipo int
         Customer expectedCustomer = new Customer(123, "usuarioAtilano", "atilanocorreo@dominio.com", "password123", "Atilano", "Apellido1", "Apellido2");
-
-        // Simular el comportamiento del ConnectionDAO
-        when(connectionDAO.getConnection()).thenReturn(conexion); // Simula que getConnection devuelve la conexión mockeada
 
         // Simular el PreparedStatement y el ResultSet
         when(conexion.prepareStatement(anyString())).thenReturn(pst);  // Simula el PreparedStatement
