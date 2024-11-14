@@ -224,8 +224,8 @@ public class Cliente {
         HashMap<String, Object> session = new HashMap<>();
         session.put("usuario", username);
         session.put("nombre", name);
-        session.put("email", email);
-        session.put("contraseña", password);
+        session.put("correo", email);
+        session.put("password", password);
         messageOut.setSession(session);
 
         sent(messageOut, new Message());

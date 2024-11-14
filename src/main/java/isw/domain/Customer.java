@@ -13,6 +13,31 @@ public class Customer implements Serializable {
     private String apellido1;
     private String apellido2;
 
+    //public HashMap() seguidores;
+    //public HashMap() seguidos;
+
+    // Estructura HashMap para la aplicación
+    //HashMap<Integer, List<Integer>> seguidores = new HashMap<>();
+    //HashMap<Integer, List<Integer>> seguidos = new HashMap<>();
+
+
+
+    /*public Customer(String nombre_usuario, String correo, String password, String nombre) {
+        this.setId(); //siempre se asigna de anera automática
+        this.setNombreUsuario(nombre_usuario);
+        this.setCorreo(correo);
+        this.setPassword(password);
+        this.setNombre(nombre);
+    }
+
+    public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1) {
+        this.setId(); //siempre se asigna de anera automática
+        this.setNombreUsuario(nombre_usuario);
+        this.setCorreo(correo);
+        this.setPassword(password);
+        this.setNombre(nombre);
+        this.setApellido1(apellido1);
+    }**/
 
     //constructor que voy a usar al recoger un customer de la base de datos
     public Customer(int id, String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
@@ -25,30 +50,30 @@ public class Customer implements Serializable {
         this.setApellido2(apellido2);
     }
 
+    //CONTRUCTOR MARCO
+    public Customer(String usuario, String nombre, String email, String contraseña, int id){
+        this.setNombreUsuario(usuario);
+        this.setNombre(nombre);
+        this.setCorreo(email);
+        this.setPassword(contraseña);
+        this.setId(id);
+    }
+
     //constructor que se usará cuando se registre un nuevo cliente, asignándole un nuevo id
-    /*public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
-        this.setIdNuevo(); //siempre se asigna de manera automática
+    public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
+        //this.setIdNuevo(); //siempre se asigna de manera automática
         this.setNombreUsuario(nombre_usuario);
         this.setCorreo(correo);
         this.setPassword(password);
         this.setNombre(nombre);
         this.setApellido1(apellido1);
         this.setApellido2(apellido2);
-    }*/
+    }
 
     public Customer(String usuario, String password) { //constructor para verificar el log in del usuario
         this.setNombreUsuario(usuario); //se podrá almacenar el correo o el nombre de usuario para este tipo de usuario
         this.setPassword(password);
     }
-
-    //CONTRUCTOR MARCO
-    /*public Customer(String usuario, String nombre, String email, String contraseña, int id){
-        this.setNombreUsuario(usuario);
-        this.setNombre(nombre);
-        this.setCorreo(email);
-        this.setPassword(contraseña);
-        this.setId(id);
-    }*/
 
 
 
@@ -117,6 +142,9 @@ public class Customer implements Serializable {
         System.out.println(this.id + " " + this.password + " " + this.correo);
     }
 
+    public void setIdNuevo(){
+        this.id = 2;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -127,8 +155,7 @@ public class Customer implements Serializable {
                     (  (Objects.equals(this.nombre_usuario, cu.getNombreUsuario())) ||
                     (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
                     )
-                    && PasswordSegura.comprobarPassword(this.password, cu.getPassword()))) { //objects añade seguridad
-
+                    && PasswordSegura.comprobarPassword())) { //objects añade seguridad
                 return true; //determino que son iguales por su nombre de usuario o por su correo
             }
         }

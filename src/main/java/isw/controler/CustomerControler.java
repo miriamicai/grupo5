@@ -41,7 +41,7 @@ public class CustomerControler {
 
     public void addUser(String usuario, String nombre, String email, String password) throws SQLException, SQLException, SQLException {
         String passwordSegura = PasswordSegura.hashPassword(password);
-        CustomerDAO.addUser(usuario, nombre, email, password);
+        CustomerDAO.addUser(usuario, nombre, email, passwordSegura); //se añade el usuario con la contraseña hashed
     }
 
 

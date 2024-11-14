@@ -1,8 +1,7 @@
-package isw.domain;
+package isw.cliente;
 
 import java.util.HashMap;
 
-import isw.cliente.Cliente;
 import isw.message.Message;
 
 public class AutentifCustomer {

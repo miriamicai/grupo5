@@ -1,7 +1,7 @@
 package isw.ui;
 
 import isw.cliente.Cliente;
-import isw.domain.AutentifCustomer;
+import isw.cliente.AutentifCustomer;
 
 import javax.swing.*;
 import java.awt.*;
