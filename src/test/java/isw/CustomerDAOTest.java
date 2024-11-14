@@ -1,8 +1,8 @@
 package isw;
-import isw.dao.ConnectionDAO;
-import isw.dao.CustomerDAO;
-import isw.domain.Customer;
 
+import isw.dao.CustomerDAO;
+import isw.dao.ConnectionDAO;
+import isw.domain.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,10 +17,7 @@ import static org.mockito.Mockito.*;
 public class CustomerDAOTest {
 
     @Mock
-    private CustomerDAO customerDAO;  // Simulación de CustomerDAO
-
-    @Mock
-    private ConnectionDAO connectionDAO; // Simulación de ConnectionDAO
+    private ConnectionDAO connectionDAO;  // Simulación de ConnectionDAO
 
     @Mock
     private Connection conexion;  // Simulación de la conexión a la base de datos
@@ -32,11 +29,12 @@ public class CustomerDAOTest {
     private ResultSet rs; // Simulación de ResultSet
 
     @InjectMocks
-    private CustomerDAO customerDAOTest; // Inyectar mocks en CustomerDAO (no en CustomerDAOTest)
+    private CustomerDAO customerDAOTest; // Inyectar mocks en CustomerDAO
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.openMocks(this); // Inicializar los mocks
+        // Inicializar los mocks
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -44,14 +42,13 @@ public class CustomerDAOTest {
         // Crear un objeto de cliente simulado con un id de tipo int
         Customer expectedCustomer = new Customer(123, "usuarioAtilano", "atilanocorreo@dominio.com", "password123", "Atilano", "Apellido1", "Apellido2");
 
-        // Simular el comportamiento del ConnectionDAO y obtener la conexión
-        when(connectionDAO.getInstance()).thenReturn(connectionDAO); // Simula el método getInstance()
-        when(connectionDAO.getConnection()).thenReturn(conexion); // Simula la conexión
+        // Simular el comportamiento del ConnectionDAO
+        when(connectionDAO.getConnection()).thenReturn(conexion); // Simula que getConnection devuelve la conexión mockeada
 
         // Simular el PreparedStatement y el ResultSet
-        when(conexion.prepareStatement(anyString())).thenReturn(pst);
-        when(pst.executeQuery()).thenReturn(rs);
-        when(rs.next()).thenReturn(true);
+        when(conexion.prepareStatement(anyString())).thenReturn(pst);  // Simula el PreparedStatement
+        when(pst.executeQuery()).thenReturn(rs);  // Simula la ejecución de la consulta
+        when(rs.next()).thenReturn(true);  // Simula que hay un resultado
         when(rs.getInt(1)).thenReturn(123);
         when(rs.getString(2)).thenReturn("usuarioAtilano");
         when(rs.getString(3)).thenReturn("atilanocorreo@dominio.com");
@@ -61,7 +58,7 @@ public class CustomerDAOTest {
         when(rs.getString(7)).thenReturn("Apellido2");
 
         // Llamar al método
-        Customer actualCustomer = customerDAO.getCliente(123);
+        Customer actualCustomer = customerDAOTest.getCliente(123);
 
         // Verificar que el resultado no es nulo
         assertNotNull(actualCustomer);
@@ -71,6 +68,6 @@ public class CustomerDAOTest {
         assertEquals("Atilano", actualCustomer.getNombre());
 
         // Verificar que el método getCliente fue llamado una vez con el id 123
-        verify(customerDAO, times(1)).getCliente(123);
+        verify(customerDAOTest, times(1)).getCliente(123);
     }
 }
