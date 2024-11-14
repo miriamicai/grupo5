@@ -27,9 +27,9 @@ public class Cliente {
     public Cliente() { //constructor vacío de Cliente: host y puerto sacado de PropertiesISW.java
         this.host = PropertiesISW.getInstance().getProperty("host");
         this.port = Integer.parseInt(PropertiesISW.getInstance().getProperty("port"));
-        if (this.host == null || this.port == 0) {
+        /*if (this.host == null || this.port == 0) {
             throw new IllegalArgumentException("Host o puerto no válidos.");
-        }
+        }*/
     }
 
     public HashMap<String, Object> sentMessage(String Context, HashMap<String, Object> session) {
@@ -84,6 +84,24 @@ public class Cliente {
                 }
                 break;
 
+            case "/loginResponse":
+                // Recuperar la sesión del mensaje de vuelta
+                session = mensajeVuelta.getSession();
+
+                // Comprobar si hay un ID de usuario autenticado en la respuesta
+                if (session.containsKey("id_logged")) {
+                    int idLogged = (int) session.get("id_logged");
+                    System.out.println("Inicio de sesión exitoso. ID de usuario autenticado: " + idLogged);
+                } else if (session.containsKey("error")) {
+                    // Mostrar mensaje de error si el servidor devolvió un error
+                    System.out.println("Error al iniciar sesión: " + session.get("error"));
+                } else {
+                    // Caso en el que la respuesta no contenga ni ID ni error explícito
+                    System.out.println("Respuesta inesperada del servidor durante el inicio de sesión.");
+                }
+                break;
+
+
             case "/getSeguidosResponse": // Seguidos
                 ArrayList<Customer> seguidos = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidos");
                 if (seguidos != null && !seguidos.isEmpty()) {
@@ -95,6 +113,7 @@ public class Cliente {
                     System.out.println("No se encontraron personas seguidas.");
                 }
                 break;
+
 
             case "/addUserResponse":
                 String message = (String) mensajeVuelta.getSession().get("message");
@@ -160,10 +179,17 @@ public class Cliente {
                 in = echoSocket.getInputStream(); //flujo de entrada desde el socket (leer datos del servidor)
                 out = echoSocket.getOutputStream(); //flujo de salida del socket (enviar datos del servidor)
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-                ObjectInputStream objectInputStream = new ObjectInputStream(in);
 
                 //Create the objetct to send
                 objectOutputStream.writeObject(messageOut);
+
+                // create a DataInputStream so we can read data from it.
+                ObjectInputStream objectInputStream = new ObjectInputStream(in);
+
+                // Leer la respuesta del servidor
+                Message msg=(Message)objectInputStream.readObject();
+                messageIn.setContext(msg.getContext());
+                messageIn.setSession(msg.getSession());
 
                 /*
                 // create a DataInputStream so we can read data from it.
@@ -175,14 +201,6 @@ public class Cliente {
 		        String cadena=(String) messageIn.getSession().get("Nombre");
 		        System.out.println("\n2.- La cadena devuelta es: "+cadena);*/
 
-                // Enviar el objeto al servidor
-                objectOutputStream.writeObject(messageOut);
-                objectOutputStream.flush(); // Asegúrate de que los datos se envíen
-
-                // Leer la respuesta del servidor
-                Message msg = (Message) objectInputStream.readObject();
-                messageIn.setContext(msg.getContext());
-                messageIn.setSession(msg.getSession());
 
             } catch (UnknownHostException e) {
                 System.err.println("Unknown host: " + host);
@@ -232,6 +250,20 @@ public class Cliente {
 
         System.out.println("User added to database from Cliente registerUser() method.");
     }
+    public static void main(String[] args) {
+        Cliente cliente = new Cliente();
+        HashMap<String, Object> session = new HashMap<>();
+        //crear un mensaje con los datos de autenticación
+
+
+        session.put("usuario", "hola");
+        session.put("password", "11111");
+
+        cliente.sentMessage("/login", session);
+
+        // Prueba de obtener seguidos
+        //cliente.sentMessage("/getSeguidos", session);
+    }
 
 }
 
@@ -254,15 +286,4 @@ public class Cliente {
     }*/
 
 
-    /* Prueba mensajes conexiones clientes
-    public static void main(String[] args) {
-        Cliente cliente = new Cliente();
-        HashMap<String, Object> session = new HashMap<>();
-
-        // Prueba de obtener seguidores
-        session.put("id_logged", 1); // ID de ejemplo
-        cliente.sentMessage("/getSeguidores", session);
-
-        // Prueba de obtener seguidos
-        cliente.sentMessage("/getSeguidos", session);
-    }*/
+    // Prueba mensajes conexiones clientes

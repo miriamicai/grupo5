@@ -2,14 +2,12 @@ package isw.controler;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
 import isw.domain.PasswordSegura;
 
 //import isw.domain.PasswordSegura;
-import static isw.dao.CustomerDAO.getCliente;
 
 public class CustomerControler {
 
@@ -23,7 +21,7 @@ public class CustomerControler {
     }
 
     public int autentifLogin(String usuario, String password) {
-        ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
+        ArrayList<Customer> lista = new ArrayList<>(); //ArrayList de Customers
         this.getCustomers(lista);
 
         Customer esUsuario = new Customer(usuario, password);
@@ -33,6 +31,7 @@ public class CustomerControler {
             //customer.getInfoPruebas();
 
             if (esUsuario.equals(customer)) {
+                System.out.println(customer.getId()); //verificar log in
                 return customer.getId(); //devuelve el id si coincide con lo introducido por el usuario
             }
         }
