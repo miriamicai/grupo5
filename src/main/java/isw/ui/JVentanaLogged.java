@@ -19,18 +19,18 @@ public class JVentanaLogged extends JVentana{
         //colocar el botón
         getTopPanel().add(btnMiPerfil);
 
-
         btnMiPerfil.addActionListener(e -> {
             //System.out.println("Detecta el botón");
-            HashMap<String, Object> response = cliente.sentMessage("/getCustomerResponse", session); //FALLO EN ESTA LÍNEA
-            System.out.println("Conexión en cliente");
+            //HashMap<String, Object> response = cliente.sentMessage("/getCustomerResponse", session); //FALLO EN ESTA LÍNEA
+            //System.out.println("Conexión en cliente");
 
             //se tiene la respuesta con el cliente
-            if (response != null && response.get("Customer") != null) {
-                new UserProfileForm(response, cliente);
+            /*if (response != null && response.get("Customer") != null) {
+                new UserProfileForm(idLogged, response, cliente);
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo recuperar la información del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            }*/
+            new UserProfileForm(idLogged);
         });
 
     }

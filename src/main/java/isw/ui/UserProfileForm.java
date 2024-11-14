@@ -28,11 +28,18 @@ public class UserProfileForm extends JFrame implements ActionListener {
     private ArrayList<String> nombresSeguidos;
     private Cliente cliente;
 
+    private int idLogged;
 
-    public UserProfileForm(HashMap<String, Object> session, Cliente cliente) {
+
+    public UserProfileForm(int idLogged) {
+
+        cliente = new Cliente();
+        //Almacena id del crack que haya iniciado sesión
+        this.idLogged = idLogged;
+        cargarDatosDelCliente(cliente);
 
         //Cargar datos desde el servidor -> seguidores, seguidos, canciones, etc.
-        nombreUsuario = cargarDatosDelCliente(session, cliente);
+        //nombreUsuario = cargarDatosDelCliente(session, cliente);
 
         setTitle("User Profile");
         setSize(800, 700);
@@ -237,31 +244,36 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
 
 
-    private String cargarDatosDelCliente(HashMap<String, Object> session, Cliente cliente) {
+    private String cargarDatosDelCliente(Cliente cliente) {
         this.cliente = cliente; // Uso cliente para hacer las peticiones
 
         // Obtener los seguidores y seguidos
-        HashMap<String, Object> seguidoresResponse = cliente.sentMessage("/getSeguidores", session);
-        HashMap<String, Object> seguidosResponse = cliente.sentMessage("/getSeguidos", session);
+        //HashMap<String, Object> seguidoresResponse = cliente.getFollowers(idLogged);
+        //HashMap<String, Object> seguidosResponse = cliente.sentMessage("/getSeguidos", session);
+        cliente.getFollowers(idLogged);
+        ArrayList<Customer> listaSeguidores = cliente.getSeguidoresList();
 
         // Inicializar las listas
         this.nombresSeguidores = new ArrayList<>();
         this.nombresSeguidos = new ArrayList<>();
 
         // Extraer los nombres de los seguidores
-        ArrayList<Customer> seguidoresList = (ArrayList<Customer>) seguidoresResponse.get("Seguidores");
+        /*ArrayList<Customer> seguidoresList = (ArrayList<Customer>) seguidoresResponse.get("Seguidores");
         if (seguidoresList != null) {
             for (Customer seguidor : seguidoresList) {
                 this.nombresSeguidores.add(seguidor.getNombreUsuario());
             }
-        }
+        }*/
 
         // Extraer los nombres de los seguidos
-        ArrayList<Customer> seguidosList = (ArrayList<Customer>) seguidosResponse.get("Seguidos");
+        /*ArrayList<Customer> seguidosList = (ArrayList<Customer>) seguidosResponse.get("Seguidos");
         if (seguidosList != null) {
             for (Customer seguido : seguidosList) {
                 this.nombresSeguidos.add(seguido.getNombreUsuario());
             }
+        }*/
+        for(Customer c : listaSeguidores){
+            this.nombresSeguidores.add(c.getNombre());
         }
 
         // Deberías tener más lógica aquí para completar el resto de la carga de datos, como el nombre de usuario.

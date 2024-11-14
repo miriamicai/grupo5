@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import isw.configuration.PropertiesISW;
 import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
@@ -105,6 +107,26 @@ public class SocketServer extends Thread{
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
+                case "/getSeguidores":
+                    conexionesControler = new ConexionesControler();
+                    id = (int) session.get("id_logged");
+                    List<Customer> seguidores = conexionesControler.getMisSeguidores(id);
+                    mensajeOut.setContext("/getSeguidoresResponse");
+                    session.put("Seguidores", seguidores);
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    break;
+
+                case "/getSeguidos":
+                    conexionesControler = new ConexionesControler();
+                    id = (int) session.get("id_logged");
+                    List<Customer> seguidos = conexionesControler.getMisSeguidos(id);
+                    mensajeOut.setContext("/getSeguidosResponse");
+                    session.put("Seguidos", seguidos);
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
                     break;
 
 

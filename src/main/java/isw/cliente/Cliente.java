@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import isw.message.Message;
 public class Cliente {
     private String host;
     private int port;
+    public ArrayList<Customer> seguidores;
 
     public Cliente(String host, int port) { //constructor de Cliente: caracterísiticas petición host y puerto
         this.host = host;
@@ -88,6 +90,29 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
+            case "/getSeguidoresResponse": // Seguidores
+                seguidores = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidores");
+                if (seguidores != null && !seguidores.isEmpty()) {
+                    System.out.println("Lista de seguidores:");
+                    for (Customer seguidor : seguidores) {
+                        System.out.println("Id: " + seguidor.getId() + ", Nombre: " + seguidor.getNombreUsuario());
+                    }
+                } else {
+                    System.out.println("No se encontraron seguidores.");
+                }
+                break;
+
+            case "/getSeguidosResponse": // Seguidos
+                ArrayList<Customer> seguidos = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidos");
+                if (seguidos != null && !seguidos.isEmpty()) {
+                    System.out.println("Lista de seguidos:");
+                    for (Customer seguido : seguidos) {
+                        System.out.println("Id: " + seguido.getId() + ", Nombre: " + seguido.getNombreUsuario());
+                    }
+                } else {
+                    System.out.println("No se encontraron personas seguidas.");
+                }
+                break;
 
             default:
 
@@ -97,6 +122,10 @@ public class Cliente {
         }
         //System.out.println("3.- En Main.- El valor devuelto es: "+((String)mensajeVuelta.getSession().get("Nombre")));
         return session;
+    }
+
+    public ArrayList<Customer> getSeguidoresList(){
+        return seguidores;
     }
 
 
@@ -175,7 +204,13 @@ public class Cliente {
     }
 
     public void getFollowers(int id){
-
+        Message messageOut = new Message();
+        messageOut.setContext("/getSeguidores");
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_logged", id);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+        System.out.println("Followers list retrieved from Cliente method.");
     }
 
     public void registerUser(String username, String name, String email, String password) {
