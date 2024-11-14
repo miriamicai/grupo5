@@ -161,6 +161,4 @@ public class Customer implements Serializable {
         }
         return false;
     }
-
-
 }

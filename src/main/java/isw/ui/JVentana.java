@@ -9,13 +9,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import isw.cliente.Cliente;
-import isw.dao.MusicBrainzService;
+import isw.dao.LastFmService;
 import isw.dao.SpotifyAuth;
 import isw.domain.Customer;
 import isw.domain.AutentifCustomer;
 import isw.enums.SearchTypes;
 import isw.releases.Album;
-import isw.server.OAuthCallbackServer;
 
 public class JVentana extends JFrame {
     private JButton btnIniciarSesion;
@@ -25,7 +24,7 @@ public class JVentana extends JFrame {
     private JButton btnSalir;
 
     public JVentana() {
-        MusicBrainzService musicBrainzService = new MusicBrainzService();
+        LastFmService musicBrainzService = new LastFmService();
 
         // Configuración de la ventana principal
         setTitle("Página Principal");
@@ -94,11 +93,7 @@ public class JVentana extends JFrame {
         //Acción del botón "Buscar"
         btnBuscar.addActionListener(e -> {
             List<Album> albums = null;
-            try {
-                albums = musicBrainzService.searchAlbum(searchField.getText());
-            } catch (UnsupportedEncodingException ex) {
-                throw new RuntimeException(ex);
-            }
+            albums = musicBrainzService.searchAlbum(searchField.getText());
             showSearchResults(albums);
         });
 

@@ -113,8 +113,36 @@ public class ConexionesDAO {
         return conexionesCliente;
     }
 
+    public static boolean checkExistingConnection(int idSeguidor, int idSeguido) throws SQLException {
+
+
+        Connection conexion = ConnectionDAO.getInstance().getConnection();
+        String query = "SELECT COUNT(*) FROM seguidores WHERE id_seguidor = ? AND id_seguido = ?";
+
+        try (PreparedStatement checkStmt = conexion.prepareStatement(query)) {
+            checkStmt.setInt(1, idSeguidor);
+            checkStmt.setInt(2, idSeguido);
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.out.println("Connection already exists between user " + idSeguidor + " and user " + idSeguido);
+                    return false;
+                }else{
+                    System.out.println("Connection doesn't exist yet, can be added.");
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while checking for existing connection: " + e.getMessage());
+            throw e;  // Rethrow the exception
+        }
+    }
 
     public static void addConexion(int idSeguidor, int idSeguido) throws SQLException { //CAMBIAR A ESTATICO
+        if (!checkExistingConnection(idSeguidor, idSeguido)) {
+            System.out.println("Connection already exists. Skipping insertion.");
+            return;  // Exit the method without adding a new connection
+        }
 
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         String query = "INSERT INTO seguidores (id_seguidor, id_seguido) VALUES (?, ?)";
@@ -126,9 +154,9 @@ public class ConexionesDAO {
             int rowsAffected = pst.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("User added successfully, amazing");
+                System.out.println("Connection added successfully, amazing");
             } else {
-                System.out.println("Failed to add user oh no");
+                System.out.println("Failed to add connection oh no");
             }
         } catch (SQLException e) {
             System.out.println("Error while adding user: " + e.getMessage());

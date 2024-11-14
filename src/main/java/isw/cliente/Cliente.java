@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
-import isw.domain.UserSession;
 import isw.message.Message;
 
 public class Cliente {
@@ -172,7 +171,11 @@ public class Cliente {
         messageOut.setSession(session);
         sent(messageOut, new Message());
 
-        System.out.println("Connection established from Cliente estabishConnection() method.");
+        System.out.println("Connection established from Cliente establishConnection() method.");
+    }
+
+    public void getFollowers(int id){
+
     }
 
     public void registerUser(String username, String name, String email, String password) {
@@ -195,6 +198,6 @@ public class Cliente {
 
     public static void main(String[] args) {
         Cliente c = new Cliente();
-        c.establishConnection(5, 9);
+        c.establishConnection(5, 7);
     }
 }
