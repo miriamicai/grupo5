@@ -6,7 +6,9 @@ import java.util.List;
 
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
+import isw.domain.PasswordSegura;
 
+//import isw.domain.PasswordSegura;
 import static isw.dao.CustomerDAO.getCliente;
 
 public class CustomerControler {
@@ -38,7 +40,8 @@ public class CustomerControler {
     }
 
     public void addUser(String usuario, String nombre, String email, String password) throws SQLException, SQLException, SQLException {
-        dao.addUser(usuario, nombre, email, password);
+        String passwordSegura = PasswordSegura.hashPassword(password);
+        CustomerDAO.addUser(usuario, nombre, email, password);
     }
 
 

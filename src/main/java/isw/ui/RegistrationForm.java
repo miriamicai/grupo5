@@ -1,5 +1,6 @@
-
 package isw.ui;
+
+import isw.cliente.Cliente;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -14,12 +15,14 @@ public class RegistrationForm implements ActionListener {
 
     String[] gender = {"Male", "Female"};
     JLabel nameLabel = new JLabel("Name");
+    JLabel usernameLabel = new JLabel("Username: ");
     JLabel genderLabel = new JLabel("Gender");
     JLabel passwordLabel = new JLabel("Password");
     JLabel confirmPasswordLabel = new JLabel("Confirm Password");
     JLabel cityLabel = new JLabel("City");
     JLabel emailLabel = new JLabel("Email");
 
+    JTextField usernameTextField = new JTextField();
     JTextField nameTextField = new JTextField();
     JComboBox genderComboBox = new JComboBox(gender);
     JPasswordField passwordField = new JPasswordField();
@@ -34,6 +37,8 @@ public class RegistrationForm implements ActionListener {
         createWindow();
         setLocationAndSize();
         addComponentsToFrame();
+        registerButton.addActionListener(this);
+        resetButton.addActionListener(this);
     }
 
     public void createWindow() {
@@ -54,13 +59,14 @@ public class RegistrationForm implements ActionListener {
         soulLabel.setFont(newFont);
 
         // Load the logo image
-        ImageIcon logoIcon = new ImageIcon("/Users/salomerivas/Desktop/COMILLAS/ING DE SOFTWARE/Java Login/soulmatelogosinfondo.png");  // Replace with actual path to your logo
+        ImageIcon logoIcon = new ImageIcon("src/main/resources/soulmatelogosinfondo.png");
         logoLabel.setIcon(logoIcon);  // Set the icon for the logo
 
         // Set bounds for each component
         logoLabel.setBounds(110, 0, 50, 50);  // Adjust size and location as needed
         signLabel.setBounds(110, 100, 180, 70);
         soulLabel.setBounds(105, 140, 180, 70);
+        usernameLabel.setBounds(20, 200, 100,70);
         nameLabel.setBounds(20, 220, 100, 70);
         genderLabel.setBounds(20, 250, 100, 70);
         passwordLabel.setBounds(20, 300, 100, 70);
@@ -69,6 +75,7 @@ public class RegistrationForm implements ActionListener {
         emailLabel.setBounds(20, 450, 100, 70);
 
         // Set bounds for text fields
+        usernameTextField.setBounds(180, 200, 165, 23);
         nameTextField.setBounds(180, 220, 165, 23);
         genderComboBox.setBounds(180, 270, 165, 23);
         passwordField.setBounds(180, 320, 165, 23);
@@ -79,6 +86,7 @@ public class RegistrationForm implements ActionListener {
         resetButton.setBounds(220, 520, 100, 35);
 
         // Set label colors
+        usernameLabel.setForeground(Color.WHITE);
         nameLabel.setForeground(Color.WHITE);
         signLabel.setForeground(Color.WHITE);
         soulLabel.setForeground(Color.WHITE);
@@ -91,6 +99,7 @@ public class RegistrationForm implements ActionListener {
 
     public void addComponentsToFrame() {
         frame.add(logoLabel);  // Add the logo to the frame
+        frame.add(usernameLabel);
         frame.add(nameLabel);
         frame.add(signLabel);
         frame.add(soulLabel);
@@ -99,6 +108,7 @@ public class RegistrationForm implements ActionListener {
         frame.add(confirmPasswordLabel);
         frame.add(cityLabel);
         frame.add(emailLabel);
+        frame.add(usernameTextField);
         frame.add(nameTextField);
         frame.add(genderComboBox);
         frame.add(passwordField);
@@ -111,7 +121,35 @@ public class RegistrationForm implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //funcionalidad de los botones
+        // Add functionality for the buttons here
+        if(e.getSource() == registerButton){
+            Cliente cliente = new Cliente();
+            String username = usernameTextField.getText();
+            String name = nameTextField.getText();
+            String gender = genderComboBox.getSelectedItem().toString();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+            String city = cityTextField.getText();
+            String email = emailTextField.getText();
+
+            if(username.isEmpty()||name.isEmpty() || password.isEmpty() ||
+                    confirmPassword.isEmpty() || city.isEmpty() || email.isEmpty()){
+                JOptionPane.showMessageDialog(frame, "Por favor rellena todos los campos.", "Formulatio incompleto", JOptionPane.ERROR_MESSAGE);
+            } else if (!password.equals(confirmPassword)) {
+                JOptionPane.showMessageDialog(frame, "Contraseñas no coinciden..", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                cliente.registerUser(username, name, email, password);
+                JOptionPane.showMessageDialog(frame, "¡Registrado con éxito!", "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else if (e.getSource()==resetButton) {
+            usernameTextField.setText("");
+            nameTextField.setText("");
+            genderComboBox.setSelectedIndex(0);
+            passwordField.setText("");
+            confirmPasswordField.setText("");
+            cityTextField.setText("");
+            emailTextField.setText("");
+        }
     }
 
     public static void main(String[] args) {

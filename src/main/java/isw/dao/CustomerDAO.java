@@ -51,14 +51,14 @@ public class CustomerDAO {
 
 
     // Método para añadir usuarios a la tabla (revisado para evitar duplicados)
-    public void addUser(String usuario, String correo, String password, String nombre) throws SQLException {
+    public static void addUser(String usuario, String correo, String passwordSegura, String nombre) throws SQLException {
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         String query = "INSERT INTO users (nombre_usuario, correo, password, nombre) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pst = conexion.prepareStatement(query)) {
             pst.setString(1, usuario);
             pst.setString(2, correo);
-            pst.setString(3, password);
+            pst.setString(3, passwordSegura);
             pst.setString(4, nombre);
 
             int rowsAffected = pst.executeUpdate();

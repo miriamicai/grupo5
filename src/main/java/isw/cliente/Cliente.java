@@ -200,6 +200,39 @@ public class Cliente {
             e.printStackTrace();
         }
     }
+
+
+    public void establishConnection(int followerId, int followingId){
+        Message messageOut = new Message();
+        messageOut.setContext("/connectUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("followerId", followerId);
+        session.put("followingId", followingId);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+
+        System.out.println("Connection established from Cliente estabishConnection() method.");
+    }
+
+    public void registerUser(String username, String name, String email, String password) {
+        //Cliente cliente = new Cliente();
+
+        Message messageOut = new Message();
+        messageOut.setContext("/addUser");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("usuario", username);
+        session.put("nombre", name);
+        session.put("email", email);
+        session.put("contraseña", password);
+        messageOut.setSession(session);
+
+        sent(messageOut, new Message());
+
+        System.out.println("User added to database from Cliente registerUser() method.");
+    }
+
 }
 
     /*public static void main(String[] args) {
@@ -232,49 +265,4 @@ public class Cliente {
 
         // Prueba de obtener seguidos
         cliente.sentMessage("/getSeguidos", session);
-    }*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//MARCO ÚLTIMO AÑADIDO
-/*public void establishConnection(int followerId, int followingId){
-        Message messageOut = new Message();
-        messageOut.setContext("/connectUser");
-
-        HashMap<String, Object> session = new HashMap<>();
-        session.put("followerId", followerId);
-        session.put("followingId", followingId);
-        messageOut.setSession(session);
-        sent(messageOut, new Message());
-
-        System.out.println("Connection established from Cliente estabishConnection() method.");
-    }
-
-    public void registerUser(String username, String name, String email, String password) {
-        //Cliente cliente = new Cliente();
-
-        Message messageOut = new Message();
-        messageOut.setContext("/addUser");
-
-        HashMap<String, Object> session = new HashMap<>();
-        session.put("usuario", username);
-        session.put("nombre", name);
-        session.put("email", email);
-        session.put("contraseña", password);
-        messageOut.setSession(session);
-
-        sent(messageOut, new Message());
-
-        System.out.println("User added to database from Cliente registerUser() method.");
     }*/

@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import isw.ui.JVentana;
 import org.json.JSONObject;
 
 import isw.server.OAuthCallbackServer;

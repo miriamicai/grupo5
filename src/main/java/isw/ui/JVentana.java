@@ -4,9 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.UnsupportedEncodingException;
+
+import java.util.List;
+
+import isw.dao.MusicBrainzService;
+import isw.dao.SpotifyAuth;
+import isw.releases.Album;
+import isw.enums.SearchTypes;
 
 
 public class JVentana extends JFrame {
+    protected JButton btnIniciarSesion;
+    protected JButton btnRegistro;
+    protected JButton btnSpotify;
+    protected JButton btnDatosSpotify;
+    protected JButton btnSalir;
 
     protected JPanel topPanel; //para que lo pueda acceder JVentanaLogged
 
@@ -17,6 +30,8 @@ public class JVentana extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+
+        MusicBrainzService musicBrainzService = new MusicBrainzService();
 
         // Panel izquierdo para el logo
         JPanel panelIzq = new JPanel();
@@ -62,12 +77,15 @@ public class JVentana extends JFrame {
         topPanel.add(btnBuscar);
 
         // Botones de inicio de sesión
-        JButton btnIniciarSesion = createStyledButton("Iniciar Sesión");
-        JButton btnRegistro = createStyledButton("Registro");
-        JButton btnSalir = createStyledButton("Salir");
+        this.btnIniciarSesion = createStyledButton("Iniciar Sesión");
+        this.btnRegistro = createStyledButton("Registro");
+        this.btnSpotify = createStyledButton("Vincular con tu cuenta de Spotify");
+        this.btnDatosSpotify = createStyledButton("Ver datos de tu cuenta Spotify");
+        this.btnSalir = createStyledButton("Salir");
 
         topPanel.add(btnIniciarSesion);
         topPanel.add(btnRegistro);
+        topPanel.add(btnSpotify);
         topPanel.add(btnSalir);
 
         add(topPanel, BorderLayout.NORTH);
@@ -82,6 +100,22 @@ public class JVentana extends JFrame {
             new RegistrationForm();
         });
 
+        //Acción del botón "Buscar"
+        btnBuscar.addActionListener(e -> {
+            List<Album> albums = null;
+            try {
+                albums = musicBrainzService.searchAlbum(searchField.getText());
+            } catch (UnsupportedEncodingException ex) {
+                throw new RuntimeException(ex);
+            }
+            showSearchResults(albums);
+        });
+
+        //Acción del botón "Vincular con cuenta de Spotify"
+        btnSpotify.addActionListener(e -> {
+            SpotifyAuth.requestNewAuthorizationCode();
+        });
+
         // Acción del botón "Salir"
         btnSalir.addActionListener(e -> {
             System.exit(0);
@@ -92,7 +126,26 @@ public class JVentana extends JFrame {
         addHoverEffect(btnExplorarArtistas);
         addHoverEffect(btnCantantesFavoritos);
         addHoverEffect(btnMasEscuchado);
+
     }
+
+    public void showAccountInfoButton() {
+        JPanel topPanel = (JPanel) btnSpotify.getParent();
+        topPanel.remove(btnSpotify); // Remove the Spotify link button
+        topPanel.add(btnDatosSpotify); // Add the account info button
+        topPanel.revalidate();
+        topPanel.repaint();
+
+        // Set up the action for the new button to show account info
+        btnDatosSpotify.addActionListener(e -> {
+            if (SpotifyAuth.accessToken != null) {
+                SpotifyAuth.getUserAccountInfo(SpotifyAuth.accessToken);
+            } else {
+                System.out.println("Access token is not available.");
+            }
+        });
+    }
+
 
     //acceso a top panel delde JVentanaLogged
     protected JPanel getTopPanel() {
@@ -156,6 +209,19 @@ public class JVentana extends JFrame {
             }
         });
     }
+
+    public void showSearchResults(List<Album> albums) {
+        if (albums.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No results found.", "Search Results", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            SearchResults resultsWindow = new SearchResults(albums, SearchTypes.ALBUM);
+            resultsWindow.setVisible(true);
+        }
+    }
+
+
+
+
 
     public static void main(String[] args) {
         JVentana ventanaPpal = new JVentana();
