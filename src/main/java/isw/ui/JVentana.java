@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 
 public class JVentana extends JFrame {
 
+    protected JPanel topPanel; //para que lo pueda acceder JVentanaLogged
+
     public JVentana() {
         // Configuración de la ventana principal
         setTitle("Página Principal");
@@ -50,7 +52,7 @@ public class JVentana extends JFrame {
         add(panelCenDer, BorderLayout.CENTER);
 
         // Panel superior
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         topPanel.setBackground(Color.BLACK);
 
         JTextField searchField = new JTextField(20);
@@ -92,8 +94,13 @@ public class JVentana extends JFrame {
         addHoverEffect(btnMasEscuchado);
     }
 
+    //acceso a top panel delde JVentanaLogged
+    protected JPanel getTopPanel() {
+        return topPanel;
+    }
+
     // Resto de los métodos para crear botones
-    private JButton createStyledButton(String text) {
+    protected JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
         button.setBackground(new Color(64, 64, 64));
@@ -154,4 +161,5 @@ public class JVentana extends JFrame {
         JVentana ventanaPpal = new JVentana();
         ventanaPpal.setVisible(true);
     }
+
 }

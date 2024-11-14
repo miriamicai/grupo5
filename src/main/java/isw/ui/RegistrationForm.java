@@ -111,7 +111,7 @@ public class RegistrationForm implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Add functionality for the buttons here
+        //funcionalidad de los botones
     }
 
     public static void main(String[] args) {

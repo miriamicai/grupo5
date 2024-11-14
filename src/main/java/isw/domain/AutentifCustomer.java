@@ -15,7 +15,7 @@ public class AutentifCustomer {
         this.customerControler = new CustomerControler();
     }
 
-    public boolean VerificarLogin(String usuario, String password) {
+    public int VerificarLogin(String usuario, String password) {
 
         ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
         this.customerControler.getCustomers(lista);
@@ -27,9 +27,10 @@ public class AutentifCustomer {
             //customer.getInfoPruebas();
 
             if (esUsuario.equals(customer)) {
-                return true; //si coincide lo introducido con los datos de algún cliente en la base de datos
+                return customer.getId(); //devuelve el id si coincide con lo introducido por el usuario
             }
         }
-        return false;
+        return 0;
     }
+
 }

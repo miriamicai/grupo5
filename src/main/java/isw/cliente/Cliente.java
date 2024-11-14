@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
-
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -58,18 +57,43 @@ public class Cliente {
             case "/getCustomersResponse": //CustomerS (varios)
                 ArrayList<Customer> customerList=(ArrayList<Customer>)(mensajeVuelta.getSession().get("Customer"));
                 for (Customer customer : customerList) { //se recorre la tabla de clientes y los muestra por pantalla
-                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getPassword());
+                    System.out.println("He leído el id: "+customer.getId()+" con nombre: "+customer.getNombreUsuario());
                 }
                 break;
             case "/getCustomerResponse": //1 Customer solo
                 session=mensajeVuelta.getSession();
                 Customer customer =(Customer) (session.get("Customer"));
                 if (customer!=null) {
-                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getPassword());
+                    System.out.println("He leído el id: " + customer.getId() + " con nombre: " + customer.getNombreUsuario());
                 }else {
                     System.out.println("No se ha recuperado nada de la base de datos");
                 }
                 break;
+
+            case "/getSeguidoresResponse": // Seguidores
+                ArrayList<Customer> seguidores = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidores");
+                if (seguidores != null && !seguidores.isEmpty()) {
+                    System.out.println("Lista de seguidores:");
+                    for (Customer seguidor : seguidores) {
+                        System.out.println("Id: " + seguidor.getId() + ", Nombre: " + seguidor.getNombreUsuario());
+                    }
+                } else {
+                    System.out.println("No se encontraron seguidores.");
+                }
+                break;
+
+            case "/getSeguidosResponse": // Seguidos
+                ArrayList<Customer> seguidos = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidos");
+                if (seguidos != null && !seguidos.isEmpty()) {
+                    System.out.println("Lista de seguidos:");
+                    for (Customer seguido : seguidos) {
+                        System.out.println("Id: " + seguido.getId() + ", Nombre: " + seguido.getNombreUsuario());
+                    }
+                } else {
+                    System.out.println("No se encontraron personas seguidas.");
+                }
+                break;
+
             case "/addUserResponse":
                 String message = (String) mensajeVuelta.getSession().get("message");
                 if (message != null) {
@@ -171,6 +195,21 @@ public class Cliente {
 
         System.out.println("User added to database from Cliente main method.");
     }**/
+
+
+    /* Prueba mensajes conexiones clientes
+    public static void main(String[] args) {
+        Cliente cliente = new Cliente();
+        HashMap<String, Object> session = new HashMap<>();
+
+        // Prueba de obtener seguidores
+        session.put("id_logged", 1); // ID de ejemplo
+        cliente.sentMessage("/getSeguidores", session);
+
+        // Prueba de obtener seguidos
+        cliente.sentMessage("/getSeguidos", session);
+    }*/
+
 }
 
 

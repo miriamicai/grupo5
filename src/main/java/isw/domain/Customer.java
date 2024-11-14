@@ -13,31 +13,6 @@ public class Customer implements Serializable {
     private String apellido1;
     private String apellido2;
 
-    //public HashMap() seguidores;
-    //public HashMap() seguidos;
-
-    // Estructura HashMap para la aplicación
-    //HashMap<Integer, List<Integer>> seguidores = new HashMap<>();
-    //HashMap<Integer, List<Integer>> seguidos = new HashMap<>();
-
-
-
-    /*public Customer(String nombre_usuario, String correo, String password, String nombre) {
-        this.setId(); //siempre se asigna de anera automática
-        this.setNombreUsuario(nombre_usuario);
-        this.setCorreo(correo);
-        this.setPassword(password);
-        this.setNombre(nombre);
-    }
-
-    public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1) {
-        this.setId(); //siempre se asigna de anera automática
-        this.setNombreUsuario(nombre_usuario);
-        this.setCorreo(correo);
-        this.setPassword(password);
-        this.setNombre(nombre);
-        this.setApellido1(apellido1);
-    }**/
 
     //constructor que voy a usar al recoger un customer de la base de datos
     public Customer(int id, String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
@@ -52,7 +27,7 @@ public class Customer implements Serializable {
 
     //constructor que se usará cuando se registre un nuevo cliente, asignándole un nuevo id
     public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
-        //this.setIdNuevo(); //siempre se asigna de manera automática
+        this.setIdNuevo(); //siempre se asigna de manera automática
         this.setNombreUsuario(nombre_usuario);
         this.setCorreo(correo);
         this.setPassword(password);

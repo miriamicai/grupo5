@@ -9,8 +9,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import isw.configuration.PropertiesISW;
+import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -47,6 +49,7 @@ public class SocketServer extends Thread{
 
             HashMap<String,Object> session = mensajeIn.getSession(); //se devuelve la sesión
             CustomerControler customerControler; //CustomerControler que utilizaremos para interactuar con la bd
+            ConexionesControler conexionesControler = new ConexionesControler();
 
             switch (mensajeIn.getContext()) { //dependiendo del tipo de petición, tendrá un contexto
                 case "/getCustomers"://contexto 1. me recupera todos los clientes
@@ -76,6 +79,24 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
+                case "/getSeguidores":
+                    id = (int) session.get("id_logged");
+                    List<Customer> seguidores = conexionesControler.getMisSeguidores(id);
+                    mensajeOut.setContext("/getSeguidoresResponse");
+                    session.put("Seguidores", seguidores);
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    break;
+
+                case "/getSeguidos":
+                    id = (int) session.get("id_logged");
+                    List<Customer> seguidos = conexionesControler.getMisSeguidos(id);
+                    mensajeOut.setContext("/getSeguidosResponse");
+                    session.put("Seguidos", seguidos);
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    break;
+
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;
@@ -99,7 +120,7 @@ public class SocketServer extends Thread{
     }
 
     public static void main(String[] args) {
-        System.out.println("SocketServer Example - Listening port "+port);
+        System.out.println("SocketServer Example - Listening port " + port);
         ServerSocket server = null;
         try {
             server = new ServerSocket(port);

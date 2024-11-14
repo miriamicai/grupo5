@@ -2,9 +2,11 @@ package isw.controler;
 
 import isw.dao.ConexionesDAO;
 import isw.dao.CustomerDAO;
+import isw.domain.Customer;
 
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,19 +22,34 @@ public class ConexionesControler {
     }
 
     //PARA UN ÚNICO USUARIO:
-    public List<Integer> getMisSeguidos(int id) {
-        //se devuelve los datos del cliente en función de su id (sacado de nuestra base de datos)
-        return (ConexionesDAO.getSeguidosCliente(id));
+    public List<Customer> getMisSeguidores(int id) {
+        List<Integer> idsSeguidores = ConexionesDAO.getSeguidoresCliente(id);
+        CustomerControler customerControler = new CustomerControler();
+        List<Customer> seguidores = new ArrayList<>();
+        for (int idSeguidor : idsSeguidores) {
+            Customer customer = customerControler.getCustomer(idSeguidor);
+            if (customer != null) {
+                seguidores.add(customer);
+            }
+        }
+        return seguidores;
     }
 
-    public List<Integer> getMisSeguidores(int id) {
-        //se devuelve los datos del cliente en función de su id (sacado de nuestra base de datos)
-        return (ConexionesDAO.getSeguidoresCliente(id));
+    public List<Customer> getMisSeguidos(int id) {
+        List<Integer> idsSeguidos = ConexionesDAO.getSeguidosCliente(id);
+        CustomerControler customerControler = new CustomerControler();
+        List<Customer> seguidos = new ArrayList<>();
+        for (int idSeguido : idsSeguidos) {
+            Customer customer = customerControler.getCustomer(idSeguido);
+            if (customer != null) {
+                seguidos.add(customer);
+            }
+        }
+        return seguidos;
     }
 
-    public void addConexion(String usuario, String nombre, String email, String password) throws SQLException {
-        CustomerDAO dao = new CustomerDAO();
-        dao.addUser(usuario, nombre, email, password);
+    public void addConexion(int id, int id_seguir) throws SQLException {
+        ConexionesDAO.addConexion(id, id_seguir);
     }
 
 
@@ -72,15 +89,6 @@ public class ConexionesControler {
         } catch (SQLException e) {
             System.out.println("Error al cargar las conexiones: " + e.getMessage());
         }
-    }
-
-    //obtener seguidores de un usuario
-    public List<Integer> obtenerSeguidores(int idUsuario) {
-        return seguidores.getOrDefault(idUsuario, new ArrayList<>());
-    }
-
-    //obtener usuarios a los que sigue un usuario
-    public List<Integer> obtenerSeguidos(int idUsuario) {
-        return seguidos.getOrDefault(idUsuario, new ArrayList<>());
     }*/
+
 }
