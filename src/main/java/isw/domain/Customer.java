@@ -50,6 +50,15 @@ public class Customer implements Serializable {
         this.setApellido2(apellido2);
     }
 
+    //CONTRUCTOR MARCO
+    public Customer(String usuario, String nombre, String email, String contraseña, int id){
+        this.setNombreUsuario(usuario);
+        this.setNombre(nombre);
+        this.setCorreo(email);
+        this.setPassword(contraseña);
+        this.setId(id);
+    }
+
     //constructor que se usará cuando se registre un nuevo cliente, asignándole un nuevo id
     public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
         //this.setIdNuevo(); //siempre se asigna de manera automática

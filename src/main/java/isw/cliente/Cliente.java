@@ -192,6 +192,9 @@ public class Cliente {
 
         System.out.println("User added to database from Cliente registerUser() method.");
     }
+
+    public static void main(String[] args) {
+        Cliente c = new Cliente();
+        c.establishConnection(5, 9);
+    }
 }
-
-

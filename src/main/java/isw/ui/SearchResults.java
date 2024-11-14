@@ -1,11 +1,13 @@
 package isw.ui;
 
+import isw.dao.CustomerDAO;
 import isw.domain.Customer;
 import isw.enums.SearchTypes;
 import isw.releases.Album;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResults extends JFrame {
@@ -42,12 +44,6 @@ public class SearchResults extends JFrame {
             for (Object item : items){
                 Customer c = (Customer) item;
                 ProfileDisplayPanel profilePanel = new ProfileDisplayPanel(c);
-                profilePanel.addMouseListener(new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseClicked(java.awt.event.MouseEvent e) {
-
-                    }
-                });
                 releasePanel.add(profilePanel);
             }
         }
@@ -92,5 +88,13 @@ public class SearchResults extends JFrame {
     private void createUIComponents() {
         // TODO: place custom component creation code here
         releasePanel = new JPanel(new GridLayout(0, 3, 10, 10)); // Customize layout as needed
+    }
+
+    public static void main(String[] args) {
+        //CustomerDAO cdao = new CustomerDAO();
+        ArrayList<Customer> allUsers = new ArrayList<>();
+        CustomerDAO.getClientes(allUsers);
+        SearchResults allCustomerWindow = new SearchResults(allUsers, SearchTypes.CUSTOMER);
+        allCustomerWindow.setVisible(true);
     }
 }

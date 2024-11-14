@@ -29,6 +29,7 @@ public class AutentifCustomer {
 
         ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
         this.customerControler.getCustomers(lista);
+        System.out.println(lista);
 
         Customer esUsuario = new Customer(usuario, password);
 
@@ -37,10 +38,16 @@ public class AutentifCustomer {
             //customer.getInfoPruebas();
 
             if (esUsuario.equals(customer)) {
+                System.out.println("The id of the user trying to log in is: " + customer.getId());
                 UserSession.getInstance().setUserId(customer.getId());
+                System.out.println("And userSession states that the logged in id is now: " +  UserSession.getInstance().getUserId());
                 return true; //si coincide lo introducido con los datos de algún cliente en la base de datos
             }
         }
         return false;
+    }
+
+    public static void main(String[] args) {
+      System.out.println("But if I run it through here the id is: " + UserSession.getInstance().getUserId());
     }
 }

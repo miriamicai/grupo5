@@ -35,8 +35,8 @@ public class ProfileDisplayPanel extends JPanel{
         followButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int loggedInUserId = UserSession.getInstance().getUserId();
-                cliente.establishConnection(loggedInUserId, followerId);
+                //int loggedInUserId = UserSession.getInstance().getUserId();
+                cliente.establishConnection(3, followerId);
             }
         });
 
