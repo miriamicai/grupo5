@@ -19,6 +19,9 @@ public class JVentanaLogged extends JVentana{
 
 
         btnMiPerfil.addActionListener(e -> {
+
+            new UserProfileForm();
+            /*
             //System.out.println("Detecta el botón");
             HashMap<String, Object> response = cliente.sentMessage("/getCustomerResponse", session); //FALLO EN ESTA LÍNEA
             System.out.println("Conexión en cliente");
@@ -28,7 +31,7 @@ public class JVentanaLogged extends JVentana{
                 new UserProfileForm(response, cliente);
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo recuperar la información del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            }*/
         });
 
     }

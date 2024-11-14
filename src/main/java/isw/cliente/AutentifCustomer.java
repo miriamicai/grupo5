@@ -27,8 +27,11 @@ public class AutentifCustomer {
         cliente.sent(mensajeAServior, mensajeDelServior);
 
         //analizar respuesta del Servidor
+        System.out.println("1");
         if (mensajeDelServior.getContext().equals("/loginResponse")) {
+            System.out.println("2");
             if (mensajeDelServior.getSession().containsKey("id_logged")) {
+                System.out.println("loggeado bien en autentif");
                 return (int) mensajeDelServior.getSession().get("id_logged");
             }
         }

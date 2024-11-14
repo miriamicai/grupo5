@@ -30,10 +30,10 @@ public class UserProfileForm extends JFrame implements ActionListener {
     private Cliente cliente;
 
 
-    public UserProfileForm(HashMap<String, Object> session, Cliente cliente) {
+    public UserProfileForm() {
 
         //Cargar datos desde el servidor -> seguidores, seguidos, canciones, etc.
-        nombreUsuario = cargarDatosDelCliente(session, cliente);
+        //nombreUsuario = cargarDatosDelCliente(session, cliente);
 
         setTitle("User Profile");
         setSize(800, 700);
