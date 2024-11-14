@@ -148,14 +148,13 @@ public class Customer implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-
         if ((o != null) && (o instanceof Customer)) {
             Customer cu = (Customer) o;
             if ((
                     (  (Objects.equals(this.nombre_usuario, cu.getNombreUsuario())) ||
-                    (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
+                            (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
                     )
-                    && Objects.equals(this.password, cu.getPassword()))) { //objects añade seguridad
+                            && Objects.equals(this.password, cu.getPassword()))) { //objects añade seguridad
                 return true; //determino que son iguales por su nombre de usuario o por su correo
             }
         }

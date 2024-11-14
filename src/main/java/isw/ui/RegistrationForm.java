@@ -48,7 +48,7 @@ public class RegistrationForm implements ActionListener {
         frame.getContentPane().setBackground(new Color(32, 32, 32));
         frame.getContentPane().setLayout(null);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setResizable(false);
     }
 

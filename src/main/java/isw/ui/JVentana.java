@@ -99,7 +99,7 @@ public class JVentana extends JFrame {
 
         // Acción del botón "Iniciar Sesión"
         btnIniciarSesion.addActionListener(e -> {
-            new LoginWindow(JVentana.this);
+            new LoginFrame();
         });
 
         // Acción del botón "Registro"

@@ -38,8 +38,8 @@ public class CustomerDAO {
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
-                cu = new Customer(rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6), rs.getString(7));
+                cu = new Customer(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4),
+                        rs.getInt(5));
             }
 
         } catch (SQLException e) {
@@ -50,7 +50,7 @@ public class CustomerDAO {
     }
 
     // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
-    public void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
+    public static void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         String query = "INSERT INTO users (usuario, nombre, email, contraseña) VALUES (?, ?, ?, ?)";
 

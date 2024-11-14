@@ -38,9 +38,9 @@ public class AutentifCustomer {
             //customer.getInfoPruebas();
 
             if (esUsuario.equals(customer)) {
-                System.out.println("The id of the user trying to log in is: " + customer.getId());
+                //System.out.println("The id of the user trying to log in is: " + customer.getId());
                 UserSession.getInstance().setUserId(customer.getId());
-                System.out.println("And userSession states that the logged in id is now: " +  UserSession.getInstance().getUserId());
+                //System.out.println("And userSession states that the logged in id is now: " +  UserSession.getInstance().getUserId());
                 return true; //si coincide lo introducido con los datos de algún cliente en la base de datos
             }
         }
