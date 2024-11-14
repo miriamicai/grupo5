@@ -94,15 +94,15 @@
                 </executions>
             </plugin>
 
-            <!-- Plugin para ejecutar pruebas con JUnit 5 -->
+            <!-- Plugin para ejecutar pruebas con JUnit 5 y JUnit 4 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M5</version>
                 <configuration>
-                    <dependenciesToScan>
-                        <dependency>org.junit.jupiter</dependency>
-                    </dependenciesToScan>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
                     <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
