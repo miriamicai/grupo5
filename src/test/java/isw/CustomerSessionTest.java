@@ -7,6 +7,8 @@ import isw.domain.UserSession;
 public class CustomerSessionTest {
     private Customer customer;
 
+
+
     @Before
     public void setUp() {
         // Inicializa un cliente antes de cada prueba
