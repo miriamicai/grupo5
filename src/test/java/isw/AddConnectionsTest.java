@@ -1,6 +1,6 @@
 /*package isw;
 
-import isw.dao.CustomerDAO;
+import isw.dao. CustomerDAO;
 import isw.domain.Customer;
 
 import isw.controler.ConexionesControler;
