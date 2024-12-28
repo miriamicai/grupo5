@@ -17,8 +17,8 @@ public class CustomerControler {
         return(CustomerDAO.getCliente(id));
     }
     //CustomerControler
-    public void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
+    public void addUser(String usuario, String nombre, String email, String password) throws SQLException {
         //String passwordSegura = PasswordSegura.hashPassword(contraseña);
-        CustomerDAO.addUser(usuario, nombre, email, contraseña);
+        CustomerDAO.addUser(usuario, nombre, email, password);
     }
 }

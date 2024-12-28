@@ -15,6 +15,7 @@ import java.util.List;
 import isw.configuration.PropertiesISW;
 import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
+import isw.domain.AutentifCustomer;
 import isw.domain.Customer;
 import isw.message.Message;
 
@@ -85,11 +86,33 @@ public class SocketServer extends Thread{
                     String usuario = (String) session.get("usuario");
                     String nombre = (String) session.get("nombre");
                     String email = (String) session.get("email");
-                    String contraseña = (String) session.get("contraseña");
-                    customerControler.addUser(usuario, nombre, email, contraseña);
+                    String password = (String) session.get("contraseña");
+                    customerControler.addUser(usuario, nombre, email, password);
 
                     mensajeOut.setContext("/addUserResponse");
                     session.put("message", "User added successfully.");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
+                case "/login":
+                    String user = (String) session.get("usuario");
+                    String passwrd = (String) session.get("contraseña");
+
+                    AutentifCustomer autentif = new AutentifCustomer();
+                    int idLogged = autentif.VerificarLogin(user, passwrd);
+                    System.out.println(idLogged);
+
+                    if (idLogged != 0) {
+                        session.put("id", idLogged);
+                        session.put("message", "Login successfull.");
+                        System.out.println(idLogged);
+                    } else {
+                        session.put("id", 0);
+                        session.put("message", "Login unsuccessful");
+                    }
+                    mensajeOut.setContext("/loginResponse");
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());

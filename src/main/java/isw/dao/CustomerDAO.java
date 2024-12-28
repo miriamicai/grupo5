@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import isw.domain.Customer;
 
 public class CustomerDAO {
+    static int contador_id = 7;
 
     public static void getClientes(ArrayList<Customer> lista) { //devuelve lista de Clientes
         Connection conexion =ConnectionDAO.getInstance().getConnection(); //instance de la DAO -> como objeto Connection
@@ -50,20 +51,22 @@ public class CustomerDAO {
     }
 
     // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
-    public static void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
+    public static void addUser(String usuario, String nombre, String email, String password) throws SQLException {
         Connection conexion = ConnectionDAO.getInstance().getConnection();
-        String query = "INSERT INTO users (usuario, nombre, email, contraseña) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO users (usuario, nombre, email, password, id) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = conexion.prepareStatement(query)) {
             pst.setString(1, usuario);
             pst.setString(2, nombre);
             pst.setString(3, email);
-            pst.setString(4, contraseña);
+            pst.setString(4, password);
+            pst.setInt(5, contador_id);
 
             int rowsAffected = pst.executeUpdate();
 
             if (rowsAffected > 0) {
                 System.out.println("User added successfully, amazing");
+                contador_id++;
             } else {
                 System.out.println("Failed to add user oh no");
             }

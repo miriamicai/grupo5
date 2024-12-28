@@ -51,11 +51,11 @@ public class Customer implements Serializable {
     }
 
     //CONTRUCTOR MARCO
-    public Customer(String usuario, String nombre, String email, String contraseña, int id){
+    public Customer(String usuario, String nombre, String email, String password, int id){
         this.setNombreUsuario(usuario);
         this.setNombre(nombre);
         this.setCorreo(email);
-        this.setPassword(contraseña);
+        this.setPassword(password);
         this.setId(id);
     }
 

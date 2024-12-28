@@ -15,16 +15,6 @@ public class AutentifCustomer {
         this.customerControler = new CustomerControler();
     }
 
-    /*public AutentifCustomer(String usuario, String password){
-        this.usuario = usuario;
-        this.password = password;
-    }
-
-    public AutentifCustomer() {
-        this.usuario = "";
-        this.password = "";
-    }*/
-
     int id_logged;
 
     public int VerificarLogin(String usuario, String password) {
@@ -44,13 +34,11 @@ public class AutentifCustomer {
                 UserSession.getInstance().setUserId(customer.getId());
                 id_logged = customer.getId();
                 //System.out.println("And userSession states that the logged in id is now: " +  UserSession.getInstance().getUserId());
+                System.out.println(id_logged);
                 return id_logged; //si coincide lo introducido con los datos de algún cliente en la base de datos
             }
         }
+        System.out.println("0");
         return 0;
     }
-
-    /*public static void main(String[] args) {
-      System.out.println("But if I run it through here the id is: " + UserSession.getInstance().getUserId());
-    }*/
 }
