@@ -21,7 +21,7 @@ public class AutentifCustomer {
 
         ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
         this.customerControler.getCustomers(lista);
-        System.out.println(lista);
+        //System.out.println(lista);
 
         Customer esUsuario = new Customer(usuario, password);
 

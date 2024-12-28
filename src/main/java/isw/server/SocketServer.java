@@ -106,13 +106,14 @@ public class SocketServer extends Thread{
 
                     if (idLogged != 0) {
                         session.put("id", idLogged);
+                        mensajeOut.setContext("/loginResponse");
                         session.put("message", "Login successfull.");
-                        System.out.println(idLogged);
+                        //System.out.println(idLogged);
                     } else {
                         session.put("id", 0);
+                        mensajeOut.setContext("/loginResponse");
                         session.put("message", "Login unsuccessful");
                     }
-                    mensajeOut.setContext("/loginResponse");
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
