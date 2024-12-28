@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import isw.configuration.PropertiesISW;
 import isw.controler.ConexionesControler;
@@ -105,12 +106,12 @@ public class SocketServer extends Thread{
                     System.out.println(idLogged);
 
                     if (idLogged != 0) {
-                        session.put("id", idLogged);
+                        session.put("id_logged", idLogged);
                         mensajeOut.setContext("/loginResponse");
                         session.put("message", "Login successfull.");
                         //System.out.println(idLogged);
                     } else {
-                        session.put("id", 0);
+                        session.put("id_logged", 0);
                         mensajeOut.setContext("/loginResponse");
                         session.put("message", "Login unsuccessful");
                     }

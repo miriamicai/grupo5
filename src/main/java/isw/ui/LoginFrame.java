@@ -78,11 +78,11 @@ public class LoginFrame extends JFrame {
             //añadir usuario y contraseña a la sesión
             session.put("usuario", usuario);
             session.put("contraseña", password);
-
+            boolean ses = cliente.login(session);
 
             //la lógica de la autentif pasa a estar en el backend
 
-            if (cliente.login(session) == true) {
+            if (ses) {
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
             } else {

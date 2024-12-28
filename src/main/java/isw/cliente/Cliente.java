@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -254,8 +256,15 @@ public class Cliente {
         HashMap<String, Object> respuesta = this.sentMessage("/login", session);
 
         // Procesar la respuesta
-        if (respuesta != null && respuesta.containsKey("id")) {
-            int idLogged = (int) respuesta.get("id");
+
+        //PRUEBA
+        System.out.println("Recorriendo el HashMap (clave, valor):");
+        for (Map.Entry<String, Object> entry : respuesta.entrySet()) {
+            System.out.println("Clave: " + entry.getKey() + ", Valor: " + entry.getValue());
+        }
+
+        if (respuesta != null && respuesta.containsKey("id_logged")) {
+            int idLogged = (int) respuesta.get("id_logged");
 
             if (idLogged!=0) {
                 //session.put("id_logged", idLogged);
