@@ -1,56 +1,38 @@
 package isw.domain;
 
 import java.util.ArrayList;
-
 import isw.controler.CustomerControler;
 
-//Añadir autentificación también con correo y contraseña
+// Añadido para mejorar equals y hashCode en Customer
+import java.util.Objects;
+
 public class AutentifCustomer {
 
-    //private String usuario;
-    //private String password;
-    public CustomerControler customerControler;
+    private CustomerControler customerControler; // Cambiado a privado por buenas prácticas
 
-    public AutentifCustomer(){
+    public AutentifCustomer() {
         this.customerControler = new CustomerControler();
     }
 
-    /*public AutentifCustomer(String usuario, String password){
-        this.usuario = usuario;
-        this.password = password;
+    // Nuevo setter para facilitar inyección de dependencias en tests
+    public void setCustomerControler(CustomerControler customerControler) {
+        this.customerControler = customerControler;
     }
 
-    public AutentifCustomer() {
-        this.usuario = "";
-        this.password = "";
-    }*/
-
-    int id_logged;
-
+    // Método para verificar login
     public int VerificarLogin(String usuario, String password) {
-
-        ArrayList<Customer> lista = new ArrayList<Customer>(); //ArrayList de Customers
-        this.customerControler.getCustomers(lista);
-        System.out.println(lista);
+        ArrayList<Customer> lista = new ArrayList<>(); // Lista para almacenar los clientes
+        this.customerControler.getCustomers(lista); // Obtener clientes desde el controlador
 
         Customer esUsuario = new Customer(usuario, password);
 
         for (Customer customer : lista) {
-
-            //customer.getInfoPruebas();
-
+            // Comparación usando equals de Customer
             if (esUsuario.equals(customer)) {
-                //System.out.println("The id of the user trying to log in is: " + customer.getId());
                 UserSession.getInstance().setUserId(customer.getId());
-                id_logged = customer.getId();
-                //System.out.println("And userSession states that the logged in id is now: " +  UserSession.getInstance().getUserId());
-                return id_logged; //si coincide lo introducido con los datos de algún cliente en la base de datos
+                return customer.getId(); // Devolver ID si coincide
             }
         }
-        return 0;
+        return 0; // Devolver 0 si no hay coincidencias
     }
-
-    /*public static void main(String[] args) {
-      System.out.println("But if I run it through here the id is: " + UserSession.getInstance().getUserId());
-    }*/
 }
