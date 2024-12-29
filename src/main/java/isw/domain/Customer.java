@@ -107,7 +107,7 @@ public class Customer implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = PasswordSegura.hashPassword(password); //contraseña hashed
     }
 
     public String getNombre() {

@@ -30,7 +30,7 @@ public class TestAutentifCustomer {
             return null;
         }).when(mockCustomerControler).getCustomers(Mockito.any(ArrayList.class));
 
-        boolean result = autentifCustomer.VerificarLogin("user1", "password1");
+        boolean result = autentifCustomer.VerificarLoginTest("user1", "password1");
         assertTrue(result);
     }
 
@@ -45,7 +45,7 @@ public class TestAutentifCustomer {
             return null;
         }).when(mockCustomerControler).getCustomers(Mockito.any(ArrayList.class));
 
-        boolean result = autentifCustomer.VerificarLogin("user2", "password2");
+        boolean result = autentifCustomer.VerificarLoginTest("user2", "password2");
         assertFalse(result);
     }
 }
