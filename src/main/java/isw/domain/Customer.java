@@ -50,6 +50,15 @@ public class Customer implements Serializable {
         this.setApellido2(apellido2);
     }
 
+    //CONTRUCTOR MARCO
+    public Customer(String usuario, String nombre, String email, String contraseña, int id){
+        this.setNombreUsuario(usuario);
+        this.setNombre(nombre);
+        this.setCorreo(email);
+        this.setPassword(contraseña);
+        this.setId(id);
+    }
+
     //constructor que se usará cuando se registre un nuevo cliente, asignándole un nuevo id
     public Customer(String nombre_usuario, String correo, String password, String nombre, String apellido1, String apellido2) {
         //this.setIdNuevo(); //siempre se asigna de manera automática
@@ -139,19 +148,16 @@ public class Customer implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-
         if ((o != null) && (o instanceof Customer)) {
             Customer cu = (Customer) o;
             if ((
                     (  (Objects.equals(this.nombre_usuario, cu.getNombreUsuario())) ||
-                    (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
+                            (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
                     )
-                    && Objects.equals(this.password, cu.getPassword()))) { //objects añade seguridad
+                            && Objects.equals(this.password, cu.getPassword()))) { //objects añade seguridad
                 return true; //determino que son iguales por su nombre de usuario o por su correo
             }
         }
         return false;
     }
-
-
 }

@@ -12,14 +12,18 @@ public class CustomerDAO {
 
     public static void getClientes(ArrayList<Customer> lista) { //devuelve lista de Clientes
         Connection conexion =ConnectionDAO.getInstance().getConnection(); //instance de la DAO -> como objeto Connection
-        try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM usuarios");
+        //RENOMBRADO NECESARIO PARA MI TABLA
+        try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM users");
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
                 //creo una lista con todos los clientes que aparecen en la base de datos
-                lista.add(new Customer(rs.getInt(1), rs.getString(2), rs.getString(3),
+                /*lista.add(new Customer(rs.getInt(1), rs.getString(2), rs.getString(3),
                     rs.getString(4), rs.getString(5), rs.getString(6),
-                        rs.getString(7)));
+                        rs.getString(7)));*/
+
+                //PARA ACOMODAR TABLA MARCO
+                lista.add(new Customer(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getInt(5)));
             }
 
         } catch (SQLException e) {
@@ -27,16 +31,15 @@ public class CustomerDAO {
         }
     }
 
-
     public static Customer getCliente(int id) { //se usa en CustomerControler
         Connection conexion = ConnectionDAO.getInstance().getConnection();
         Customer cu = null; //es nulo
-        try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM usuarios WHERE id="+id);
+        try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM users WHERE id="+id);
              ResultSet rs = pst.executeQuery()) {
 
             while (rs.next()) {
-                cu = new Customer(rs.getString(2), rs.getString(3), rs.getString(4),
-                        rs.getString(5), rs.getString(6), rs.getString(7));
+                cu = new Customer(rs.getString(1),rs.getString(2), rs.getString(3), rs.getString(4),
+                        rs.getInt(5));
             }
 
         } catch (SQLException e) {
@@ -46,16 +49,16 @@ public class CustomerDAO {
         return cu; //devuelve la información del customer si coincide el id, si no será nulo
     }
 
-
-    public void addUser(String usuario, String nombre, String email, String password) throws SQLException { //CAMBIAR A ESTATICo
+    // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
+    public static void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {
         Connection conexion = ConnectionDAO.getInstance().getConnection();
-        String query = "INSERT INTO users (usuario, nombre, email, password) VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO users (usuario, nombre, email, contraseña) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement pst = conexion.prepareStatement(query)) {
             pst.setString(1, usuario);
             pst.setString(2, nombre);
             pst.setString(3, email);
-            pst.setString(4, password);
+            pst.setString(4, contraseña);
 
             int rowsAffected = pst.executeUpdate();
 

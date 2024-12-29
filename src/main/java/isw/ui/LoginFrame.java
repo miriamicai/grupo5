@@ -1,38 +1,42 @@
 package isw.ui;
 
+import isw.cliente.Cliente;
 import isw.domain.AutentifCustomer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.HashMap;
 
 public class LoginFrame extends JFrame {
 
-    Container container = getContentPane();
-    JLabel logLabel = new JLabel("Log in to");
-    JLabel userLabel = new JLabel("Email or username");
-    JLabel passwordLabel = new JLabel("Password");
-    JTextField userTextField = new JTextField();
-    JPasswordField passwordField = new JPasswordField();
-    JButton loginButton = new JButton("Log In");
-    JButton forgotButton = new JButton("Forgot your password?");
-    JLabel noaccountLabel = new JLabel("Don't have an account?");
-    JButton signupButton = new JButton("Sign up for Soulmate");
+    public Cliente cliente = new Cliente();
+    public HashMap<String, Object> session = new HashMap<>();
 
-    JLabel logoLabel = new JLabel();
+    private Container container = getContentPane();
+    private JLabel logLabel = new JLabel("Log in to");
+    private JLabel userLabel = new JLabel("Email or username");
+    private JLabel passwordLabel = new JLabel("Password");
+    private JTextField userTextField = new JTextField();
+    private JPasswordField passwordField = new JPasswordField();
+    private JButton loginButton = new JButton("Log In");
+    private JButton forgotButton = new JButton("Forgot your password?");
+    private JLabel noaccountLabel = new JLabel("Don't have an account?");
+    private JButton signupButton = new JButton("Sign up for Soulmate");
+
+    private JLabel logoLabel = new JLabel();
 
     public LoginFrame() {
         this.setTitle("Login Form");
         this.setVisible(true);
         this.setBounds(10, 10, 500, 650);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
 
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
-        //addActionEvent();
 
         container.setBackground(new Color(32, 32, 32));
 
@@ -65,17 +69,22 @@ public class LoginFrame extends JFrame {
 
         // Lógica para iniciar sesión
         loginButton.addActionListener(e -> {
+
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
             //lógica en domain.AutetifCustomer
             AutentifCustomer verif = new AutentifCustomer();
-            boolean exito = verif.VerificarLogin(usuario, password);
-            if (exito){
+            int id_logged = verif.VerificarLogin(usuario, password);
+            if (id_logged!=0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
+                session.put("id_logged", id_logged);
+                //System.out.println("Bien en LoginFrame");
+                new JVentanaLogged(id_logged, session,cliente);
             }else{
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
         });
+
     }
 
     public void setLayoutManager() {
@@ -146,12 +155,12 @@ public class LoginFrame extends JFrame {
         }
     }*/
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         LoginFrame frame = new LoginFrame();
         /*frame.setTitle("Login Form");
         frame.setVisible(true);
         frame.setBounds(10, 10, 500, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);*/
-    }
+        frame.setResizable(false);
+    }*/
 }
