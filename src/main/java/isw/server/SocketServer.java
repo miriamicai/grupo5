@@ -185,10 +185,6 @@ public class SocketServer extends Thread{
         try {
             server = new ServerSocket(port);
             while (true) {
-                //Socket socketCliente = server.accept();
-                //SocketServer socketServer = new SocketServer(socketCliente);
-                //Thread hilo = new Thread(socketServer);
-                //hilo.start();
                 new SocketServer(server.accept());
             }
         } catch (IOException e) {

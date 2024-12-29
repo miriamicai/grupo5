@@ -56,6 +56,14 @@ public class Cliente {
         mensajeEnvio.setSession(session);
         this.sent(mensajeEnvio, mensajeVuelta);
 
+        //CÓDIGO DE PRUEBA
+        if (mensajeVuelta.getContext() != null) {
+            System.out.println("Contexto: " + mensajeVuelta.getContext() + mensajeVuelta.getSession());
+            //processServerResponse(mensajeVuelta);
+        } else {
+            System.out.println("Error en la respuesta del servidor");
+        }
+
 
         switch (mensajeVuelta.getContext()) { //Devolver los Customers dependiendo del mensaje que devuelva el servidor (mensajeVuelta)
             case "/getCustomersResponse": //CustomerS (varios)
@@ -147,49 +155,39 @@ public class Cliente {
     }
 
 
-    public void sent(Message messageOut, Message messageIn) {
+    public Message sent(Message messageOut, Message messageIn) {
         try {
 
             System.out.println("Connecting to host " + host + " on port " + port + ".");
 
-            Socket echoSocket = null; //A socket is an endpoint for communication between two machines.
-            OutputStream out = null;
-            InputStream in = null;
-
-            /**
-             *
-             * InputStream and OutputStream is to abstract different ways to input and output: whether
-             * the stream is a file, a web page, or the screen shouldn't matter. All that matters is
-             * that you receive information from the stream (or send information into that stream.)
-             *
-             */
-
-
-            /**
-             *
-             * El siguiente try-catch: este código es parte de un cliente que se comunica con un
-             * servidor mediante sockets. El cliente abre una conexión con el servidor, envía un
-             * objeto, espera una respuesta del servidor y luego la procesa.
-             *
-             */
+            //Socket echoSocket = null; //A socket is an endpoint for communication between two machines.
+            //OutputStream out = null;
+            //InputStream in = null;
 
             try {
-                echoSocket = new Socket(host, port); //se crea la conexión a Internet entre el cliente y el servidor
-                in = echoSocket.getInputStream(); //flujo de entrada desde el socket (leer datos del servidor)
-                out = echoSocket.getOutputStream(); //flujo de salida del socket (enviar datos del servidor)
+                Socket echoSocket = new Socket(host, port); //se crea la conexión a Internet entre el cliente y el servidor
+                InputStream in = echoSocket.getInputStream(); //flujo de entrada desde el socket (leer datos del servidor)
+                OutputStream out = echoSocket.getOutputStream(); //flujo de salida del socket (enviar datos del servidor)
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-
-                //Create the objetct to send
+                ObjectInputStream objectInputStream = new ObjectInputStream(in);
+                //Create the object to send
                 objectOutputStream.writeObject(messageOut);
+                objectOutputStream.flush(); // Asegúrate de vaciar el flujo de salida
 
                 // create a DataInputStream so we can read data from it.
-                ObjectInputStream objectInputStream = new ObjectInputStream(in);
-                Message msg = (Message) objectInputStream.readObject();
-                messageIn.setContext(msg.getContext());
-                messageIn.setSession(msg.getSession());
+            
+                Message response = (Message) objectInputStream.readObject();
+                messageIn.setContext(response.getContext());
+                messageIn.setSession(response.getSession());
 		        /*System.out.println("\n1.- El valor devuelto es: "+messageIn.getContext());
 		        String cadena=(String) messageIn.getSession().get("Nombre");
 		        System.out.println("\n2.- La cadena devuelta es: "+cadena);*/
+
+                objectOutputStream.close();
+                objectInputStream.close();
+                echoSocket.close();
+
+                return messageIn;
 
             } catch (UnknownHostException e) {
                 System.err.println("Unknown host: " + host);
@@ -200,12 +198,13 @@ public class Cliente {
             }
 
             /** Closing all the resources */
-            out.close();
-            in.close();
-            echoSocket.close();
+            //out.close();
+            //in.close();
+            //echoSocket.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void establishConnection(int followerId, int followingId){
@@ -244,9 +243,19 @@ public class Cliente {
         session.put("contraseña", password);
         messageOut.setSession(session);
 
-        sent(messageOut, new Message());
+        //sent(messageOut, new Message());
+        Message response = new Message();
+        response = sent(messageOut, response);
 
-        System.out.println("User added to database from Cliente registerUser() method.");
+        System.out.println("Response from server en registerUser: " + response.getContext());
+
+        if (response != null && response.getContext().equals("/addUserSuccess")) {
+            System.out.println("User added to database from Cliente registerUser() method.");
+        } else {
+            System.out.println("Failed to add user to database from Cliente registerUser() method.");
+        }
+
+        //System.out.println("User added to database from Cliente registerUser() method.");
     }
 
 
