@@ -48,12 +48,12 @@ public class AlbumDisplayPanel extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Action to perform on click
-                JOptionPane.showMessageDialog(
+                /*JOptionPane.showMessageDialog(
                         AlbumDisplayPanel.this,
                         "You clicked on: " + title + " by " + artist,
                         "Album Clicked",
                         JOptionPane.INFORMATION_MESSAGE
-                );
+                );*/
                 dAlbum = fmService.getAlbumDetails(album.getId());
                 if (dAlbum == null) {
                     //JOptionPane.showMessageDialog(null, "Album details not available.", "Error", JOptionPane.ERROR_MESSAGE);

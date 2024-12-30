@@ -32,10 +32,10 @@ public class ReleasePage extends JFrame{
         artist.setText(album.getArtist());
         releaseDate.setText(album.getRelease() != null ? album.getRelease().toString() : "Unknown");
         track_Count.setText("Number of tracks: " + String.valueOf(album.getNumTracks()));
-        avgRating.setText(album.getAvgRating() > 0 ? String.valueOf(album.getAvgRating()) : "N/A");
         ratingBox.setText(album.getPersonalRating() > 0 ? String.valueOf(album.getPersonalRating()) : "");
         // Assume you have a field to display genres
-        genres.setText("Genres not implemented yet");
+        genres.setText("Genres: " + album.getGenres());
+        length.setText("Length: " + album.getLength());
 
         // Load the album cover image
         loadCoverImage(album.getCoverUrl());
@@ -47,7 +47,6 @@ public class ReleasePage extends JFrame{
         artist = new JLabel("Artist: ");
         releaseDate = new JLabel("Release Date: ");
         track_Count = new JLabel("Track Count: ");
-        avgRating = new JLabel("Average Rating: ");
         genres = new JLabel("Genres: ");
         length = new JLabel("Length: ");
         //cover = new JLabel("Cover not available");
@@ -69,7 +68,7 @@ public class ReleasePage extends JFrame{
         panel.add(artist);
         panel.add(releaseDate);
         panel.add(track_Count);
-        panel.add(avgRating);
+        //panel.add(avgRating);
         panel.add(genres);
         panel.add(length);
         panel.add(cover);
