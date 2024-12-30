@@ -78,16 +78,15 @@ public class LoginFrame extends JFrame {
             session.put("usuario", usuario);
             session.put("contraseña", password);
             System.out.println("botón pulsado correcto");
-            int idlogged = cliente.login(session);
-            System.out.println(idlogged);
-            System.out.println("vuelta correcta");
+            int idLogged = cliente.login(session);
 
-            if (idlogged > 0){
+            if (idLogged > 0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-                new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
+                new JVentanaLogged(idLogged, session, cliente); // Abrir la nueva ventana
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
+
 
             //la lógica de la autentif pasa a estar en el backend
 
