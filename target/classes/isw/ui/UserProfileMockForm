@@ -1,91 +1,52 @@
 package isw.ui;
 
-import isw.controler.ConexionesControler;
-import isw.domain.Customer;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.AbstractBorder;
+import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class UserProfileForm extends JFrame implements ActionListener {
+public class UserProfileMockForm extends JFrame {
 
-    private int numberOfPlaylists = 10;
-    private int followersCount = 120;
-    private int followingCount = 35;
+    private int numberOfPlaylists;
+    private int followersCount;
+    private int followingCount;
     private String nombreUsuario;
-    private ArrayList<String> topArtists = new ArrayList<>();
-    private ArrayList<String> topTracks = new ArrayList<>();
-    private ArrayList<String> playlists = new ArrayList<>();
+    private ArrayList<String> topArtists;
+    private ArrayList<String> topTracks;
+    private ArrayList<String> playlists;
 
     private int idLogged;
     private JPanel followersPanel;
     private JPanel followingPanel;
 
-    public UserProfileForm(int idLogged) {
-
+    public UserProfileMockForm(int idLogged) {
         this.idLogged = idLogged;
 
-        setTitle("User Profile");
+        // Datos inventados
+        this.nombreUsuario = "UsuarioPrueba" + idLogged;
+        this.numberOfPlaylists = 5;
+        this.followersCount = 120;
+        this.followingCount = 45;
+        this.topArtists = new ArrayList<>(Arrays.asList("Artista1", "Artista2", "Artista3"));
+        this.topTracks = new ArrayList<>(Arrays.asList("Canción1", "Canción2", "Canción3"));
+        this.playlists = new ArrayList<>(Arrays.asList("Playlist1", "Playlist2", "Playlist3"));
+
+        // Configuración del JFrame
+        setTitle("Mock User Profile");
         setSize(800, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(18, 18, 18));
 
-        // Top Panel for Profile Info
-        JPanel profilePanel = new JPanel(new BorderLayout());
-        profilePanel.setBackground(new Color(18, 18, 18));
-
-        // Profile header with "Profile" text above the username
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setBackground(new Color(18, 18, 18));
-
-        JLabel profileLabel = new JLabel("Profile");
-        profileLabel.setForeground(Color.LIGHT_GRAY);
-        profileLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        //mover a la derecha y añadir espacio
-        profileLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.add(Box.createVerticalStrut(20)); // Space above the label
-        headerPanel.add(profileLabel);
-
-        //avatares
-        JLabel avatarLabel = new JLabel();
-        avatarLabel.setOpaque(true);
-        avatarLabel.setBackground(Color.GRAY);
-        avatarLabel.setPreferredSize(new Dimension(100, 100));
-        avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        avatarLabel.setVerticalAlignment(SwingConstants.CENTER);
-        avatarLabel.setBorder(createCircleBorder(Color.WHITE));
-
-        //añadir avatar
-        headerPanel.add(profileLabel);
-        headerPanel.add(Box.createVerticalStrut(10));
-        headerPanel.add(avatarLabel);
-        headerPanel.add(Box.createVerticalStrut(10));
-
-        //nombre de usuario
-        JLabel profileNameLabel = new JLabel(nombreUsuario);
-        profileNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
-        profileNameLabel.setForeground(Color.WHITE);
-
-        headerPanel.add(profileNameLabel);
-
-        JLabel profileInfoLabel = new JLabel(numberOfPlaylists + " Saved Albums · " + followersCount + " Followers · " + followingCount + " Following");
-        profileInfoLabel.setForeground(Color.LIGHT_GRAY);
-
-        profilePanel.add(headerPanel, BorderLayout.NORTH);
-        profilePanel.add(profileInfoLabel, BorderLayout.SOUTH);
-
-        // Main panels for followers and following
+        // Panel principal
+        JPanel profilePanel = createProfilePanel();
         followersPanel = createListPanel("Followers", Color.LIGHT_GRAY);
         followingPanel = createListPanel("Following", Color.CYAN);
 
-        loadFollowersAndFollowing();
+        loadMockFollowersAndFollowing();
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -101,6 +62,45 @@ public class UserProfileForm extends JFrame implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private JPanel createProfilePanel() {
+        JPanel profilePanel = new JPanel(new BorderLayout());
+        profilePanel.setBackground(new Color(18, 18, 18));
+
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setBackground(new Color(18, 18, 18));
+
+        JLabel profileLabel = new JLabel("Profile");
+        profileLabel.setForeground(Color.LIGHT_GRAY);
+        profileLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        headerPanel.add(Box.createVerticalStrut(20));
+        headerPanel.add(profileLabel);
+
+        JLabel avatarLabel = new JLabel();
+        avatarLabel.setOpaque(true);
+        avatarLabel.setBackground(Color.GRAY);
+        avatarLabel.setPreferredSize(new Dimension(100, 100));
+        avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        avatarLabel.setVerticalAlignment(SwingConstants.CENTER);
+        avatarLabel.setBorder(createCircleBorder(Color.WHITE));
+
+        headerPanel.add(Box.createVerticalStrut(10));
+        headerPanel.add(avatarLabel);
+
+        JLabel profileNameLabel = new JLabel(nombreUsuario);
+        profileNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        profileNameLabel.setForeground(Color.WHITE);
+        headerPanel.add(profileNameLabel);
+
+        JLabel profileInfoLabel = new JLabel(numberOfPlaylists + " Saved Albums · " + followersCount + " Followers · " + followingCount + " Following");
+        profileInfoLabel.setForeground(Color.LIGHT_GRAY);
+
+        profilePanel.add(headerPanel, BorderLayout.NORTH);
+        profilePanel.add(profileInfoLabel, BorderLayout.SOUTH);
+
+        return profilePanel;
     }
 
     private JPanel createListPanel(String title, Color titleColor) {
@@ -120,43 +120,29 @@ public class UserProfileForm extends JFrame implements ActionListener {
         return panel;
     }
 
-    private void loadFollowersAndFollowing() {
-        ConexionesControler conexionesControler = new ConexionesControler();
+    private void loadMockFollowersAndFollowing() {
+        // Datos inventados
+        List<String> mockFollowers = Arrays.asList("Seguidor1", "Seguidor2", "Seguidor3", "Seguidor4", "Seguidor5");
+        List<String> mockFollowing = Arrays.asList("Seguido1", "Seguido2", "Seguido3", "Seguido4");
 
-        // Load followers
-        List<Customer> followers = conexionesControler.getMisSeguidores(idLogged);
         JPanel followersList = (JPanel) followersPanel.getComponent(1);
-        addCustomersToPanel(followers, followersList);
+        addMockCustomersToPanel(mockFollowers, followersList);
 
-        // Load following
-        List<Customer> following = conexionesControler.getMisSeguidos(idLogged);
         JPanel followingList = (JPanel) followingPanel.getComponent(1);
-        addCustomersToPanel(following, followingList);
+        addMockCustomersToPanel(mockFollowing, followingList);
     }
 
-    private void addCustomersToPanel(List<Customer> customers, JPanel panel) {
+    private void addMockCustomersToPanel(List<String> names, JPanel panel) {
         panel.removeAll();
-        int count = 0;
-
-        for (Customer customer : customers) {
-            if (count >= 4) break;
-
-            JButton customerButton = new JButton(customer.getNombre());
+        for (String name : names) {
+            JButton customerButton = new JButton(name);
             customerButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-            customerButton.addActionListener(e -> viewProfile(customer));
-
+            customerButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Profile of: " + name, "Profile", JOptionPane.INFORMATION_MESSAGE));
             panel.add(customerButton);
             panel.add(Box.createVerticalStrut(5));
-
-            count++;
         }
-
         panel.revalidate();
         panel.repaint();
-    }
-
-    private void viewProfile(Customer customer) {
-        JOptionPane.showMessageDialog(this, "Profile of: " + customer.getNombre(), "Profile", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public Border createCircleBorder(Color color) {
@@ -169,8 +155,10 @@ public class UserProfileForm extends JFrame implements ActionListener {
         };
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // Functionality for buttons
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            UserProfileMockForm mockForm = new UserProfileMockForm(1); // Cambiar ID para pruebas
+            mockForm.setVisible(true);
+        });
     }
 }
