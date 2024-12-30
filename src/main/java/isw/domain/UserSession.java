@@ -36,4 +36,9 @@ public class UserSession {
     public void clearSession() {
         userId = null;
     }
+
+    // Reset the session (allow the user to log in again)
+    public void resetSession() {
+        this.userId = null;
+    }
 }

@@ -11,10 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import isw.configuration.PropertiesISW;
 import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
+import isw.domain.AutentifCustomer;
 import isw.domain.Customer;
 import isw.message.Message;
 
@@ -85,11 +87,34 @@ public class SocketServer extends Thread{
                     String usuario = (String) session.get("usuario");
                     String nombre = (String) session.get("nombre");
                     String email = (String) session.get("email");
-                    String contraseña = (String) session.get("contraseña");
-                    customerControler.addUser(usuario, nombre, email, contraseña);
+                    String password = (String) session.get("contraseña");
+                    customerControler.addUser(usuario, nombre, email, password);
 
                     mensajeOut.setContext("/addUserResponse");
                     session.put("message", "User added successfully.");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
+                case "/login":
+                    String user = (String) session.get("usuario");
+                    String passwrd = (String) session.get("contraseña");
+
+                    AutentifCustomer autentif = new AutentifCustomer();
+                    int idLogged = autentif.VerificarLogin(user, passwrd);
+                    System.out.println(idLogged);
+
+                    if (idLogged != 0) {
+                        session.put("id_logged", idLogged);
+                        mensajeOut.setContext("/loginResponse");
+                        session.put("message", "Login successfull.");
+                        //System.out.println(idLogged);
+                    } else {
+                        session.put("id_logged", 0);
+                        mensajeOut.setContext("/loginResponse");
+                        session.put("message", "Login unsuccessful");
+                    }
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());
@@ -160,10 +185,6 @@ public class SocketServer extends Thread{
         try {
             server = new ServerSocket(port);
             while (true) {
-                //Socket socketCliente = server.accept();
-                //SocketServer socketServer = new SocketServer(socketCliente);
-                //Thread hilo = new Thread(socketServer);
-                //hilo.start();
                 new SocketServer(server.accept());
             }
         } catch (IOException e) {

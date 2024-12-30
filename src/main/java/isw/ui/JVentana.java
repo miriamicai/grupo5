@@ -53,7 +53,7 @@ public class JVentana extends JFrame {
         // Crear botones
         JButton btnNovedades = createImageButton("Últimas novedades", "src/main/resources/imagen1.jpg", 180, 100);
         JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "src/main/resources/imagen1.jpg", 180, 100);
-        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "src/main/resources/imagen1.jpg", 180, 100);
+        JButton btnCantantesFavoritos = createImageButton("Canciones favoritas", "src/main/resources/imagen1.jpg", 180, 100);
         JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "src/main/resources/imagen1.jpg", 180, 100);
 
         panelCenDer.add(btnNovedades);
@@ -61,6 +61,19 @@ public class JVentana extends JFrame {
         panelCenDer.add(btnCantantesFavoritos);
         panelCenDer.add(btnMasEscuchado);
         add(panelCenDer, BorderLayout.CENTER);
+
+        // Acciones de los botones
+        btnNovedades.addActionListener(e -> new UltimasNovedadesFrame());
+        btnExplorarArtistas.addActionListener(e -> new ExplorarArtistasFrame());
+        btnCantantesFavoritos.addActionListener(e -> new CantantesFavoritosFrame());
+        btnMasEscuchado.addActionListener(e -> new MasEscuchadoZonaFrame());
+
+        // Agregar botones al panel central
+        panelCenDer.add(btnNovedades);
+        panelCenDer.add(btnExplorarArtistas);
+        panelCenDer.add(btnCantantesFavoritos);
+        panelCenDer.add(btnMasEscuchado);
+
 
         // Panel superior
         topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -118,6 +131,11 @@ public class JVentana extends JFrame {
         addHoverEffect(btnExplorarArtistas);
         addHoverEffect(btnCantantesFavoritos);
         addHoverEffect(btnMasEscuchado);
+
+
+
+
+
     }
 
     protected JPanel getTopPanel() {
