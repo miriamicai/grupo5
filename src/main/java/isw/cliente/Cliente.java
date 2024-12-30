@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import isw.configuration.PropertiesISW;
+import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
 
@@ -259,19 +260,25 @@ public class Cliente {
 
 
     //CAMBIO2
-    public void login(HashMap<String, Object> session) {
+    public int login(HashMap<String, Object> session) {
         // Enviar el mensaje al servidor
         //System.out.println("mensaje a enviar");
 
         //HashMap<String, Object> respuesta = this.sentMessage("/login", session);
 
         //System.out.println("mensaje enviado al servidor");
-        Message messageOut = new Message();
+        /*Message messageOut = new Message();
         messageOut.setContext("/login");
         messageOut.setSession(session);
 
         System.out.println("si lo envío desde aquí, aparece:");
-        sent(messageOut, new Message());
+        sent(messageOut, new Message());*/
+
+        CustomerControler customerControler = new CustomerControler();
+        String user = (String) session.get("usuario");
+        String passwrd = (String) session.get("contraseña");
+        int idLogged = customerControler.login(user,passwrd);
+        return idLogged;
 
         // Procesar la respuesta
         /*if (respuesta != null && respuesta.containsKey("id_logged")) {

@@ -56,10 +56,12 @@ public class CustomerDAO {
         Customer cu = null; //es nulo
         String pss = null;
         int idLogged = 0;
+
         try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM users WHERE usuario="+ user);
              ResultSet rs = pst.executeQuery()) {
 
             pss = rs.getString(4);
+            System.out.println(pss);
 
             AutentifCustomer autentif = new AutentifCustomer();
             boolean verificar = autentif.VerificarLogin(user, password, pss);

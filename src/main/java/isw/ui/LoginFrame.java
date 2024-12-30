@@ -78,18 +78,25 @@ public class LoginFrame extends JFrame {
             session.put("usuario", usuario);
             session.put("contraseña", password);
             System.out.println("botón pulsado correcto");
-            cliente.login(session);
-            //System.out.println(ses);
+            int idlogged = cliente.login(session);
+            System.out.println(idlogged);
             System.out.println("vuelta correcta");
 
-            //la lógica de la autentif pasa a estar en el backend
-
-            if (session.containsKey("id_logged") && (int) session.get("id_logged") > 0 ) {
+            if (idlogged > 0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
+
+            //la lógica de la autentif pasa a estar en el backend
+
+            /*if (session.containsKey("id_logged") && (int) session.get("id_logged") > 0 ) {
+                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
+                new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
+            }*/
         });
 
     }
