@@ -3,7 +3,7 @@ package isw.releases;
 import java.util.*;
 
 public class Album {
-    private String id;
+    private String id, length;
     private String title;
     private String artist;
     private String coverUrl;
@@ -19,10 +19,18 @@ public class Album {
     private String releaseGroupID;
     private Date release;
     private int numTracks, avgRating, personalRating;
+    private ArrayList<String> genres;
 
     public String getTitle(){return title;}
     public String getArtist(){return artist;}
     public String getId(){return id;}
+
+    public String getLength(){
+        return length;
+    }
+    public void setLength(String length){
+        this.length = length;
+    }
 
     public String getCoverUrl() {
         return coverUrl;
@@ -75,6 +83,13 @@ public class Album {
     public void setPersonalRating(int personalRating) {
         this.personalRating = personalRating;
     }
+    public void setGenres(ArrayList<String> genres){
+        this.genres = genres;
+    }
+
+    public ArrayList<String> getGenres(){
+        return genres;
+    }
 
     @Override
     public String toString() {
@@ -88,13 +103,15 @@ public class Album {
     }
 
 
-    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String releaseGroupID) {
+    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String length, ArrayList<String> genres, String releaseGroupID) {
         this.id = id;
         this.title = title;
         this.artist = artist;
         this.coverUrl = coverUrl;
         this.release = release;
         this.numTracks = numTracks;
+        this.length = length;
+        this.genres = genres;
         this.releaseGroupID = releaseGroupID;
     }
 }

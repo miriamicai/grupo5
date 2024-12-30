@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class LastFmService {
 
@@ -45,11 +46,13 @@ public class LastFmService {
                     String title = albumObj.getString("name");
                     String artist = albumObj.getString("artist");
                     String coverUrl = albumObj.getJSONArray("image").getJSONObject(2).getString("#text");
+                    String albumID = albumObj.has("mbid") && !albumObj.isNull("mbid") ? albumObj.getString("mbid") : null;
+                    System.out.println("The ID for " + title + " by " + artist + " is: " + albumID);
                     if (coverUrl == null || coverUrl.isEmpty()) {
                         coverUrl = DEFAULT_COVER_URL;
                     }
 
-                    albums.add(new Album(null, title, artist, coverUrl, null, 0, null));
+                    albums.add(new Album(albumID, title, artist, coverUrl, null, 0, null, null, null ));
                 }
             }
         } catch (Exception e) {
@@ -58,6 +61,93 @@ public class LastFmService {
         return albums;
     }
 
+    public Album getAlbumDetails(String artist, String albumTitle) {
+        try {
+            if (artist == null || artist.isEmpty() || albumTitle == null || albumTitle.isEmpty()) {
+                System.err.println("Artist or album title is missing.");
+                return null;
+            }
+
+            // Construct the API URL using artist and album name
+            String url = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=" + LASTFM_API_KEY +
+                    "&artist=" + URLEncoder.encode(artist, StandardCharsets.UTF_8.toString()) +
+                    "&album=" + URLEncoder.encode(albumTitle, StandardCharsets.UTF_8.toString()) +
+                    "&format=json";
+            System.out.println("API URL: " + url);
+
+            JSONObject response = makeApiRequest(url);
+            if (response == null) {
+                System.err.println("API response is null.");
+                return null;
+            }
+
+            if (!response.has("album") || response.isNull("album")) {
+                System.err.println("Album object is missing in the response.");
+                return null;
+            }
+
+            JSONObject albumJson = response.getJSONObject("album");
+
+            // Extract album details
+            String title = albumJson.optString("name", "Unknown Title");
+
+            // Handle "artist" as either a JSONObject or String
+            String artistName;
+            if (albumJson.has("artist")) {
+                Object artistField = albumJson.get("artist");
+                if (artistField instanceof JSONObject) {
+                    artistName = ((JSONObject) artistField).optString("name", "Unknown Artist");
+                } else if (artistField instanceof String) {
+                    artistName = (String) artistField;
+                } else {
+                    artistName = "Unknown Artist";
+                }
+            } else {
+                artistName = "Unknown Artist";
+            }
+
+            JSONArray imageArray = albumJson.optJSONArray("image");
+            String coverUrl = (imageArray != null && imageArray.length() > 3) ?
+                    imageArray.getJSONObject(3).optString("#text", DEFAULT_COVER_URL) : DEFAULT_COVER_URL;
+
+            int trackCount = albumJson.has("tracks") ?
+                    albumJson.getJSONObject("tracks").optJSONArray("track").length() : 0;
+
+            String albumLength = "Unknown";
+            if (albumJson.has("tracks") && albumJson.getJSONObject("tracks").has("track")) {
+                JSONArray tracksArray = albumJson.getJSONObject("tracks").optJSONArray("track");
+                if (tracksArray != null) {
+                    albumLength = calculateAlbumLength(tracksArray);
+                }
+            }
+
+            ArrayList<String> genres = new ArrayList<>();
+            if (albumJson.has("tags") && albumJson.getJSONObject("tags").has("tag")) {
+                JSONArray tagsArray = albumJson.getJSONObject("tags").getJSONArray("tag");
+                for (int i = 0; i < tagsArray.length(); i++) {
+                    JSONObject tag = tagsArray.getJSONObject(i);
+                    String genre = tag.optString("name", null);
+                    if (genre != null) {
+                        genres.add(genre);
+                    }
+                }
+            }
+
+            // Handle the "wiki" field safely
+            Date releaseDate = null;
+            if (albumJson.has("wiki") && albumJson.optJSONObject("wiki") != null) {
+                JSONObject wikiJson = albumJson.optJSONObject("wiki");
+                releaseDate = parseDate(wikiJson.optString("published"));
+            }
+
+            return new Album(null, title, artistName, coverUrl, releaseDate, trackCount, albumLength, genres, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     /**
      * Retrieves detailed information about an album using its MusicBrainz ID.
      *
@@ -65,6 +155,11 @@ public class LastFmService {
      * @return An Album object containing detailed information.
      */
     public Album getAlbumDetails(String albumId) {
+        System.out.println("Fetching album details for ID: " + albumId);
+        if (albumId == null || albumId.isEmpty()) {
+            System.err.println("Invalid album ID: " + albumId);
+            return null;
+        }
         try {
             String url = "http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key=" + LASTFM_API_KEY +
                     "&mbid=" + URLEncoder.encode(albumId, StandardCharsets.UTF_8.toString()) + "&format=json";
@@ -73,15 +168,50 @@ public class LastFmService {
             if (response != null) {
                 JSONObject albumJson = response.getJSONObject("album");
                 String title = albumJson.getString("name");
-                String artist = albumJson.getJSONObject("artist").getString("name");
+                //String artist = albumJson.getJSONObject("artist").getString("name");
+                String artistName;
+                if (albumJson.has("artist")) {
+                    Object artistField = albumJson.get("artist");
+                    if (artistField instanceof JSONObject) {
+                        artistName = ((JSONObject) artistField).optString("name", "Unknown Artist");
+                    } else if (artistField instanceof String) {
+                        artistName = (String) artistField;
+                    } else {
+                        artistName = "Unknown Artist";
+                    }
+                } else {
+                    artistName = "Unknown Artist";
+                }
+
                 String coverUrl = albumJson.getJSONArray("image").getJSONObject(3).getString("#text");
                 if (coverUrl == null || coverUrl.isEmpty()) {
                     coverUrl = DEFAULT_COVER_URL;
                 }
                 int trackCount = albumJson.getJSONObject("tracks").getJSONArray("track").length();
+
+                String albumLength = "Unknown";
+                if (albumJson.has("tracks") && albumJson.getJSONObject("tracks").has("track")) {
+                    JSONArray tracksArray = albumJson.getJSONObject("tracks").optJSONArray("track");
+                    if (tracksArray != null) {
+                        albumLength = calculateAlbumLength(tracksArray);
+                    }
+                }
+
+                ArrayList<String> genres = new ArrayList<>();
+                if (albumJson.has("tags") && albumJson.getJSONObject("tags").has("tag")) {
+                    JSONArray tagsArray = albumJson.getJSONObject("tags").getJSONArray("tag");
+                    for (int i = 0; i < tagsArray.length(); i++) {
+                        JSONObject tag = tagsArray.getJSONObject(i);
+                        String genre = tag.optString("name", null);
+                        if (genre != null) {
+                            genres.add(genre);
+                        }
+                    }
+                }
+
                 Date releaseDate = parseDate(albumJson.optString("wiki", "published"));
 
-                return new Album(albumId, title, artist, coverUrl, releaseDate, trackCount, null);
+                return new Album(albumId, title, artistName, coverUrl, releaseDate, trackCount, albumLength, genres, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -131,12 +261,45 @@ public class LastFmService {
      */
     private Date parseDate(String dateString) {
         try {
-            if (dateString != null && !dateString.isEmpty()) {
-                return DATE_FORMAT.parse(dateString);
+            if (dateString == null || dateString.isEmpty()) {
+                System.err.println("Date string is null or empty.");
+                return null;
+            }
+
+            // If the date string contains JSON-like content, extract only the "published" part
+            if (dateString.contains("\"published\"")) {
+                JSONObject wikiJson = new JSONObject(dateString);
+                dateString = wikiJson.optString("published", "");
+            }
+
+            // Parse the extracted date
+            if (!dateString.isEmpty()) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.ENGLISH);
+                System.out.println(dateFormat.parse(dateString));
+                return dateFormat.parse(dateString);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.err.println("Failed to parse date: " + dateString);
         return null;
     }
+
+    private String calculateAlbumLength(JSONArray tracksArray) {
+        int totalDuration = 0;
+
+        for (int i = 0; i < tracksArray.length(); i++) {
+            JSONObject track = tracksArray.getJSONObject(i);
+            int trackDuration = track.optInt("duration", 0); // Get track duration, default to 0 if missing
+            totalDuration += trackDuration;
+        }
+
+        // Convert totalDuration (seconds) to minutes:seconds format
+        int minutes = totalDuration / 60;
+        int seconds = totalDuration % 60;
+
+        return String.format("%d:%02d", minutes, seconds); // Format as "mm:ss"
+    }
+
 }
