@@ -53,30 +53,34 @@ public class CustomerDAO {
 
     public static int getClienteLogin(String user, String password) { //se usa en CustomerControler
         Connection conexion = ConnectionDAO.getInstance().getConnection();
-        Customer cu = null; //es nulo
-        String pss = null;
         int idLogged = 0;
 
-        try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM users WHERE usuario="+ user);
-             ResultSet rs = pst.executeQuery()) {
+        String query = "SELECT * FROM users WHERE usuario = ?";
+        try (PreparedStatement pst = conexion.prepareStatement(query)) {
+            // Sustituimos el parámetro en la consulta
+            pst.setString(1, user);
 
-            pss = rs.getString(4);
-            System.out.println(pss);
+            try (ResultSet rs = pst.executeQuery()) {
+                // Verificamos si hay resultados
+                if (rs.next()) {
+                    String pss = rs.getString("contraseña");
 
-            AutentifCustomer autentif = new AutentifCustomer();
-            boolean verificar = autentif.VerificarLogin(user, password, pss);
-            if (verificar){
-                idLogged = rs.getInt(5); //cambia el valor del id si coinciden las contraseñas
+                    AutentifCustomer autentif = new AutentifCustomer();
+                    boolean verificar = autentif.VerificarLogin(user, password, pss);
+                    if (verificar) {
+                        idLogged = rs.getInt("id");
+                    }
+                } else {
+                    System.out.println("Usuario no encontrado.");
+                }
             }
-
         } catch (SQLException e) {
-
             System.out.println(e.getMessage());
         }
 
-        return idLogged; //devuelve la información del customer o 0
-
+        return idLogged; // Devuelve la información del customer o 0 si no se encontró
     }
+
 
     // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
     public static void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {

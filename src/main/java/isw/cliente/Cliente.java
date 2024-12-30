@@ -278,6 +278,7 @@ public class Cliente {
         String user = (String) session.get("usuario");
         String passwrd = (String) session.get("contraseña");
         int idLogged = customerControler.login(user,passwrd);
+        System.out.println(idLogged);
         return idLogged;
 
         // Procesar la respuesta

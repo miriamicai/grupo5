@@ -25,6 +25,7 @@ public class CustomerControler {
 
     public int login (String usuario, String password_nohashed){
         int id_logged = CustomerDAO.getClienteLogin(usuario, password_nohashed);
+        System.out.println(id_logged);
         return id_logged; //devuelve el id del usuario para mantener la sesión activa
     }
 }
