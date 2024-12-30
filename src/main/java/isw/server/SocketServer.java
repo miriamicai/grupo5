@@ -15,6 +15,7 @@ import java.util.List;
 import isw.configuration.PropertiesISW;
 import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
+import isw.domain.AutentifCustomer;
 import isw.domain.Customer;
 import isw.message.Message;
 
@@ -32,11 +33,13 @@ public class SocketServer extends Thread{
     }
 
     public void run() {
+        System.out.println("aparece en el RUN");
         InputStream in = null;
         OutputStream out = null;
         try { //se maneja la lógica principal del servidor para procesar solicitudes para enviar y leer archivos
             in = socket.getInputStream();
             out = socket.getOutputStream();
+            System.out.println("después de in y out del servidor");
 
             //first read the object that has been sent
             //ObjectInputStream permite leer objetos en binario enviados por el cliente
@@ -65,7 +68,7 @@ public class SocketServer extends Thread{
                     break;
 
                 case "/getCustomer": //me recupera un cliente -> muestra los datos
-                    int id = (int) session.get("id");
+                    int id = (int) session.get("id_logged");
                     customerControler = new CustomerControler();
                     Customer cu = customerControler.getCustomer(id); //Customer con los datos sacados de la bd
                     if (cu!=null){ //solo si se encuentra el id en la base de datos
@@ -85,11 +88,38 @@ public class SocketServer extends Thread{
                     String usuario = (String) session.get("usuario");
                     String nombre = (String) session.get("nombre");
                     String email = (String) session.get("email");
-                    String contraseña = (String) session.get("contraseña");
-                    customerControler.addUser(usuario, nombre, email, contraseña);
+                    String password = (String) session.get("contraseña");
+                    customerControler.addUser(usuario, nombre, email, password);
 
                     mensajeOut.setContext("/addUserResponse");
                     session.put("message", "User added successfully.");
+                    mensajeOut.setSession(session);
+                    objectOutputStream.writeObject(mensajeOut);
+                    System.out.println("Response sent to client: " + mensajeOut.getContext());
+                    break;
+
+                case "/login":
+                    System.out.println("entra en /login");
+                    customerControler = new CustomerControler();
+                    String user = (String) session.get("usuario");
+                    String passwrd = (String) session.get("contraseña");
+                    int idLogged = customerControler.login(user,passwrd);
+                    System.out.println(idLogged +"id en /login");
+
+                    /*AutentifCustomer autentif = new AutentifCustomer();
+                    int idLogged = autentif.VerificarLogin(user, passwrd);
+                    System.out.println(idLogged);*/
+
+                    if (idLogged != 0) {
+                        session.put("id_logged", idLogged);
+                        mensajeOut.setContext("/loginResponse");
+                        session.put("message", "Login successfull");
+                        //System.out.println(idLogged);
+                    } else {
+                        //session.put("id_logged", 0);
+                        mensajeOut.setContext("/loginResponse");
+                        session.put("message", "Error: Login unsuccessful");
+                    }
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     System.out.println("Response sent to client: " + mensajeOut.getContext());

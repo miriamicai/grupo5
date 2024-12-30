@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -18,6 +20,7 @@ public class Cliente {
     private String host;
     private int port;
     public ArrayList<Customer> seguidores;
+    public ArrayList<Customer> seguidos;
 
     public Cliente(String host, int port) { //constructor de Cliente: caracterísiticas petición host y puerto
         this.host = host;
@@ -80,6 +83,23 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
+
+            //CAMBIO 1
+            case "/loginResponse": //tengo session con el id_logged
+                if (session != null && session.containsKey("id_logged")) {
+                    int idLogged = (int) session.get("id_logged");
+
+                    if (idLogged!=0) {
+                        //session.put("id_logged", idLogged);
+                        System.out.println("Inicio de sesión exitoso. ID de usuario: " + idLogged);
+                    }
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /addUserResponse");
+                }
+                break;
+
             case "/connectUserResponse":
                 String mensaje = (String) mensajeVuelta.getSession().get("message");
                 if (mensaje != null) {
@@ -90,6 +110,7 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
+
             case "/getSeguidoresResponse": // Seguidores
                 seguidores = (ArrayList<Customer>) mensajeVuelta.getSession().get("Seguidores");
                 if (seguidores != null && !seguidores.isEmpty()) {
@@ -132,6 +153,8 @@ public class Cliente {
     public void sent(Message messageOut, Message messageIn) {
         try {
 
+
+
             System.out.println("Connecting to host " + host + " on port " + port + ".");
 
             Socket echoSocket = null; //A socket is an endpoint for communication between two machines.
@@ -162,13 +185,16 @@ public class Cliente {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
 
                 //Create the objetct to send
+                System.out.println("Antes output");
                 objectOutputStream.writeObject(messageOut);
+                System.out.println("Después output");
 
                 // create a DataInputStream so we can read data from it.
                 ObjectInputStream objectInputStream = new ObjectInputStream(in);
                 Message msg = (Message) objectInputStream.readObject();
                 messageIn.setContext(msg.getContext());
                 messageIn.setSession(msg.getSession());
+                System.out.println("Llega hasta antes de los catch");
 		        /*System.out.println("\n1.- El valor devuelto es: "+messageIn.getContext());
 		        String cadena=(String) messageIn.getSession().get("Nombre");
 		        System.out.println("\n2.- La cadena devuelta es: "+cadena);*/
@@ -231,8 +257,71 @@ public class Cliente {
         System.out.println("User added to database from Cliente registerUser() method.");
     }
 
-    public static void main(String[] args) {
+
+    //CAMBIO2
+    public void login(HashMap<String, Object> session) {
+        // Enviar el mensaje al servidor
+        //System.out.println("mensaje a enviar");
+
+        //HashMap<String, Object> respuesta = this.sentMessage("/login", session);
+
+        //System.out.println("mensaje enviado al servidor");
+        Message messageOut = new Message();
+        messageOut.setContext("/login");
+        messageOut.setSession(session);
+
+        System.out.println("si lo envío desde aquí, aparece:");
+        sent(messageOut, new Message());
+
+        // Procesar la respuesta
+        /*if (respuesta != null && respuesta.containsKey("id_logged")) {
+            int idLogged = (int) respuesta.get("id_logged");
+
+            if (idLogged!=0) {
+                //session.put("id_logged", idLogged);
+                System.out.println("Inicio de sesión exitoso. ID de usuario: " + idLogged);
+                return true;
+            } else {
+                System.out.println("Error en el inicio de sesión.");
+            }
+        } else {
+            System.out.println("Respuesta inesperada del servidor.");
+        }
+        return false;*/
+    }
+
+    //CAMBIO 3
+    public Customer getCustomer(int id) {
+        Message messageOut = new Message();
+        messageOut.setContext("/getCustomer");
+
+        //se envía el id del cliente en el HashMap
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id", id);
+        messageOut.setSession(session);
+
+        Message messageIn = new Message();
+        sent(messageOut, messageIn); //se envía el mensaje al servidor
+
+        //procesar la respuesta del SocketServer
+        Customer customer = null;
+        if ("/getCustomerResponse".equals(messageIn.getContext())) {
+            customer = (Customer) messageIn.getSession().get("Customer");
+            if (customer != null) {
+                System.out.println("Cliente recuperado: " + customer.getId() + ", " + customer.getNombreUsuario());
+            } else {
+                System.out.println("Cliente no encontrado.");
+            }
+        } else {
+            System.out.println("Respuesta inesperada del servidor.");
+        }
+        return customer;
+    }
+
+
+
+    /*public static void main(String[] args) {
         Cliente c = new Cliente();
         c.establishConnection(25, 2);
-    }
+    }*/
 }
