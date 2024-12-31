@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import isw.dao.LastFmService;
+import isw.dao.LastFmServiceUI;
 import isw.dao.SpotifyAuth;
 import isw.enums.SearchTypes;
 import isw.releases.Album;
@@ -22,7 +22,7 @@ public class JVentana extends JFrame {
     protected JPanel topPanel;
 
     public JVentana() {
-        LastFmService musicBrainzService = new LastFmService();
+        LastFmServiceUI musicBrainzService = new LastFmServiceUI();
 
         // Configuración de la ventana principal
         setTitle("Página Principal");

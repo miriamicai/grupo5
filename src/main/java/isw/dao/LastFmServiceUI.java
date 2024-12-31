@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class LastFmService {
+public class LastFmServiceUI {
 
     private static final String USER_AGENT = "Soulmate/1.0 (your-email@example.com)";
     private static final String LASTFM_API_KEY = "c02461157b7f2bb67aa1771a5eb40f33";

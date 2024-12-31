@@ -1,6 +1,6 @@
 package isw.ui;
 
-import isw.dao.LastFmService;
+import isw.dao.LastFmServiceUI;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -27,7 +27,7 @@ public class MasEscuchadoZonaFrame extends JFrame {
         mainPanel.add(titleLabel, BorderLayout.NORTH);
 
         // Obtener datos de Last.fm
-        LastFmService lastFmService = new LastFmService();
+        LastFmServiceUI lastFmService = new LastFmServiceUI();
         Map<String, Integer> topTracks = lastFmService.getTopTracks();
 
         // Crear gráfica
