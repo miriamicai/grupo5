@@ -12,6 +12,7 @@ public class Album {
         return releaseGroupID;
     }
 
+
     public void setReleaseGroupID(String releaseGroupID) {
         this.releaseGroupID = releaseGroupID;
     }
@@ -112,6 +113,16 @@ public class Album {
         this.numTracks = numTracks;
         this.length = length;
         this.genres = genres;
+        this.releaseGroupID = releaseGroupID;
+    }
+
+    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String releaseGroupID) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.coverUrl = coverUrl;
+        this.release = release;
+        this.numTracks = numTracks;
         this.releaseGroupID = releaseGroupID;
     }
 }

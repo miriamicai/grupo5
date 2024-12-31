@@ -2,17 +2,14 @@ package isw.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 import java.util.List;
 
-import isw.cliente.Cliente;
-import isw.dao.LastFmService;
+import isw.dao.LastFmServiceUI;
 import isw.dao.SpotifyAuth;
-import isw.domain.Customer;
-import isw.domain.AutentifCustomer;
 import isw.enums.SearchTypes;
 import isw.releases.Album;
 
@@ -25,7 +22,7 @@ public class JVentana extends JFrame {
     protected JPanel topPanel;
 
     public JVentana() {
-        LastFmService musicBrainzService = new LastFmService();
+        LastFmServiceUI musicBrainzService = new LastFmServiceUI();
 
         // Configuración de la ventana principal
         setTitle("Página Principal");
@@ -47,8 +44,38 @@ public class JVentana extends JFrame {
         etiquetaImagen.setPreferredSize(new Dimension(400, 600));
 
         panelIzq.add(etiquetaImagen, BorderLayout.NORTH);
-        add(panelIzq, BorderLayout.WEST);
 
+        // Botón para el minijuego
+        JButton btnMinijuego = createStyledButton("Minijuego");
+        btnMinijuego.setPreferredSize(new Dimension(400, 100));
+        btnMinijuego.setBackground(Color.PINK);
+        btnMinijuego.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MusicTriviaGameFrame(); // Abre la ventana del minijuego
+            }
+        });
+
+        // Agregar efecto de parpadeo al botón del minijuego
+        Timer blinkTimer = new Timer(650, new ActionListener() {
+            private boolean isPink = true;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (isPink) {
+                    btnMinijuego.setBackground(new Color(201, 135, 147));
+                } else {
+                    btnMinijuego.setBackground(new Color(231, 152, 167));
+                }
+                isPink = !isPink;
+            }
+        });
+        blinkTimer.start();
+
+        // Añadir el botón debajo de la imagen
+        panelIzq.add(btnMinijuego, BorderLayout.SOUTH);
+
+        add(panelIzq, BorderLayout.WEST);
 
         // Panel central y derecho combinado
         JPanel panelCenDer = new JPanel();
@@ -58,7 +85,7 @@ public class JVentana extends JFrame {
         // Crear botones
         JButton btnNovedades = createImageButton("Últimas novedades", "src/main/resources/imagen1.jpg", 180, 100);
         JButton btnExplorarArtistas = createImageButton("Explorar nuevos artistas", "src/main/resources/imagen1.jpg", 180, 100);
-        JButton btnCantantesFavoritos = createImageButton("Tus cantantes favoritos", "src/main/resources/imagen1.jpg", 180, 100);
+        JButton btnCantantesFavoritos = createImageButton("Canciones favoritas", "src/main/resources/imagen1.jpg", 180, 100);
         JButton btnMasEscuchado = createImageButton("Lo más escuchado en tu zona", "src/main/resources/imagen1.jpg", 180, 100);
 
         panelCenDer.add(btnNovedades);
@@ -66,6 +93,18 @@ public class JVentana extends JFrame {
         panelCenDer.add(btnCantantesFavoritos);
         panelCenDer.add(btnMasEscuchado);
         add(panelCenDer, BorderLayout.CENTER);
+
+        // Acciones de los botones
+        btnNovedades.addActionListener(e -> new UltimasNovedadesFrame());
+        btnExplorarArtistas.addActionListener(e -> new ExplorarArtistasFrame());
+        btnCantantesFavoritos.addActionListener(e -> new CantantesFavoritosFrame());
+        btnMasEscuchado.addActionListener(e -> new MasEscuchadoZonaFrame());
+
+        // Agregar botones al panel central
+        panelCenDer.add(btnNovedades);
+        panelCenDer.add(btnExplorarArtistas);
+        panelCenDer.add(btnCantantesFavoritos);
+        panelCenDer.add(btnMasEscuchado);
 
         // Panel superior
         topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -159,6 +198,7 @@ public class JVentana extends JFrame {
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(new Color(96, 96, 96));
             }
+
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(new Color(64, 64, 64));
             }
@@ -218,137 +258,3 @@ public class JVentana extends JFrame {
         ventanaPpal.setVisible(true);
     }
 }
-
-/*class LoginWindow extends JFrame {
-    public LoginWindow(JFrame parent) {
-        // Configurar la ventana de login
-        setTitle("Iniciar Sesión");
-        setSize(500, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(parent);
-        setLayout(new GridBagLayout());
-        getContentPane().setBackground(new Color(30, 30, 30));
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Sección de usuario y contraseña
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JLabel lblUsuario = new JLabel("Usuario:");
-        lblUsuario.setForeground(Color.WHITE);
-        add(lblUsuario, gbc);
-
-        JTextField txtUsuario = new JTextField(15);
-        txtUsuario.setBackground(new Color(50, 50, 50));
-        txtUsuario.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtUsuario, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        JLabel lblContraseña = new JLabel("Contraseña:");
-        lblContraseña.setForeground(Color.WHITE);
-        add(lblContraseña, gbc);
-
-        JPasswordField txtPassword = new JPasswordField(15);
-        txtPassword.setBackground(new Color(50, 50, 50));
-        txtPassword.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtPassword, gbc);
-
-        JButton btnLogin = new JButton("Iniciar Sesión");
-        btnLogin.setBackground(new Color(50, 150, 50));
-        btnLogin.setForeground(Color.WHITE);
-        btnLogin.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        add(btnLogin, gbc);
-
-        // Separación visual entre las secciones
-        JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
-        gbc.gridy = 3;
-        add(separator, gbc);
-
-        // Sección de ID del cliente y recuperación de información
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        JLabel lblId = new JLabel("ID Cliente:");
-        lblId.setForeground(Color.WHITE);
-        add(lblId, gbc);
-
-        JTextField txtId = new JTextField(15);
-        txtId.setBackground(new Color(50, 50, 50));
-        txtId.setForeground(Color.WHITE);
-        gbc.gridx = 1;
-        add(txtId, gbc);
-
-        JButton btnRecibirInfo = new JButton("Recibir Información");
-        btnRecibirInfo.setBackground(new Color(50, 150, 50));
-        btnRecibirInfo.setForeground(Color.WHITE);
-        btnRecibirInfo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        btnRecibirInfo.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        gbc.gridx = 0;
-        gbc.gridy = 5;
-        gbc.gridwidth = 2;
-        add(btnRecibirInfo, gbc);
-
-        // Cuadro de texto para mostrar la información recibida
-        JTextArea txtAreaResultado = new JTextArea(5, 20);
-        txtAreaResultado.setLineWrap(true);
-        txtAreaResultado.setWrapStyleWord(true);
-        txtAreaResultado.setEditable(false);
-        txtAreaResultado.setBackground(new Color(50, 50, 50));
-        txtAreaResultado.setForeground(Color.WHITE);
-
-        JScrollPane scrollPane = new JScrollPane(txtAreaResultado);
-        gbc.gridy = 6;
-        add(scrollPane, gbc);
-
-        // Lógica para iniciar sesión
-        btnLogin.addActionListener(e -> {
-            String usuario = txtUsuario.getText();
-            String password = new String(txtPassword.getPassword());
-            //lógica en domain.AutetifCustomer
-            AutentifCustomer verif = new AutentifCustomer();
-            boolean exito = verif.VerificarLogin(usuario, password);
-            if (exito){
-                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-            }else{
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
-            }
-        });
-
-
-        // Lógica para recibir información con el ID del cliente
-        btnRecibirInfo.addActionListener(e -> {
-            int id = Integer.parseInt(txtId.getText());
-            String nombreCliente = recuperarInformacion(id);
-            txtAreaResultado.setText("Cliente: " + nombreCliente);
-        });
-
-        setVisible(true);
-    }
-
-    public String recuperarInformacion(int id) {
-        Cliente cliente = new Cliente();
-        HashMap<String, Object> session = new HashMap<>();
-        String context = "/getCustomer";
-        session.put("id", id);
-        session = cliente.sentMessage(context, session);
-        Customer cu = (Customer) session.get("Customer");
-        String nombre;
-        if (cu == null) {
-            nombre = "Error - No encontrado en la base de datos";
-        } else {
-            nombre = cu.getNombreUsuario();
-        }
-        return nombre;
-    }
-
-}*/

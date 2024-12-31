@@ -6,7 +6,6 @@ import isw.domain.LoginHash;
 
 import javax.swing.*;
 import java.awt.*;
-import java.net.URL;
 import java.util.HashMap;
 
 public class LoginFrame extends JFrame {
@@ -34,7 +33,6 @@ public class LoginFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
-
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
@@ -56,12 +54,13 @@ public class LoginFrame extends JFrame {
         forgotButton.setForeground(new Color(32, 32, 32));
         signupButton.setForeground(new Color(32, 32, 32));
 
-        //cargar el logo desde la url de GitHub
+        // Cargar el logo desde una ruta interna
         try {
-            URL imageUrl = new URL("https://raw.githubusercontent.com/miriamicai/grupo5/main/Fotos/soulmatelogosinfondo.png");
-            ImageIcon logo = new ImageIcon(imageUrl);
+            ImageIcon logo = new ImageIcon("src/main/resources/soulmatelogosinfondo.png");
+            Image scaledImage = logo.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH);
+            logo.setImage(scaledImage);
             logoLabel.setIcon(logo);
-            logoLabel.setBounds(120, 65, 300, 240);  //posición y tamaño del logo
+            logoLabel.setBounds(120, 65, 300, 240); // posición y tamaño del logo
             container.add(logoLabel);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error cargando la imagen del logo.");
@@ -70,7 +69,6 @@ public class LoginFrame extends JFrame {
 
         // Lógica para iniciar sesión
         loginButton.addActionListener(e -> {
-            //LoginHash loginhash = new LoginHash();
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
             Cliente cliente = new Cliente(); //instancio un cliente
@@ -81,25 +79,14 @@ public class LoginFrame extends JFrame {
             System.out.println("botón pulsado correcto");
             int idLogged = cliente.login(session);
 
-            if (idLogged > 0){
+            if (idLogged > 0) {
                 LoginHash.setCredentials(session);
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 new JVentanaLogged(idLogged, session, cliente); // Abrir la nueva ventana
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
-
-
-            //la lógica de la autentif pasa a estar en el backend
-
-            /*if (session.containsKey("id_logged") && (int) session.get("id_logged") > 0 ) {
-                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-                new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
-            } else {
-                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
-            }*/
         });
-
     }
 
     public void setLayoutManager() {
@@ -135,47 +122,7 @@ public class LoginFrame extends JFrame {
         container.add(signupButton);
     }
 
-    /*
-    public void addActionEvent() {
-        loginButton.addActionListener(this);
-        forgotButton.addActionListener(this);
-        signupButton.addActionListener(this);
-    }*/
-
-
-
-
-    /* Overriding actionPerformed() method
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
-            // Get user input
-            String username = userTextField.getText();
-            String password = new String(passwordField.getPassword());
-
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter all fields.");
-            }
-        } else if (e.getSource() == forgotButton) {
-            // Forgot password logic
-            String email = JOptionPane.showInputDialog(this, "Enter your email to reset password:");
-            if (email != null && !email.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "A password reset link has been sent to " + email);
-            } else {
-                JOptionPane.showMessageDialog(this, "Email is required to reset password.");
-            }
-        } else if (e.getSource() == signupButton) {
-            // Open registration form (assuming it's another class)
-            new RegistrationForm();  // Replace with actual form class
-        }
-    }*/
-
     public static void main(String[] args) {
         LoginFrame frame = new LoginFrame();
-        /*frame.setTitle("Login Form");
-        frame.setVisible(true);
-        frame.setBounds(10, 10, 500, 650);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);*/
     }
 }
