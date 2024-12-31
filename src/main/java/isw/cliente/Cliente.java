@@ -10,9 +10,11 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import isw.configuration.PropertiesISW;
+import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -230,14 +232,31 @@ public class Cliente {
         System.out.println("Connection established from Cliente establishConnection() method.");
     }
 
-    public void getFollowers(int id){
-        Message messageOut = new Message();
+    public List<Customer> getSeguidores(int id){
+        /*Message messageOut = new Message();
         messageOut.setContext("/getSeguidores");
         HashMap<String, Object> session = new HashMap<>();
         session.put("id_logged", id);
         messageOut.setSession(session);
         sent(messageOut, new Message());
-        System.out.println("Followers list retrieved from Cliente method.");
+        System.out.println("Followers list retrieved from Cliente method.");*/
+
+        ConexionesControler conexionesControler = new ConexionesControler();
+        List<Customer> seguidores = conexionesControler.getMisSeguidores(id);
+        return seguidores;
+    }
+
+    public List<Customer> getSeguidos(int id){
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getSeguidos");
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_logged", id);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+        System.out.println("Following list retrieved from Cliente method.");*/
+        ConexionesControler conexionesControler = new ConexionesControler();
+        List<Customer> seguidos = conexionesControler.getMisSeguidos(id);
+        return seguidos;
     }
 
     public void registerUser(String username, String name, String email, String password) {
@@ -259,7 +278,6 @@ public class Cliente {
     }
 
 
-    //CAMBIO2
     public int login(HashMap<String, Object> session) {
         // Enviar el mensaje al servidor
         //System.out.println("mensaje a enviar");
@@ -325,6 +343,8 @@ public class Cliente {
         }
         return customer;
     }
+
+
 
 
 
