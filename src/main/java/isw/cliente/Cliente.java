@@ -11,7 +11,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
 import isw.configuration.PropertiesISW;
+import isw.controler.ConexionesControler;
 import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
@@ -294,6 +297,95 @@ public class Cliente {
         System.out.println("Release logged successfully via title and artist.");
     }
 
+    public List<Customer> getSeguidores(int id){
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getSeguidores");
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_logged", id);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+        System.out.println("Followers list retrieved from Cliente method.");*/
+
+        ConexionesControler conexionesControler = new ConexionesControler();
+        List<Customer> seguidores = conexionesControler.getMisSeguidores(id);
+        return seguidores;
+    }
+
+    public List<Customer> getSeguidos(int id){
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getSeguidos");
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_logged", id);
+        messageOut.setSession(session);
+        sent(messageOut, new Message());
+        System.out.println("Following list retrieved from Cliente method.");*/
+        ConexionesControler conexionesControler = new ConexionesControler();
+        List<Customer> seguidos = conexionesControler.getMisSeguidos(id);
+        return seguidos;
+    }
+
+    public Customer getCustomer(int id) {
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getCustomer");
+
+        //se envía el id del cliente en el HashMap
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id", id);
+        messageOut.setSession(session);
+
+        Message messageIn = new Message();
+        sent(messageOut, messageIn); //se envía el mensaje al servidor
+
+        //procesar la respuesta del SocketServer
+        Customer customer = null;
+        if ("/getCustomerResponse".equals(messageIn.getContext())) {
+            customer = (Customer) messageIn.getSession().get("Customer");
+            if (customer != null) {
+                System.out.println("Cliente recuperado: " + customer.getId() + ", " + customer.getNombreUsuario());
+            } else {
+                System.out.println("Cliente no encontrado.");
+            }
+        } else {
+            System.out.println("Respuesta inesperada del servidor.");
+        }
+        return customer;*/
+        CustomerControler customerControler = new CustomerControler();
+        Customer customer = customerControler.getCustomer(id);
+        return customer;
+    }
+
+
+    public ArrayList<Customer> getCustomers(){
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getCustomers");
+
+        //se envía el id del cliente en el HashMap
+        HashMap<String, Object> session = new HashMap<>();
+        messageOut.setSession(session);
+
+        Message messageIn = new Message();
+        sent(messageOut, messageIn); //se envía el mensaje al servidor
+
+        //procesar la respuesta del SocketServer
+        ArrayList<Customer> customers = null;
+        if ("/getCustomerResponse".equals(messageIn.getContext())) {
+            customers = (ArrayList<Customer>) messageIn.getSession().get("Customers");
+            if (customers != null) {
+                System.out.println("Cliente: Customers recuperados.");
+            } else {
+                System.out.println("Cliente: No hay customers en la base de datos.");
+            }
+        } else {
+            System.out.println("Cliente: Respuesta inesperada del servidor.");
+        }
+        return customers;*/
+        CustomerControler customerControler = new CustomerControler();
+        ArrayList<Customer> customers = new ArrayList<Customer>();
+        ArrayList<Customer> clientes = customerControler.getCustomers(customers);
+        return clientes;
+    }
+
+
     //CAMBIO2
     public int login(HashMap<String, Object> session) {
         // Enviar el mensaje al servidor
@@ -333,33 +425,7 @@ public class Cliente {
         return false;*/
     }
 
-    //CAMBIO 3
-    public Customer getCustomer(int id) {
-        Message messageOut = new Message();
-        messageOut.setContext("/getCustomer");
 
-        //se envía el id del cliente en el HashMap
-        HashMap<String, Object> session = new HashMap<>();
-        session.put("id", id);
-        messageOut.setSession(session);
-
-        Message messageIn = new Message();
-        sent(messageOut, messageIn); //se envía el mensaje al servidor
-
-        //procesar la respuesta del SocketServer
-        Customer customer = null;
-        if ("/getCustomerResponse".equals(messageIn.getContext())) {
-            customer = (Customer) messageIn.getSession().get("Customer");
-            if (customer != null) {
-                System.out.println("Cliente recuperado: " + customer.getId() + ", " + customer.getNombreUsuario());
-            } else {
-                System.out.println("Cliente no encontrado.");
-            }
-        } else {
-            System.out.println("Respuesta inesperada del servidor.");
-        }
-        return customer;
-    }
 
     public static void main(String[] args) {
         Cliente c = new Cliente();

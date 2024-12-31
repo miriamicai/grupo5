@@ -20,18 +20,21 @@ public class JVentanaLogged extends JVentana{
         getTopPanel().add(btnMiPerfil);
 
         btnMiPerfil.addActionListener(e -> {
-            //System.out.println("Detecta el botón");
-            //HashMap<String, Object> response = cliente.sentMessage("/getCustomerResponse", session); //FALLO EN ESTA LÍNEA
-            //System.out.println("Conexión en cliente");
+            try {
+                // Muestra un mensaje para confirmar que se detecta el clic
+                //System.out.println("Botón 'Mi perfil' presionado.");
 
-            //se tiene la respuesta con el cliente
-            /*if (response != null && response.get("Customer") != null) {
-                new UserProfileForm(idLogged, response, cliente);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo recuperar la información del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
-            }*/
-            new UserProfileForm(idLogged);
+                // Intenta abrir la ventana de perfil
+                new UserProfileForm(idLogged, session, cliente);
+                //System.out.println("Ventana 'UserProfileForm' abierta correctamente.");
+            } catch (Exception ex) {
+                // Maneja excepciones y muestra el error en la consola
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error al abrir la ventana de perfil: " + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
+
 
     }
 

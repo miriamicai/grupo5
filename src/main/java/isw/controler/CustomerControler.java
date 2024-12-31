@@ -11,9 +11,10 @@ import isw.domain.PasswordSegura;
 
 public class CustomerControler {
 
-    public void getCustomers(ArrayList<Customer> lista) {
+    public ArrayList<Customer> getCustomers(ArrayList<Customer> lista) {
         //devuelve todos los clientes
         CustomerDAO.getClientes(lista);
+        return lista;
     }
     public Customer getCustomer(int id) {
         //se devuelve los datos del cliente en función de su id (sacado de nuestra base de datos)

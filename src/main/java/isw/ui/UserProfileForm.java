@@ -1,7 +1,6 @@
 package isw.ui;
 
 import isw.cliente.Cliente;
-import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -9,106 +8,110 @@ import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class UserProfileForm extends JFrame implements ActionListener {
 
-    // Assuming user data is passed as parameters or fetched from a database or API
-    private int numberOfPlaylists = 10;
-    private int followersCount = 120;
-    private int followingCount = 35;
-    private String nombreUsuario;
-    private ArrayList<String> topArtists = new ArrayList<>();
-    private ArrayList<String> topTracks = new ArrayList<>();
-    private ArrayList<String> playlists = new ArrayList<>();
+    protected int numberOfPlaylists = 10;
+    protected String nombreUsuario;
+    protected ArrayList<String> topArtists = new ArrayList<>();
+    protected ArrayList<String> topTracks = new ArrayList<>();
+    protected ArrayList<String> playlists = new ArrayList<>();
 
-    private ArrayList<String> nombresSeguidores;
-    private ArrayList<String> nombresSeguidos;
-    private Cliente cliente;
+    protected Cliente cliente;
+    protected int idLogged;
+    protected HashMap<String, Object> session;
+    public Color fondo = new Color(18, 18, 18);
 
-    private int idLogged;
+    private JButton addFollowingButton; //no quiero que lo herede UserProfileOtros
+    protected JLabel profileInfoLabel;
 
-
-    public UserProfileForm(int idLogged) {
-
-        cliente = new Cliente();
-        //Almacena id del crack que haya iniciado sesión
+    public UserProfileForm(int idLogged, HashMap<String, Object> session, Cliente cliente) {
+        this.cliente = cliente;
         this.idLogged = idLogged;
-        cargarDatosDelCliente(cliente);
+        this.session = session;
+        this.nombreUsuario = getUsuario(idLogged).getNombre();
 
-        //Cargar datos desde el servidor -> seguidores, seguidos, canciones, etc.
-        //nombreUsuario = cargarDatosDelCliente(session, cliente);
-
-        setTitle("User Profile");
+        setTitle("Perfil");
         setSize(800, 700);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
-        getContentPane().setBackground(new Color(18, 18, 18));
+        getContentPane().setBackground(fondo);
+        this.setVisible(true);
 
         // Top Panel for Profile Info
-        JPanel profilePanel = new JPanel(new BorderLayout());
-        profilePanel.setBackground(new Color(18, 18, 18));
+        JPanel profilePanel = new JPanel();
+        profilePanel.setLayout(new BoxLayout(profilePanel, BoxLayout.Y_AXIS));
+        profilePanel.setBackground(fondo);
 
-        // Profile header with "Profile" text above the username
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setBackground(new Color(18, 18, 18));
-
-        JLabel profileLabel = new JLabel("Profile");
+        JLabel profileLabel = new JLabel("Perfil");
         profileLabel.setForeground(Color.LIGHT_GRAY);
         profileLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        //mover a la derecha y añadir espacio
-        profileLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        headerPanel.add(Box.createVerticalStrut(20)); // Space above the label
-        headerPanel.add(profileLabel);
 
-        //avatares
         JLabel avatarLabel = new JLabel();
         avatarLabel.setOpaque(true);
-        avatarLabel.setBackground(Color.GRAY); // Placeholder color for avatar
+        avatarLabel.setBackground(Color.GRAY);
         avatarLabel.setPreferredSize(new Dimension(100, 100));
         avatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
         avatarLabel.setVerticalAlignment(SwingConstants.CENTER);
-        avatarLabel.setBorder(createCircleBorder(Color.WHITE)); // Create circular border
+        avatarLabel.setBorder(createCircleBorder(Color.WHITE));
 
-
-        //añadir avatar
-        headerPanel.add(profileLabel);
-        headerPanel.add(Box.createVerticalStrut(10)); // Spacing between "Profile" and avatar
-        headerPanel.add(avatarLabel);
-        headerPanel.add(Box.createVerticalStrut(10)); // Spacing between avatar and username
-
-        //nombre de usuario
-        CustomerControler controler = null;
         JLabel profileNameLabel = new JLabel(nombreUsuario);
         profileNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
         profileNameLabel.setForeground(Color.WHITE);
 
-        headerPanel.add(profileNameLabel);
-
-        // Profile info like number of playlists, followers, and following
-        JLabel profileInfoLabel = new JLabel(numberOfPlaylists + " Saved Albums · " + followersCount + " Followers · " + followingCount + " Following");
+        profileInfoLabel = new JLabel();
         profileInfoLabel.setForeground(Color.LIGHT_GRAY);
+        actualizarProfileInfoLabel();
 
-        profilePanel.add(headerPanel, BorderLayout.NORTH);
-        profilePanel.add(profileInfoLabel, BorderLayout.SOUTH);
 
-        // Top Artists Panel
-        JPanel artistsPanel = new JPanel();
-        artistsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        artistsPanel.setBackground(new Color(18, 18, 18));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        buttonPanel.setBackground(fondo);
+
+        JButton followersButton = createStyledButton("Seguidores");
+        followersButton.addActionListener(e -> openFollowersWindow());
+
+        JButton followingButton = createStyledButton("Seguidos");
+        followingButton.addActionListener(e -> openFollowingWindow());
+
+        buttonPanel.add(followersButton);
+        buttonPanel.add(followingButton);
+
+        //añadir botón de añadir seguidos mediante método:
+        addFollowingButton(buttonPanel);
+
+
+        profilePanel.add(Box.createVerticalStrut(20)); // Espaciado
+        profilePanel.add(profileLabel);
+        profilePanel.add(Box.createVerticalStrut(10)); // Espaciado
+        profilePanel.add(avatarLabel);
+        profilePanel.add(Box.createVerticalStrut(10)); // Espaciado
+        profilePanel.add(profileNameLabel);
+        profilePanel.add(Box.createVerticalStrut(10)); // Espaciado
+        profilePanel.add(profileInfoLabel);
+        profilePanel.add(Box.createVerticalStrut(10)); // Espaciado
+        profilePanel.add(buttonPanel);
+        profilePanel.add(Box.createVerticalStrut(20)); // Espaciado
+
+        add(profilePanel, BorderLayout.NORTH);
+
+        // Extra: artistas, canciones y álbumes
+        JPanel ArtistasPanel = new JPanel();
+        ArtistasPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        ArtistasPanel.setBackground(new Color(18, 18, 18));
 
         JLabel topArtistsLabel = new JLabel("Favorite Albums");
         topArtistsLabel.setForeground(Color.LIGHT_GRAY);
 
-        artistsPanel.add(topArtistsLabel);
+        ArtistasPanel.add(topArtistsLabel);
 
         for (String artist : topArtists) {
             JPanel artistPanel = new JPanel();
             artistPanel.setPreferredSize(new Dimension(100, 120));
-            artistPanel.setBackground(new Color(18, 18, 18));
+            artistPanel.setBackground(fondo);
             artistPanel.setLayout(new BorderLayout());
 
             JLabel artistLabel = new JLabel(artist, SwingConstants.CENTER);
@@ -121,70 +124,20 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
             artistPanel.add(artistImage, BorderLayout.CENTER);
             artistPanel.add(artistLabel, BorderLayout.SOUTH);
-            artistsPanel.add(artistPanel);
+            ArtistasPanel.add(artistPanel);
         }
 
         // Top Tracks Panel
         JPanel tracksPanel = new JPanel(new GridLayout(5, 1));
-        tracksPanel.setBackground(new Color(18, 18, 18));
+        tracksPanel.setBackground(fondo);
 
         JLabel topTracksLabel = new JLabel("Top tracks this month");
         topTracksLabel.setForeground(Color.LIGHT_GRAY);
 
-        /*for (String track : topTracks) {
-            JLabel trackLabel = new JLabel(track);
-            trackLabel.setForeground(Color.WHITE);
-            tracksPanel.add(trackLabel);
-        }*/
-
-
-        //mostrar listas de seguidores y seguidos
-        // Mostrar seguidores
-        JPanel seguidoresPanel = new JPanel();
-        seguidoresPanel.setLayout(new BoxLayout(seguidoresPanel, BoxLayout.Y_AXIS));
-        seguidoresPanel.setBackground(new Color(18, 18, 18));
-
-        JLabel seguidoresLabel = new JLabel("Followers");
-        seguidoresLabel.setForeground(Color.LIGHT_GRAY);
-        seguidoresPanel.add(seguidoresLabel);
-
-        for (String seguidor : nombresSeguidores) {
-            JLabel seguidorLabel = new JLabel(seguidor);
-            seguidorLabel.setForeground(Color.WHITE);
-            seguidoresPanel.add(seguidorLabel);
-        }
-
-        // Mostrar seguidos
-        JPanel seguidosPanel = new JPanel();
-        seguidosPanel.setLayout(new BoxLayout(seguidosPanel, BoxLayout.Y_AXIS));
-        seguidosPanel.setBackground(new Color(18, 18, 18));
-
-        JLabel seguidosLabel = new JLabel("Following");
-        seguidosLabel.setForeground(Color.LIGHT_GRAY);
-        seguidosPanel.add(seguidosLabel);
-
-        for (String seguido : nombresSeguidos) {
-            JLabel seguidoLabel = new JLabel(seguido);
-            seguidoLabel.setForeground(Color.WHITE);
-            seguidosPanel.add(seguidoLabel);
-        }
-
-        // Agregar estos paneles a tu interfaz principal
-        topTracksLabel.add(seguidoresPanel);
-        topTracksLabel.add(Box.createVerticalStrut(20));
-        topTracksLabel.add(seguidosPanel);
-
-
-
-
-
-
-
-
         // Public Playlists Panel
         JPanel playlistsPanel = new JPanel();
         playlistsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        playlistsPanel.setBackground(new Color(18, 18, 18));
+        playlistsPanel.setBackground(fondo);
 
         JLabel publicPlaylistsLabel = new JLabel("Favorite Songs");
         publicPlaylistsLabel.setForeground(Color.LIGHT_GRAY);
@@ -193,7 +146,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
         for (String playlist : playlists) {
             JPanel playlistPanel = new JPanel();
             playlistPanel.setPreferredSize(new Dimension(100, 120));
-            playlistPanel.setBackground(new Color(18, 18, 18));
+            playlistPanel.setBackground(fondo);
             playlistPanel.setLayout(new BorderLayout());
 
             JLabel playlistLabel = new JLabel(playlist, SwingConstants.CENTER);
@@ -212,10 +165,9 @@ public class UserProfileForm extends JFrame implements ActionListener {
         // Adding Panels to Main Container
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(18, 18, 18));
-        mainPanel.add(profilePanel);
+        mainPanel.setBackground(fondo);
         mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(artistsPanel);
+        mainPanel.add(ArtistasPanel);
         mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(tracksPanel);
         mainPanel.add(Box.createVerticalStrut(20));
@@ -226,72 +178,154 @@ public class UserProfileForm extends JFrame implements ActionListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(scrollPane, BorderLayout.CENTER);
+    }
 
+    protected int getFollowersCount() {
+        ArrayList<Customer> seguidores = getSeguidores(idLogged);
+        if (seguidores == null) {
+            return 0; //devuelve 0 si no se encontraron seguidores
+        }
+        return seguidores.size();
+    }
+
+    protected int getFollowingCount() {
+        ArrayList<Customer> seguidos = getSeguidos(idLogged);
+        if (seguidos == null) {
+            return 0; //devuelve 0 si no se encontraron seguidores
+        }
+        return seguidos.size();
+    }
+
+    protected Customer getUsuario(int id) {
+        Customer customer = cliente.getCustomer(id);
+        return
+                customer;
     }
 
 
+    protected ArrayList<Customer> getTodosUsuarios() {
+        return cliente.getCustomers();
+    }
 
-    // Custom method to create circular borders (for avatar)
+    protected void openFollowersWindow() {
+        ArrayList<Customer> seguidores = getSeguidores(idLogged);
+        createUserGridWindow("Seguidores", seguidores);
+    }
+
+    protected void openFollowingWindow() {
+        ArrayList<Customer> seguidos = getSeguidos(idLogged);
+        createUserGridWindow("Seguidos", seguidos);
+    }
+
+
+    protected void actualizarProfileInfoLabel() {
+        profileInfoLabel.setText(numberOfPlaylists + " Saved Albums · " + getFollowersCount() + " Seguidores · " + getFollowingCount() + " Seguidos");
+    }
+
+
+    protected void addFollowingButton(JPanel buttonPanel) {
+        addFollowingButton = createStyledButton("Añadir Seguidos");
+        addFollowingButton.addActionListener(e -> openAddFollowingWindow());
+        buttonPanel.add(addFollowingButton);
+    }
+
+    private void openAddFollowingWindow() {
+        ArrayList<Customer> seguidos = getSeguidos(idLogged);
+        ArrayList<Customer> noSeguidos = getNoConnectedUsers(seguidos);
+        createUserGridWindow("Añadir Seguidos", noSeguidos);
+    }
+
+    protected ArrayList<Customer> getSeguidores(int id) {
+        return (ArrayList<Customer>) cliente.getSeguidores(id);
+    }
+
+    protected ArrayList<Customer> getSeguidos(int id) {
+        return (ArrayList<Customer>) cliente.getSeguidos(id);
+    }
+
+    private ArrayList<Customer> getNoConnectedUsers(ArrayList<Customer> connectedUsers) {
+        ArrayList<Customer> todosUsuarios = new ArrayList<>(getTodosUsuarios());
+        todosUsuarios.removeIf(user -> user.getId() == idLogged || connectedUsers.contains(user));
+        return todosUsuarios;
+    }
+
+    protected void createUserGridWindow(String title, ArrayList<Customer> users) {
+        JFrame frame = new JFrame(title);
+        frame.setSize(600, 400);
+        frame.setLayout(new BorderLayout());
+
+        JPanel gridPanel = new JPanel();
+        gridPanel.setLayout(new GridLayout(4, 3, 10, 10));
+        gridPanel.setBackground(fondo);
+
+        for (Customer user : users) {
+            JButton userButton = createStyledButton(user.getNombre());
+            userButton.setPreferredSize(new Dimension(120, 120));
+            userButton.setBackground(Color.WHITE);
+            userButton.setForeground(Color.BLACK);
+            if (title == "Añadir Seguidos") {
+                userButton.addActionListener(e -> {
+                    JOptionPane.showMessageDialog(this, "Conexión creada con: " + user.getNombre(), "Conexión", JOptionPane.INFORMATION_MESSAGE);
+                    // Creo la nueva conexión a través del cliente
+                    cliente.establishConnection(idLogged, user.getId());
+                    actualizarProfileInfoLabel();
+                });
+            } else {
+                userButton.addActionListener(e -> {
+                    new UserProfileOtros(user.getId(), session, cliente); //se muestra el perfil de otra persona
+                });
+            }
+            gridPanel.add(userButton);
+        }
+
+        frame.add(gridPanel, BorderLayout.CENTER);
+
+        JButton backButton = createBackButton(frame);
+        frame.add(backButton, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
+    }
+
+    protected JButton createBackButton(JFrame currentFrame) {
+        JButton backButton = createStyledButton("Volver a Mi Perfil");
+        backButton.setBackground(new Color(45, 45, 45));
+        backButton.setForeground(Color.WHITE);
+        backButton.addActionListener(e -> currentFrame.dispose());
+        return backButton;
+    }
+
+    protected JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(64, 64, 64));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Tahoma", Font.BOLD, 16));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(new Color(96, 96, 96));
+            }
+
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(new Color(64, 64, 64));
+            }
+        });
+        return button;
+    }
+
     public Border createCircleBorder(Color color) {
         return new AbstractBorder() {
             @Override
             public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
                 g.setColor(color);
-                g.fillOval(x, y, width, height);
+                g.drawOval(x, y, width - 1, height - 1);
             }
         };
     }
 
-
-
-    private String cargarDatosDelCliente(Cliente cliente) {
-        this.cliente = cliente; // Uso cliente para hacer las peticiones
-
-        // Obtener los seguidores y seguidos
-        //HashMap<String, Object> seguidoresResponse = cliente.getFollowers(idLogged);
-        //HashMap<String, Object> seguidosResponse = cliente.sentMessage("/getSeguidos", session);
-        cliente.getFollowers(idLogged);
-        ArrayList<Customer> listaSeguidores = cliente.getSeguidoresList();
-
-        // Inicializar las listas
-        this.nombresSeguidores = new ArrayList<>();
-        this.nombresSeguidos = new ArrayList<>();
-
-        // Extraer los nombres de los seguidores
-        /*ArrayList<Customer> seguidoresList = (ArrayList<Customer>) seguidoresResponse.get("Seguidores");
-        if (seguidoresList != null) {
-            for (Customer seguidor : seguidoresList) {
-                this.nombresSeguidores.add(seguidor.getNombreUsuario());
-            }
-        }*/
-
-        // Extraer los nombres de los seguidos
-        /*ArrayList<Customer> seguidosList = (ArrayList<Customer>) seguidosResponse.get("Seguidos");
-        if (seguidosList != null) {
-            for (Customer seguido : seguidosList) {
-                this.nombresSeguidos.add(seguido.getNombreUsuario());
-            }
-        }*/
-        for(Customer c : listaSeguidores){
-            this.nombresSeguidores.add(c.getNombre());
-        }
-
-        // Deberías tener más lógica aquí para completar el resto de la carga de datos, como el nombre de usuario.
-        return this.nombreUsuario;
-    }
-
-
-
-
-    /*public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            UserProfileForm userProfileForm = new UserProfileForm(1);
-            userProfileForm.setVisible(true);
-        });
-    }*/
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        //funcionalidad de los botones
+        // Funcionalidad de los botones
     }
 }
