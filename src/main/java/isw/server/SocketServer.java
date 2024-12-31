@@ -154,7 +154,6 @@ public class SocketServer extends Thread{
                     objectOutputStream.writeObject(mensajeOut);
                     break;
 
-
                 default:
                     System.out.println("\nParámetro no encontrado");
                     break;

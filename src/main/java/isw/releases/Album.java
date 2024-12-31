@@ -7,32 +7,22 @@ public class Album {
     private String title;
     private String artist;
     private String coverUrl;
+
+    public String getReleaseGroupID() {
+        return releaseGroupID;
+    }
+
+    public void setReleaseGroupID(String releaseGroupID) {
+        this.releaseGroupID = releaseGroupID;
+    }
+
     private String releaseGroupID;
     private Date release;
     private int numTracks, avgRating, personalRating;
 
-    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String releaseGroupID) {
-        this.id = id;
-        this.title = title;
-        this.artist = artist;
-        this.coverUrl = coverUrl;
-        this.release = release;
-        this.numTracks = numTracks;
-        this.releaseGroupID = releaseGroupID;
-    }
-
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public String getId() {
-        return id;
-    }
+    public String getTitle(){return title;}
+    public String getArtist(){return artist;}
+    public String getId(){return id;}
 
     public String getCoverUrl() {
         return coverUrl;
@@ -40,26 +30,6 @@ public class Album {
 
     public Date getRelease() {
         return release;
-    }
-
-    public String getReleaseDate() {
-        return release != null ? release.toString() : "Fecha desconocida";
-    }
-
-    public String getReleaseGroupID() {
-        return releaseGroupID;
-    }
-
-    public int getNumTracks() {
-        return numTracks;
-    }
-
-    public int getAvgRating() {
-        return avgRating;
-    }
-
-    public int getPersonalRating() {
-        return personalRating;
     }
 
     public void setId(String id) {
@@ -82,16 +52,24 @@ public class Album {
         this.release = release;
     }
 
-    public void setReleaseGroupID(String releaseGroupID) {
-        this.releaseGroupID = releaseGroupID;
+    public int getNumTracks() {
+        return numTracks;
     }
 
     public void setNumTracks(int numTracks) {
         this.numTracks = numTracks;
     }
 
+    public int getAvgRating() {
+        return avgRating;
+    }
+
     public void setAvgRating(int avgRating) {
         this.avgRating = avgRating;
+    }
+
+    public int getPersonalRating() {
+        return personalRating;
     }
 
     public void setPersonalRating(int personalRating) {
@@ -107,5 +85,18 @@ public class Album {
                 ", releaseDate=" + release +
                 ", trackCount=" + numTracks +
                 '}';
+    }
+
+
+    public Album(String id, String title, String artist, String coverUrl, Date release, int numTracks, String length, ArrayList<String> genres, String releaseGroupID) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.coverUrl = coverUrl;
+        this.release = release;
+        this.numTracks = numTracks;
+        this.length = length;
+        this.genres = genres;
+        this.releaseGroupID = releaseGroupID;
     }
 }

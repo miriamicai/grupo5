@@ -2,7 +2,6 @@ package isw.ui;
 
 import isw.cliente.Cliente;
 import isw.domain.AutentifCustomer;
-import isw.message.Message;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 
 public class LoginFrame extends JFrame {
 
-    //public Cliente cliente = new Cliente();
+    public Cliente cliente = new Cliente();
     public HashMap<String, Object> session = new HashMap<>();
 
     private Container container = getContentPane();
@@ -34,7 +33,6 @@ public class LoginFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         this.setResizable(false);
 
-
         setLayoutManager();
         setLocationAndSize();
         addComponentsToContainer();
@@ -56,15 +54,16 @@ public class LoginFrame extends JFrame {
         forgotButton.setForeground(new Color(32, 32, 32));
         signupButton.setForeground(new Color(32, 32, 32));
 
-        //cargar el logo desde la url de GitHub
+        //cargar el logo desde el archivo local con ajuste dinámico
         try {
-            URL imageUrl = new URL("https://raw.githubusercontent.com/miriamicai/grupo5/main/Fotos/soulmatelogosinfondo.png");
-            ImageIcon logo = new ImageIcon(imageUrl);
-            logoLabel.setIcon(logo);
-            logoLabel.setBounds(120, 65, 300, 240);  //posición y tamaño del logo
+            ImageIcon logoInicial = new ImageIcon("src/main/resources/soulmatelogosinfondo.png");
+            Image imagenEscala = logoInicial.getImage().getScaledInstance(200, 250, Image.SCALE_SMOOTH);
+            ImageIcon iconoEscala = new ImageIcon(imagenEscala);
+            logoLabel.setIcon(iconoEscala);
+            logoLabel.setBounds(150, 40, 200, 250);  //posición y tamaño del logo ajustado
             container.add(logoLabel);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error cargando la imagen del logo.");
+            JOptionPane.showMessageDialog(this, "Error cargando la imagen del logo desde el archivo local.");
             e.printStackTrace();
         }
 
@@ -73,18 +72,13 @@ public class LoginFrame extends JFrame {
 
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
-            Cliente cliente = new Cliente(); //instancio un cliente
-            HashMap<String, Object> session = new HashMap<>(); //creo la sesión
-            //añadir usuario y contraseña a la sesión
-            session.put("usuario", usuario);
-            session.put("contraseña", password);
-            boolean ses = cliente.login(session);
-
-            //la lógica de la autentif pasa a estar en el backend
-
-            if (ses) {
+            //lógica en domain.AutetifCustomer
+            AutentifCustomer verif = new AutentifCustomer();
+            int id_logged = verif.VerificarLogin(usuario, password);
+            if (id_logged != 0) {
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-                new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
+                session.put("id_logged", id_logged);
+                new JVentanaLogged(id_logged, session, cliente);
             } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
@@ -125,47 +119,7 @@ public class LoginFrame extends JFrame {
         container.add(signupButton);
     }
 
-    /*
-    public void addActionEvent() {
-        loginButton.addActionListener(this);
-        forgotButton.addActionListener(this);
-        signupButton.addActionListener(this);
-    }*/
-
-
-
-
-    /* Overriding actionPerformed() method
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
-            // Get user input
-            String username = userTextField.getText();
-            String password = new String(passwordField.getPassword());
-
-            if (username.isEmpty() || password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Please enter all fields.");
-            }
-        } else if (e.getSource() == forgotButton) {
-            // Forgot password logic
-            String email = JOptionPane.showInputDialog(this, "Enter your email to reset password:");
-            if (email != null && !email.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "A password reset link has been sent to " + email);
-            } else {
-                JOptionPane.showMessageDialog(this, "Email is required to reset password.");
-            }
-        } else if (e.getSource() == signupButton) {
-            // Open registration form (assuming it's another class)
-            new RegistrationForm();  // Replace with actual form class
-        }
-    }*/
-
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         LoginFrame frame = new LoginFrame();
-        /*frame.setTitle("Login Form");
-        frame.setVisible(true);
-        frame.setBounds(10, 10, 500, 650);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-    }*/
+    }
 }
