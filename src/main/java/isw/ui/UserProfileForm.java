@@ -8,6 +8,8 @@ import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -74,10 +76,10 @@ public class UserProfileForm extends JFrame implements ActionListener {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
         buttonPanel.setBackground(new Color(18, 18, 18));
 
-        JButton followersButton = new JButton("Seguidores");
+        JButton followersButton = createStyledButton("Seguidores");
         followersButton.addActionListener(e -> openFollowersWindow(seguidores));
 
-        JButton followingButton = new JButton("Seguidos");
+        JButton followingButton = createStyledButton("Seguidos");
         followingButton.addActionListener(e -> openFollowingWindow(seguidos));
 
         buttonPanel.add(followersButton);
@@ -86,7 +88,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
         headerPanel.add(profileNameLabel);
         headerPanel.add(buttonPanel);
 
-        JLabel profileInfoLabel = new JLabel(numberOfPlaylists + " Saved Albums · " + followersCount + " Followers · " + followingCount + " Following");
+        JLabel profileInfoLabel = new JLabel(numberOfPlaylists + " Saved Albums · " + followersCount + " Seguidores · " + followingCount + " Seguidos");
         profileInfoLabel.setForeground(Color.LIGHT_GRAY);
 
         profilePanel.add(headerPanel, BorderLayout.NORTH);
@@ -94,7 +96,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setBackground(new Color(18, 18, 18));
+        mainPanel.setBackground(fondo);
         mainPanel.add(profilePanel);
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -140,10 +142,10 @@ public class UserProfileForm extends JFrame implements ActionListener {
     private JPanel createGridPanel(ArrayList<Customer> users) {
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(4, 3, 10, 10));
-        gridPanel.setBackground(new Color(18, 18, 18));
+        gridPanel.setBackground(fondo);
 
         for (Customer user : users) {
-            JButton userButton = new JButton(user.getNombre());
+            JButton userButton = createStyledButton(user.getNombre());
             userButton.setPreferredSize(new Dimension(120, 120));
             userButton.setBackground(Color.WHITE);
             userButton.setForeground(Color.BLACK);
@@ -155,11 +157,30 @@ public class UserProfileForm extends JFrame implements ActionListener {
     }
 
     private JButton createBackButton(JFrame currentFrame) {
-        JButton backButton = new JButton("Volver a Mi Perfil");
+        JButton backButton = createStyledButton("Volver a Mi Perfil");
         backButton.setBackground(new Color(45, 45, 45));
         backButton.setForeground(Color.WHITE);
         backButton.addActionListener(e -> currentFrame.dispose());
         return backButton;
+    }
+
+    private JButton createStyledButton(String text) {
+        JButton button = new JButton(text);
+        button.setFocusPainted(false);
+        button.setBackground(new Color(64, 64, 64));
+        button.setForeground(Color.WHITE);
+        button.setFont(new Font("Tahoma", Font.BOLD, 16));
+        button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
+                button.setBackground(new Color(96, 96, 96));
+            }
+            public void mouseExited(MouseEvent evt) {
+                button.setBackground(new Color(64, 64, 64));
+            }
+        });
+        return button;
     }
 
     public Border createCircleBorder(Color color) {
