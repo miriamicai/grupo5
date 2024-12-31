@@ -47,7 +47,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
 
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setBackground(new Color(18, 18, 18));
+        headerPanel.setBackground(fondo);
 
         JLabel profileLabel = new JLabel("Perfil");
         profileLabel.setForeground(Color.LIGHT_GRAY);
@@ -68,13 +68,12 @@ public class UserProfileForm extends JFrame implements ActionListener {
         headerPanel.add(avatarLabel);
         headerPanel.add(Box.createVerticalStrut(10));
 
-        //String nombreUsuario = getUsuario(idLogged).getNombre();
         JLabel profileNameLabel = new JLabel(String.valueOf(session.get("usuario")));
         profileNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
         profileNameLabel.setForeground(Color.WHITE);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        buttonPanel.setBackground(new Color(18, 18, 18));
+        buttonPanel.setBackground(fondo);
 
         JButton followersButton = createStyledButton("Seguidores");
         followersButton.addActionListener(e -> openFollowersWindow(seguidores));
@@ -82,8 +81,12 @@ public class UserProfileForm extends JFrame implements ActionListener {
         JButton followingButton = createStyledButton("Seguidos");
         followingButton.addActionListener(e -> openFollowingWindow(seguidos));
 
+        JButton addFollowingButton = createStyledButton("Añadir Seguidos");
+        addFollowingButton.addActionListener(e -> openAddFollowingWindow(seguidos));
+
         buttonPanel.add(followersButton);
         buttonPanel.add(followingButton);
+        buttonPanel.add(addFollowingButton);
 
         headerPanel.add(profileNameLabel);
         headerPanel.add(buttonPanel);
@@ -107,39 +110,38 @@ public class UserProfileForm extends JFrame implements ActionListener {
     }
 
     private Customer getUsuario(int idLogged) {
-        Customer customer = cliente.getCustomer(idLogged);
-        return customer;
+        return cliente.getCustomer(idLogged);
+    }
+
+    private ArrayList<Customer> getTodosUsuarios() {
+        return cliente.getCustomers();
     }
 
     private void openFollowersWindow(ArrayList<Customer> seguidores) {
-        JFrame followersFrame = new JFrame("Seguidores");
-        followersFrame.setSize(600, 400);
-        followersFrame.setLayout(new BorderLayout());
-
-        JPanel gridPanel = createGridPanel(seguidores);
-        followersFrame.add(gridPanel, BorderLayout.CENTER);
-
-        JButton backButton = createBackButton(followersFrame);
-        followersFrame.add(backButton, BorderLayout.SOUTH);
-
-        followersFrame.setVisible(true);
+        createUserGridWindow("Seguidores", seguidores);
     }
 
     private void openFollowingWindow(ArrayList<Customer> seguidos) {
-        JFrame followingFrame = new JFrame("Seguidos");
-        followingFrame.setSize(600, 400);
-        followingFrame.setLayout(new BorderLayout());
-
-        JPanel gridPanel = createGridPanel(seguidos);
-        followingFrame.add(gridPanel, BorderLayout.CENTER);
-
-        JButton backButton = createBackButton(followingFrame);
-        followingFrame.add(backButton, BorderLayout.SOUTH);
-
-        followingFrame.setVisible(true);
+        createUserGridWindow("Seguidos", seguidos);
     }
 
-    private JPanel createGridPanel(ArrayList<Customer> users) {
+    private void openAddFollowingWindow(ArrayList<Customer> seguidos) {
+        ArrayList<Customer> noSeguidos = getNoConnectedUsers(seguidos);
+        System.out.println(noSeguidos);
+        createUserGridWindow("Añadir Seguidos", noSeguidos);
+    }
+
+    private ArrayList<Customer> getNoConnectedUsers(ArrayList<Customer> connectedUsers) {
+        ArrayList<Customer> todosUsuarios = new ArrayList<>(getTodosUsuarios());
+        todosUsuarios.removeIf(user -> user.getId() == idLogged || connectedUsers.contains(user));
+        return todosUsuarios;
+    }
+
+    private void createUserGridWindow(String title, ArrayList<Customer> users) {
+        JFrame frame = new JFrame(title);
+        frame.setSize(600, 400);
+        frame.setLayout(new BorderLayout());
+
         JPanel gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(4, 3, 10, 10));
         gridPanel.setBackground(fondo);
@@ -149,11 +151,20 @@ public class UserProfileForm extends JFrame implements ActionListener {
             userButton.setPreferredSize(new Dimension(120, 120));
             userButton.setBackground(Color.WHITE);
             userButton.setForeground(Color.BLACK);
-            userButton.addActionListener(e -> JOptionPane.showMessageDialog(this, "Perfil de: " + user.getNombre(), "Perfil", JOptionPane.INFORMATION_MESSAGE));
+            userButton.addActionListener(e -> {
+                JOptionPane.showMessageDialog(this, "Conexión creada con: " + user.getNombre(), "Conexión", JOptionPane.INFORMATION_MESSAGE);
+                // Creo la nueva conexión a través del cliente
+                cliente.establishConnection(idLogged, user.getId());
+            });
             gridPanel.add(userButton);
         }
 
-        return gridPanel;
+        frame.add(gridPanel, BorderLayout.CENTER);
+
+        JButton backButton = createBackButton(frame);
+        frame.add(backButton, BorderLayout.SOUTH);
+
+        frame.setVisible(true);
     }
 
     private JButton createBackButton(JFrame currentFrame) {
@@ -176,6 +187,7 @@ public class UserProfileForm extends JFrame implements ActionListener {
             public void mouseEntered(MouseEvent evt) {
                 button.setBackground(new Color(96, 96, 96));
             }
+
             public void mouseExited(MouseEvent evt) {
                 button.setBackground(new Color(64, 64, 64));
             }

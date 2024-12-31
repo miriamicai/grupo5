@@ -345,6 +345,37 @@ public class Cliente {
     }
 
 
+    public ArrayList<Customer> getCustomers(){
+        /*Message messageOut = new Message();
+        messageOut.setContext("/getCustomers");
+
+        //se envía el id del cliente en el HashMap
+        HashMap<String, Object> session = new HashMap<>();
+        messageOut.setSession(session);
+
+        Message messageIn = new Message();
+        sent(messageOut, messageIn); //se envía el mensaje al servidor
+
+        //procesar la respuesta del SocketServer
+        ArrayList<Customer> customers = null;
+        if ("/getCustomerResponse".equals(messageIn.getContext())) {
+            customers = (ArrayList<Customer>) messageIn.getSession().get("Customers");
+            if (customers != null) {
+                System.out.println("Cliente: Customers recuperados.");
+            } else {
+                System.out.println("Cliente: No hay customers en la base de datos.");
+            }
+        } else {
+            System.out.println("Cliente: Respuesta inesperada del servidor.");
+        }
+        return customers;*/
+        CustomerControler customerControler = new CustomerControler();
+        ArrayList<Customer> customers = new ArrayList<Customer>();
+        ArrayList<Customer> clientes = customerControler.getCustomers(customers);
+        return clientes;
+    }
+
+
 
 
 

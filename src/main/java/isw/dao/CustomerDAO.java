@@ -11,7 +11,7 @@ import isw.domain.Customer;
 
 public class CustomerDAO {
 
-    public static void getClientes(ArrayList<Customer> lista) { //devuelve lista de Clientes
+    public static ArrayList<Customer> getClientes(ArrayList<Customer> lista) { //devuelve lista de Clientes
         Connection conexion =ConnectionDAO.getInstance().getConnection(); //instance de la DAO -> como objeto Connection
         //RENOMBRADO NECESARIO PARA MI TABLA
         try (PreparedStatement pst = conexion.prepareStatement("SELECT * FROM users");
@@ -30,6 +30,7 @@ public class CustomerDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return lista;
     }
 
     public static Customer getCliente(int id) { //se usa en CustomerControler
