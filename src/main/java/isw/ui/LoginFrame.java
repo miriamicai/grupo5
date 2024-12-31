@@ -2,6 +2,7 @@ package isw.ui;
 
 import isw.cliente.Cliente;
 import isw.domain.AutentifCustomer;
+import isw.domain.LoginHash;
 
 import javax.swing.*;
 import java.awt.*;
@@ -69,7 +70,7 @@ public class LoginFrame extends JFrame {
 
         // Lógica para iniciar sesión
         loginButton.addActionListener(e -> {
-
+            //LoginHash loginhash = new LoginHash();
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
             Cliente cliente = new Cliente(); //instancio un cliente
@@ -81,6 +82,7 @@ public class LoginFrame extends JFrame {
             int idLogged = cliente.login(session);
 
             if (idLogged > 0){
+                LoginHash.setCredentials(session);
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
                 new JVentanaLogged(idLogged, session, cliente); // Abrir la nueva ventana
             } else {

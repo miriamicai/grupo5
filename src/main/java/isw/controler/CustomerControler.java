@@ -6,6 +6,7 @@ import java.util.Date;
 
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
+import isw.domain.PasswordSegura;
 //import isw.domain.PasswordSegura;
 
 public class CustomerControler {

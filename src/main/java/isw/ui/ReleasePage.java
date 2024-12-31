@@ -1,6 +1,7 @@
 package isw.ui;
 
 import isw.cliente.Cliente;
+import isw.domain.LoginHash;
 import isw.releases.Album;
 import javax.swing.*;
 import java.net.URL;
@@ -16,7 +17,7 @@ public class ReleasePage extends JFrame{
     private JLabel artist;
     private JLabel track_Count;
     private JLabel length;
-    public HashMap<Integer, Integer> user_sessions;
+    public HashMap<String, Object> user_session;
     private Cliente c;
 
     public ReleasePage(Album album) {
@@ -49,7 +50,8 @@ public class ReleasePage extends JFrame{
     }
 
     private void initializeUIComponents() {
-        int logID = c.login();
+        user_session = LoginHash.getCredentials();
+        int logID = c.login(user_session);
         // Initialize labels with default text
         title = new JLabel("Title: ");
         artist = new JLabel("Artist: ");

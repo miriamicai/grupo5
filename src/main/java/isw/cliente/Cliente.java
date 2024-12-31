@@ -9,8 +9,10 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import isw.configuration.PropertiesISW;
+import isw.controler.CustomerControler;
 import isw.domain.Customer;
 import isw.message.Message;
 
