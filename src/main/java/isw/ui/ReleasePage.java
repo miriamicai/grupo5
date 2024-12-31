@@ -19,9 +19,9 @@ public class ReleasePage extends JFrame{
     public HashMap<Integer, Integer> user_sessions;
     private Cliente c;
 
-    public ReleasePage(Album album, Cliente c) {
+    public ReleasePage(Album album) {
         this.album = album;
-        this.c = c;
+        c = new Cliente();
         setTitle(album.getTitle());
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -49,6 +49,7 @@ public class ReleasePage extends JFrame{
     }
 
     private void initializeUIComponents() {
+        int logID = c.login();
         // Initialize labels with default text
         title = new JLabel("Title: ");
         artist = new JLabel("Artist: ");
@@ -57,6 +58,9 @@ public class ReleasePage extends JFrame{
         genres = new JLabel("Genres: ");
         length = new JLabel("Length: ");
         //cover = new JLabel("Cover not available");
+
+        saveChangesButton.addActionListener(e -> onSave(logID));
+        cancelButton.addActionListener(e -> onCancel());
 
         // Initialize input fields
         ratingBox = new JTextField(5); // Small text field for ratings
