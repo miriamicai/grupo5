@@ -4,21 +4,23 @@ import java.sql.*;
 
 import isw.configuration.PropertiesISW;
 
+
 public class ConnectionDAO {
     private static ConnectionDAO connectionDAO;
-    private Connection conexion;
+    private Connection con;
 
     private ConnectionDAO() {
         String url = PropertiesISW.getInstance().getProperty("ddbb.connection");
         String user = PropertiesISW.getInstance().getProperty("ddbb.user");
         String password = PropertiesISW.getInstance().getProperty("ddbb.password");
         try {
-            conexion = DriverManager.getConnection(url, user, password); //con la base de datos
-        }catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+            con = DriverManager.getConnection(url, user, password);
+        }catch (SQLException ex) {
 
+            System.out.println(ex.getMessage());
+        }
+
+    }
 
     public static ConnectionDAO getInstance() {
         if (connectionDAO == null) {
@@ -28,8 +30,9 @@ public class ConnectionDAO {
     }
 
     public Connection getConnection() {
-        return conexion;
+        return con;
     }
+
 
 
 

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import isw.domain.AutentifCustomer;
 import isw.domain.Customer;
 
 public class CustomerDAO {
@@ -49,6 +50,38 @@ public class CustomerDAO {
         }
         return cu; //devuelve la información del customer si coincide el id, si no será nulo
     }
+
+
+    public static int getClienteLogin(String user, String password) { //se usa en CustomerControler
+        Connection conexion = ConnectionDAO.getInstance().getConnection();
+        int idLogged = 0;
+
+        String query = "SELECT * FROM users WHERE usuario = ?";
+        try (PreparedStatement pst = conexion.prepareStatement(query)) {
+            // Sustituimos el parámetro en la consulta
+            pst.setString(1, user);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                // Verificamos si hay resultados
+                if (rs.next()) {
+                    String pss = rs.getString("contraseña");
+
+                    AutentifCustomer autentif = new AutentifCustomer();
+                    boolean verificar = autentif.VerificarLogin(user, password, pss);
+                    if (verificar) {
+                        idLogged = rs.getInt("id");
+                    }
+                } else {
+                    System.out.println("Usuario no encontrado.");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return idLogged; // Devuelve la información del customer o 0 si no se encontró
+    }
+
 
     // Método para añadir usuarios a la tabla (revisado para evitar duplicacion)
     public static void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException {

@@ -18,11 +18,16 @@ public class CustomerControler {
         //se devuelve los datos del cliente en función de su id (sacado de nuestra base de datos)
         return(CustomerDAO.getCliente(id));
     }
-    //CustomerControler
-    public void addUser(String usuario, String nombre, String email, String contraseña) throws SQLException, SQLException, SQLException {
-        //CustomerDAO dao = new CustomerDAO();
-        //String passwordSegura = PasswordSegura.hashPassword(contraseña);
-        CustomerDAO.addUser(usuario, nombre, email, contraseña);
+
+    public void addUser(String usuario, String nombre, String email, String password) throws SQLException {
+        String passwordSegura = PasswordSegura.hashPassword(password);
+        CustomerDAO.addUser(usuario, nombre, email, passwordSegura);
+    }
+
+    public int login (String usuario, String password_nohashed){
+        int id_logged = CustomerDAO.getClienteLogin(usuario, password_nohashed);
+        System.out.println(id_logged);
+        return id_logged; //devuelve el id del usuario para mantener la sesión activa
     }
 
     public void logRelease(int uid, String mid, String title, String artist, Date release){

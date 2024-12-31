@@ -72,17 +72,30 @@ public class LoginFrame extends JFrame {
 
             String usuario = userTextField.getText();
             String password = new String(passwordField.getPassword());
-            //lógica en domain.AutetifCustomer
-            AutentifCustomer verif = new AutentifCustomer();
-            int id_logged = verif.VerificarLogin(usuario, password);
-            if (id_logged!=0){
+            Cliente cliente = new Cliente(); //instancio un cliente
+            HashMap<String, Object> session = new HashMap<>(); //creo la sesión
+            //añadir usuario y contraseña a la sesión
+            session.put("usuario", usuario);
+            session.put("contraseña", password);
+            System.out.println("botón pulsado correcto");
+            int idLogged = cliente.login(session);
+
+            if (idLogged > 0){
                 JOptionPane.showMessageDialog(this, "¡Login exitoso!");
-                session.put("id_logged", id_logged);
-                //System.out.println("Bien en LoginFrame");
-                new JVentanaLogged(id_logged, session,cliente);
-            }else{
+                new JVentanaLogged(idLogged, session, cliente); // Abrir la nueva ventana
+            } else {
                 JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
             }
+
+
+            //la lógica de la autentif pasa a estar en el backend
+
+            /*if (session.containsKey("id_logged") && (int) session.get("id_logged") > 0 ) {
+                JOptionPane.showMessageDialog(this, "¡Login exitoso!");
+                new JVentanaLogged((int) session.get("id_logged"), session, cliente); // Abrir la nueva ventana
+            } else {
+                JOptionPane.showMessageDialog(this, "Usuario o contraseña incorrectos.");
+            }*/
         });
 
     }

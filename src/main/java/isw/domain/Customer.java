@@ -107,7 +107,11 @@ public class Customer implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password; //contraseña no hashed
+    }
+
+    public void setPasswordHash(String password) {
+        this.password = PasswordSegura.hashPassword(password); //contraseña hashed
     }
 
     public String getNombre() {
@@ -139,14 +143,14 @@ public class Customer implements Serializable {
 
 
     public void getInfoPruebas() {
-        System.out.println(this.id + " " + this.password + " " + this.correo);
+        System.out.println(this.id + " " + this.password + " ");// + this.correo);
     }
 
-    public void setIdNuevo(){
-        this.id = 2;
-    }
+    //public void setIdNuevo(){
+        //this.id = 2;
+    //}
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if ((o != null) && (o instanceof Customer)) {
             Customer cu = (Customer) o;
@@ -155,6 +159,19 @@ public class Customer implements Serializable {
                             (Objects.equals(this.nombre_usuario, cu.getCorreo())) //estará almacenado en nombre_usuario (sette)
                     )
                             && Objects.equals(this.password, cu.getPassword()))) { //objects añade seguridad
+                return true; //determino que son iguales por su nombre de usuario o por su correo
+            }
+        }
+        return false;
+    }*/
+
+
+    @Override
+    public boolean equals(Object o) {
+        if ((o != null) && (o instanceof Customer)) {
+            Customer cu = (Customer) o;
+            if (((Objects.equals(this.nombre_usuario, cu.getNombreUsuario())) ||
+                    (Objects.equals(this.nombre_usuario, cu.getCorreo())))){ //estará almacenado en nombre_usuario (sette)
                 return true; //determino que son iguales por su nombre de usuario o por su correo
             }
         }
