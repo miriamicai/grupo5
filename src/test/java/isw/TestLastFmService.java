@@ -27,8 +27,8 @@ public class TestLastFmService {
     public void testSearchAlbum() {
         // Simular respuesta de la API
         Mockito.doReturn(Arrays.asList(
-                new Album("1", "Album1", "Artist1", "http://image1.com", null, 10, "1"),
-                new Album("2", "Album2", "Artist2", "http://image2.com", null, 8, "2")
+                new Album("1", "Album1", "Artist1", "http://image1.com", null, 10, "30:00", Arrays.asList("Rock"), "1"),
+                new Album("2", "Album2", "Artist2", "http://image2.com", null, 8, "25:00", Arrays.asList("Pop"), "2")
         )).when(lastFmService).searchAlbum("test");
 
         // Ejecutar el método
@@ -40,6 +40,8 @@ public class TestLastFmService {
         assertEquals("Album1", albums.get(0).getTitle());
         assertEquals("Artist1", albums.get(0).getArtist());
         assertEquals("http://image1.com", albums.get(0).getCoverUrl());
+        assertEquals("30:00", albums.get(0).getLength());
+        assertEquals("Rock", albums.get(0).getGenres().get(0));
     }
 
     @Test

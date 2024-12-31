@@ -10,13 +10,13 @@ import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class AlbumDisplayPanel extends JPanel{
+public class AlbumDisplayPanel extends JPanel {
     private JLabel name, artist, cover;
     private JPanel TotalAlbumPanel;
     private JButton logButton;
     public Album dAlbum;
 
-    public AlbumDisplayPanel(Album album){
+    public AlbumDisplayPanel(Album album) {
         setLayout(new BorderLayout());
 
         String title = album.getTitle() != null ? album.getTitle() : "Unknown Title";
@@ -48,21 +48,22 @@ public class AlbumDisplayPanel extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Action to perform on click
-                /*JOptionPane.showMessageDialog(
-                        AlbumDisplayPanel.this,
-                        "You clicked on: " + title + " by " + artist,
-                        "Album Clicked",
-                        JOptionPane.INFORMATION_MESSAGE
-                );*/
-                dAlbum = fmService.getAlbumDetails(album.getId());
-                if (dAlbum == null) {
-                    //JOptionPane.showMessageDialog(null, "Album details not available.", "Error", JOptionPane.ERROR_MESSAGE);
+                dAlbum = album.getId() != null ? fmService.getAlbumDetails(album.getId()) : null;
+
+                if (dAlbum == null && album.getArtist() != null && album.getTitle() != null) {
                     dAlbum = fmService.getAlbumDetails(album.getArtist(), album.getTitle());
-                    if (dAlbum == null){
-                        JOptionPane.showMessageDialog(null, "Album details not available.", "Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
                 }
+
+                if (dAlbum == null) {
+                    JOptionPane.showMessageDialog(
+                            AlbumDisplayPanel.this,
+                            "Album details not available.",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+
                 createReleasePage(dAlbum); // Proceed only if album is valid
             }
         });
@@ -82,12 +83,9 @@ public class AlbumDisplayPanel extends JPanel{
         add(coverLabel, BorderLayout.SOUTH);
     }
 
-    private void initComponents(){}
+    private void initComponents() {}
 
-
-    public void createReleasePage(Album album){
+    public void createReleasePage(Album album) {
         new ReleasePage(album);
-        //releaseWindow.setVisible(true);
     }
 }
-
