@@ -188,16 +188,13 @@ public class Cliente {
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
 
                 //Create the objetct to send
-                System.out.println("Antes output");
                 objectOutputStream.writeObject(messageOut);
-                System.out.println("Después output");
 
                 // create a DataInputStream so we can read data from it.
                 ObjectInputStream objectInputStream = new ObjectInputStream(in);
                 Message msg = (Message) objectInputStream.readObject();
                 messageIn.setContext(msg.getContext());
                 messageIn.setSession(msg.getSession());
-                System.out.println("Llega hasta antes de los catch");
 		        /*System.out.println("\n1.- El valor devuelto es: "+messageIn.getContext());
 		        String cadena=(String) messageIn.getSession().get("Nombre");
 		        System.out.println("\n2.- La cadena devuelta es: "+cadena);*/
@@ -318,7 +315,7 @@ public class Cliente {
 
     //CAMBIO 3
     public Customer getCustomer(int id) {
-        Message messageOut = new Message();
+        /*Message messageOut = new Message();
         messageOut.setContext("/getCustomer");
 
         //se envía el id del cliente en el HashMap
@@ -341,6 +338,9 @@ public class Cliente {
         } else {
             System.out.println("Respuesta inesperada del servidor.");
         }
+        return customer;*/
+        CustomerControler customerControler = new CustomerControler();
+        Customer customer = customerControler.getCustomer(id);
         return customer;
     }
 

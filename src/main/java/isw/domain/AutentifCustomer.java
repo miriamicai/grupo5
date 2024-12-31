@@ -22,7 +22,7 @@ public class AutentifCustomer {
         //System.out.println(lista);
 
         Customer esUsuario = new Customer(usuario, password_nohash);
-        esUsuario.getInfoPruebas(); //imprimir contraseña NO HASHEDADA
+        //esUsuario.getInfoPruebas(); //imprimir contraseña NO HASHEDADA
 
         for (Customer customer : lista) {
 

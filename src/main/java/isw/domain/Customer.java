@@ -139,12 +139,9 @@ public class Customer implements Serializable {
     }
 
 
-
-
-
-    public void getInfoPruebas() {
+    /*public void getInfoPruebas() {
         System.out.println(this.id + " " + this.password + " ");// + this.correo);
-    }
+    }*/
 
     //public void setIdNuevo(){
         //this.id = 2;

@@ -22,11 +22,11 @@ public class JVentanaLogged extends JVentana{
         btnMiPerfil.addActionListener(e -> {
             try {
                 // Muestra un mensaje para confirmar que se detecta el clic
-                System.out.println("Botón 'Mi perfil' presionado.");
+                //System.out.println("Botón 'Mi perfil' presionado.");
 
                 // Intenta abrir la ventana de perfil
                 new UserProfileForm(idLogged, session, cliente);
-                System.out.println("Ventana 'UserProfileForm' abierta correctamente.");
+                //System.out.println("Ventana 'UserProfileForm' abierta correctamente.");
             } catch (Exception ex) {
                 // Maneja excepciones y muestra el error en la consola
                 ex.printStackTrace();

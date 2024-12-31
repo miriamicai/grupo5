@@ -16,7 +16,7 @@ public class CustomerControler {
     }
     public Customer getCustomer(int id) {
         //se devuelve los datos del cliente en función de su id (sacado de nuestra base de datos)
-        return(CustomerDAO.getCliente(id));
+        return (CustomerDAO.getCliente(id));
     }
 
     public void addUser(String usuario, String nombre, String email, String password) throws SQLException {
