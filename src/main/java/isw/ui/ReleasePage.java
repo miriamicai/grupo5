@@ -1,10 +1,13 @@
 package isw.ui;
 
+import isw.cliente.Cliente;
 import isw.releases.Album;
 import javax.swing.*;
 import java.net.URL;
+import java.util.HashMap;
 
 public class ReleasePage extends JFrame{
+    private Album album;
     private JLabel title, cover, releaseDate, avgRating, genres, rating, review;
     private JTextField ratingBox;
     private JTextArea reviewBox;
@@ -13,8 +16,12 @@ public class ReleasePage extends JFrame{
     private JLabel artist;
     private JLabel track_Count;
     private JLabel length;
+    public HashMap<Integer, Integer> user_sessions;
+    private Cliente c;
 
-    public ReleasePage(Album album) {
+    public ReleasePage(Album album, Cliente c) {
+        this.album = album;
+        this.c = c;
         setTitle(album.getTitle());
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -91,5 +98,29 @@ public class ReleasePage extends JFrame{
         } catch (Exception e) {
             cover.setText("Cover not available");
         }
+    }
+
+    private void onSave(int login){
+
+        String rating = ratingBox.getText().trim();
+        String review = reviewBox.getText().trim();
+
+        /*if(rating.isEmpty() || review.isEmpty()){
+            JOptionPane.showMessageDialog(this, "Please enter a rating or a review.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }*/
+
+        //boolean nonZeroValue = loginSessions.values().stream().anyMatch(value -> value > 0);
+        if(login > 0){
+            String albumId = (album.getId() != null && !album.getId().isEmpty()) ? album.getId() : "NO_ID";
+            c.logRelease(login, albumId, album.getTitle(),album.getArtist(), album.getRelease());
+        }else{
+            JOptionPane.showMessageDialog(this, "Please log in before logging a release.", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+    }
+
+    private void onCancel(){
+        dispose();
     }
 }

@@ -2,6 +2,7 @@ package isw.controler;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import isw.dao.CustomerDAO;
 import isw.domain.Customer;
@@ -22,5 +23,9 @@ public class CustomerControler {
         //CustomerDAO dao = new CustomerDAO();
         //String passwordSegura = PasswordSegura.hashPassword(contraseña);
         CustomerDAO.addUser(usuario, nombre, email, contraseña);
+    }
+
+    public void logRelease(int uid, String mid, String title, String artist, Date release){
+        CustomerDAO.logRelease(uid, mid, title, artist, release);
     }
 }

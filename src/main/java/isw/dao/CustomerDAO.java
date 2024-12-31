@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import isw.domain.Customer;
 
@@ -70,6 +71,36 @@ public class CustomerDAO {
         } catch (SQLException e) {
             System.out.println("Error while adding user: " + e.getMessage());
             throw e; // rethrow exception to allow SocketServer to handle it
+        }
+    }
+
+    public static void logRelease(int uid, String mid, String title, String artist, Date release){
+        Connection connection = ConnectionDAO.getInstance().getConnection();
+
+        // SQL query to insert into the user_logs table
+        String sql = "INSERT INTO user_logs (user_id, external_id, release_title, release_artist, release_date) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            // Set the parameters for the query
+            pstmt.setInt(1, uid); // user_id
+            pstmt.setString(2, mid.equals("NO_ID") ? null : mid);
+            pstmt.setString(3, title); // release_title
+            pstmt.setString(4, artist); // release_artist
+            if (release != null) {
+                pstmt.setDate(5, (java.sql.Date) release); // release_date
+            } else {
+                pstmt.setNull(5, java.sql.Types.DATE); // Set NULL if no release_date
+            }
+
+            // Execute the query
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Release logged successfully!");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Error logging the release: " + e.getMessage());
         }
     }
 

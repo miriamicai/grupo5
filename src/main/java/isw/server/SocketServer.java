@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -128,6 +129,16 @@ public class SocketServer extends Thread{
                     mensajeOut.setSession(session);
                     objectOutputStream.writeObject(mensajeOut);
                     break;
+
+                case "/logRelease":
+                    customerControler = new CustomerControler();
+                    id = (int) session.get("id_usuario");
+                    String mid = (String) session.get("id_musical");
+                    String title = (String) session.get("titulo");
+                    String artista = (String) session.get("artista");
+                    Date estreno = (Date) session.get("estreno");
+                    customerControler.logRelease(id, mid, title, artista, estreno);
+                    mensajeOut.setContext("/logReleaseResponse");
 
                 default:
                     System.out.println("\nParámetro no encontrado");

@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import isw.configuration.PropertiesISW;
 import isw.domain.Customer;
@@ -80,6 +81,7 @@ public class Cliente {
                     System.out.println("Unexpected response from server for /addUserResponse");
                 }
                 break;
+
             case "/connectUserResponse":
                 String mensaje = (String) mensajeVuelta.getSession().get("message");
                 if (mensaje != null) {
@@ -87,7 +89,7 @@ public class Cliente {
                 } else if (mensajeVuelta.getSession().containsKey("error")) {
                     System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
                 } else {
-                    System.out.println("Unexpected response from server for /addUserResponse");
+                    System.out.println("Unexpected response from server for /connectUserResponse");
                 }
                 break;
             case "/getSeguidoresResponse": // Seguidores
@@ -114,8 +116,18 @@ public class Cliente {
                 }
                 break;
 
-            default:
+            case "logReleaseResponse":
+                String m = (String) mensajeVuelta.getSession().get("message");
+                if (m != null) {
+                    System.out.println("Server response: " + m);
+                } else if (mensajeVuelta.getSession().containsKey("error")) {
+                    System.out.println("Error: " + mensajeVuelta.getSession().get("error"));
+                } else {
+                    System.out.println("Unexpected response from server for /logReleaseResponse");
+                }
+                break;
 
+            default:
                 System.out.println("\nError a la vuelta");
                 break;
 
@@ -227,8 +239,36 @@ public class Cliente {
         messageOut.setSession(session);
 
         sent(messageOut, new Message());
-
         System.out.println("User added to database from Cliente registerUser() method.");
+    }
+
+    public void logRelease(int uid, String mid, String title, String artist, Date release){
+        Message messageOut = new Message();
+        messageOut.setContext("/logRelease");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_usuario", uid);
+        session.put("id_musical", mid);
+        session.put("titulo", title);
+        session.put("artista", artist);
+        session.put("estreno", release);
+
+        sent(messageOut, new Message());
+        System.out.println("Release logged successfully via release ID.");
+    }
+
+    public void logRelease(int uid, String title,String artist, Date release){
+        Message messageOut = new Message();
+        messageOut.setContext("/logRelease");
+
+        HashMap<String, Object> session = new HashMap<>();
+        session.put("id_usuario", uid);
+        session.put("titulo", title);
+        session.put("artista", artist);
+        session.put("estreno", release);
+
+        sent(messageOut, new Message());
+        System.out.println("Release logged successfully via title and artist.");
     }
 
     public static void main(String[] args) {
